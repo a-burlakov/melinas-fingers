@@ -1,6 +1,6 @@
 import os
 import re
-
+import savefile_structure
 import datasheets
 
 def get_savefile_path() -> str:
@@ -9,8 +9,8 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    return os.getcwd() + '\\test\ER0000_before.sl2'
-    # return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
+    # return os.getcwd() + '\\test\ER0000_before.sl2'
+    return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
 
 
 def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
@@ -24,21 +24,7 @@ def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
     with open(filepath, "rb") as fh:
         dat = fh.read()
 
-        # TODO: difference between slots is always 2621456. Make it using this. And check!
-
-        intervals = ((0x0000000, 0x0280310),
-                     # (0x0000310, 0x0280310)
-                     (0x0280320, 0x0500320),
-                     (0x0500330, 0x0780330),
-                     (0x0780340, 0x0A00340),
-                     (0x0A00350, 0x0C80350),
-                     (0x0C80360, 0x0F00360),
-                     (0x0F00370, 0x1180370),
-                     (0x1180380, 0x1400380),
-                     (0x1400390, 0x1680390),
-                     (0x16803A0, 0x1900400))
-
-        slot_interval = intervals[save_slot_number - 1]
+        slot_interval = savefile_structure.full_slot_intervals(save_slot_number)
 
         return dat[slot_interval[0]:slot_interval[1]]
 
@@ -111,7 +97,8 @@ if __name__ == '__main__':
 
     weapons = datasheets.weapons_data()
     all_character_weapons = []
-    slot_data_for_search_all = slot_data[0x00000740:0x0000e590]
+    # TODO: рассчитывать и поиски для всех оружий тоже по той же схеме
+    slot_data_for_search_all = slot_data[0x00000000:0x0000e590]
     for weapon_data in weapons:
         weapon_name = weapon_data[0]
         weapon_id = weapon_data[1]
