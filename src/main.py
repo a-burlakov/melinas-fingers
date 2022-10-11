@@ -10,7 +10,7 @@ def get_savefile_path() -> str:
     :return: Path as string
     """
     # return os.getcwd() + '\\test\ER0000_before.sl2'
-    return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
+    return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
 
 
 def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
@@ -112,18 +112,18 @@ if __name__ == '__main__':
     pass
 
     slot_for_search_slot = slot_data[0x0000A500:0x00013900]
-    for name, id in all_character_weapons:
-
-        # We look for a construction like that: XX XX 80 80 WW WW WW WW
-        # W - weapon ID
-        # 80 - weapon mark
-        # X - unique ID for a specific weapon
-        search_string = bytes.fromhex(add_weapon_hex_mark(id))
-        try:
-            result = re.findall(b'.{8}(?<=' + search_string + b')', slot_data)
-            # print(result)
-            for hex_slot_weapon in result:
-                if hex_slot_weapon[:4] in slot_for_search_slot:
-                    print(str(hex_slot_weapon) + ' ' + name + " " + id)
-        except:
-            print(name, id)
+    # for name, id in all_character_weapons:
+    #
+    #     # We look for a construction like that: XX XX 80 80 WW WW WW WW
+    #     # W - weapon ID
+    #     # 80 - weapon mark
+    #     # X - unique ID for a specific weapon
+    #     search_string = bytes.fromhex(add_weapon_hex_mark(id))
+    #     try:
+    #         result = re.findall(b'.{8}(?<=' + search_string + b')', slot_data)
+    #         # print(result)
+    #         for hex_slot_weapon in result:
+    #             if hex_slot_weapon[:4] in slot_for_search_slot:
+    #                 print(str(hex_slot_weapon) + ' ' + name + " " + id)
+    #     except:
+    #         print('error', name, id)
