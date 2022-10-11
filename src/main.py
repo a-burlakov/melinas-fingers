@@ -1,5 +1,5 @@
 import os
-import re
+import regex
 import savefile_structure
 import datasheets
 
@@ -10,7 +10,8 @@ def get_savefile_path() -> str:
     :return: Path as string
     """
     # return os.getcwd() + '\\test\ER0000_before.sl2'
-    return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
+    # return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
+    return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
 
 
 def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
@@ -96,34 +97,53 @@ if __name__ == '__main__':
     slot_data = get_slot_data(path, slot_number)
 
     weapons = datasheets.weapons_data()
-    all_character_weapons = []
+    all_weapons = []
     # TODO: рассчитывать и поиски для всех оружий тоже по той же схеме
-    slot_data_for_search_all = slot_data[0x00000000:0x0000e590]
+    interval = savefile_structure.full_slot_intervals(slot_number)
+    interval_for_search = slot_data[interval[0]:interval[1]]
     for weapon_data in weapons:
         weapon_name = weapon_data[0]
         weapon_id = weapon_data[1]
 
-        search_string = bytes.fromhex(add_weapon_hex_mark(weapon_id))
-        count = slot_data_for_search_all.count(search_string)
+        search_string = bytes.fromhex(weapon_id)
+        count = interval_for_search.count(search_string)
         if count > 0:
-            all_character_weapons.append([weapon_name, weapon_id])
-            print([weapon_name, weapon_id])
+            all_weapons.append([weapon_name, weapon_id])
+            # print([weapon_name, weapon_id])
 
-    pass
+    # Looking for many instances of each weapon.
+    interval_for_search_instances = slot_data[0x0000000:0x00020000]
+    for name, id in all_weapons:
 
-    slot_for_search_slot = slot_data[0x0000A500:0x00013900]
-    # for name, id in all_character_weapons:
-    #
-    #     # We look for a construction like that: XX XX 80 80 WW WW WW WW
-    #     # W - weapon ID
-    #     # 80 - weapon mark
-    #     # X - unique ID for a specific weapon
-    #     search_string = bytes.fromhex(add_weapon_hex_mark(id))
-    #     try:
-    #         result = re.findall(b'.{8}(?<=' + search_string + b')', slot_data)
-    #         # print(result)
-    #         for hex_slot_weapon in result:
-    #             if hex_slot_weapon[:4] in slot_for_search_slot:
-    #                 print(str(hex_slot_weapon) + ' ' + name + " " + id)
-    #     except:
-    #         print('error', name, id)
+        # We look for a construction like that: XX XX 80 80 WW WW WW WW
+        # W - weapon ID
+        # 80 - weapon mark
+        # X - unique ID for a specific weapon
+        search_string = bytes.fromhex(add_weapon_hex_mark(id))
+        # print(name, id)
+        try:
+            # TODO: need to make it much faster
+            escaping_characters = [b'\\', b'[', b']', b'}', b'{', b'(', b')', b'|']
+            for ch in escaping_characters:
+                search_string = search_string.replace(ch, b'\\' + ch)
+            # search_string = search_string.replace(b'[', b'\\[')
+            # search_string = search_string.replace(b']', b'\\]')
+            # search_string = search_string.replace(b'}', b'\\}')
+            # search_string = search_string.replace(b'}', b'\\}')
+            # search_string = search_string.replace(b')', b'\\)')
+            # search_string = search_string.replace(b'(', b'\\(')
+            # search_string = search_string.replace(b'|', b'\\|')
+            reg_expression = b'.{8}(?<=' + search_string + b')'
+
+            result = regex.findall(reg_expression, slot_data)
+            # print(result)
+            for hex_slot_weapon in result:
+                if hex_slot_weapon[:4] in interval_for_search_instances:
+                  pass
+                else:
+                    print('Не был найден экземпляр', name, hex_slot_weapon)
+                #       print(str(hex_slot_weapon))
+                # print('')
+        except:
+            pass
+            print('error', name, id)
