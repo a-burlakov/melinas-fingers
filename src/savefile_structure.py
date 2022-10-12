@@ -20,3 +20,12 @@ def full_slot_intervals(save_slot_number: int = 0) -> tuple | list:
         return intervals
     else:
         return intervals[save_slot_number - 1]
+
+def inventory_and_chest_separator() -> bytes:
+    """
+    Returns a HEX-string that separates inventory and chest block for
+    weapon seatching.
+    :return:
+    """
+    return bytes.fromhex('ffffffff00000000') * 6
+    # return b'\xff\xff\xff\xff\x00\x00\x00\x00' * 6

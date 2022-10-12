@@ -9,9 +9,10 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    # return os.getcwd() + '\\test\ER0000_before.sl2'
+    # return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
     # return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
-    return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
+    # return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
+    return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
 
 
 def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
@@ -97,53 +98,55 @@ if __name__ == '__main__':
     slot_data = get_slot_data(path, slot_number)
 
     weapons = datasheets.weapons_data()
-    all_weapons = []
-    # TODO: рассчитывать и поиски для всех оружий тоже по той же схеме
-    interval = savefile_structure.full_slot_intervals(slot_number)
-    interval_for_search = slot_data[interval[0]:interval[1]]
+    all_mentioned_weapons = []
     for weapon_data in weapons:
         weapon_name = weapon_data[0]
         weapon_id = weapon_data[1]
 
         search_string = bytes.fromhex(weapon_id)
-        count = interval_for_search.count(search_string)
+        count = slot_data.count(search_string)
         if count > 0:
-            all_weapons.append([weapon_name, weapon_id])
-            # print([weapon_name, weapon_id])
+            all_mentioned_weapons.append([weapon_name, weapon_id])
+
+    # print(*all_mentioned_weapons)
+
+    data_for_instances_search = slot_data[0x0010000:0x00030000]
+    separator = savefile_structure.inventory_and_chest_separator()
+    separator_position = data_for_instances_search.find(separator)
 
     # Looking for many instances of each weapon.
-    interval_for_search_instances = slot_data[0x0000000:0x00020000]
-    for name, id in all_weapons:
+    for name, id in all_mentioned_weapons:
 
         # We look for a construction like that: XX XX 80 80 WW WW WW WW
         # W - weapon ID
         # 80 - weapon mark
-        # X - unique ID for a specific weapon
+        # X - unique ID for an instance of weapon
         search_string = bytes.fromhex(add_weapon_hex_mark(id))
         # print(name, id)
         try:
             # TODO: need to make it much faster
-            escaping_characters = [b'\\', b'[', b']', b'}', b'{', b'(', b')', b'|']
+            escaping_characters = [b'\\', b'[', b']', b'(', b')', b'|',
+                                   b'^', b'$', b'.', b'?', b'*', b'+']
             for ch in escaping_characters:
                 search_string = search_string.replace(ch, b'\\' + ch)
-            # search_string = search_string.replace(b'[', b'\\[')
-            # search_string = search_string.replace(b']', b'\\]')
-            # search_string = search_string.replace(b'}', b'\\}')
-            # search_string = search_string.replace(b'}', b'\\}')
-            # search_string = search_string.replace(b')', b'\\)')
-            # search_string = search_string.replace(b'(', b'\\(')
-            # search_string = search_string.replace(b'|', b'\\|')
+
             reg_expression = b'.{8}(?<=' + search_string + b')'
 
             result = regex.findall(reg_expression, slot_data)
             # print(result)
+
+            if len(result) == 0:
+                pass # print('Не найдено Экземпляров', name)
+
             for hex_slot_weapon in result:
-                if hex_slot_weapon[:4] in interval_for_search_instances:
-                  pass
-                else:
-                    print('Не был найден экземпляр', name, hex_slot_weapon)
-                #       print(str(hex_slot_weapon))
-                # print('')
+                instance_position = data_for_instances_search.find(hex_slot_weapon[:4])
+                if instance_position < separator_position:
+                    print('В инвентаре', name)
+            #     if hex_slot_weapon[:4] in data_for_instances_search:
+            #       print(hex_slot_weapon)
+            #     else:
+            #         print('Не был найден экземпляр', name, hex_slot_weapon)
+            #     #       print(str(hex_slot_weapon))
+            # print('')
         except:
-            pass
             print('error', name, id)
