@@ -1,5 +1,6 @@
 import os
 import regex
+import re
 import savefile_structure
 import datasheets
 
@@ -9,10 +10,10 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    # return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
-    # return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
+    return os.getcwd() + '\\test\ER0000_freedom_ashedofwar.sl2'
+    # return os.getcwd() + '\\test\ER0000_freedom_all_weapoms_inventory.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
-    return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
+    # return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
 
 
 def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
@@ -24,14 +25,18 @@ def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
     :return:
     """
     with open(filepath, "rb") as fh:
-        dat = fh.read()
+        data = fh.read()
+        slot_interval = savefile_structure.slot_ranges(save_slot_number)
 
-        slot_interval = savefile_structure.full_slot_intervals(save_slot_number)
-
-        return dat[slot_interval[0]:slot_interval[1]]
+        return data[slot_interval[0]:slot_interval[1]]
 
 
 def get_slot_names(file) -> list:
+    """
+
+    :param file:
+    :return:
+    """
     try:
         with open(file, "rb") as fh:
             data = fh.read()
@@ -39,16 +44,8 @@ def get_slot_names(file) -> list:
     except FileNotFoundError as e:
         return False
 
-    names = [data[0x1901d0e:0x1901d0e + 32].decode('utf-16'),
-             data[0x1901f5a:0x1901f5a + 32].decode('utf-16'),
-             data[0x19021a6:0x19021a6 + 32].decode('utf-16'),
-             data[0x19023f2:0x19023f2 + 32].decode('utf-16'),
-             data[0x190263e:0x190263e + 32].decode('utf-16'),
-             data[0x190288a:0x190288a + 32].decode('utf-16'),
-             data[0x1902ad6:0x1902ad6 + 32].decode('utf-16'),
-             data[0x1902d22:0x1902d22 + 32].decode('utf-16'),
-             data[0x1902f6e:0x1902f6e + 32].decode('utf-16'),
-             data[0x19031ba:0x19031ba + 32].decode('utf-16')]
+    names_ranges = savefile_structure.slot_names_ranges()
+    names = [data[x: y].decode('utf-16') for x,y in names_ranges]
 
     for i, name in enumerate(names):
         if name == '\x00' * 16:
@@ -79,6 +76,23 @@ def endian_turnoff(hex: str) -> str:
     return ''.join(reversed(pairs))
 
 
+def item_id_as_hex(item_id: str) -> str:
+    """
+
+    :param item_id:
+    :return:
+    """
+
+    needed_length = 8
+    hex_big_endian = hex(int(item_id))[2:]
+    if len(hex_big_endian) % 2 == 1:
+        hex_big_endian = '0' + hex_big_endian
+    hex_little_endian = endian_turnoff(hex_big_endian)
+    hex_little_endian += (needed_length - len(hex_little_endian))*'0'
+
+    return hex_little_endian
+
+
 def add_weapon_hex_mark(weapon_id: str) -> str:
     """
     Put two '80' hex codes in front of weapon ID.
@@ -91,62 +105,83 @@ def add_weapon_hex_mark(weapon_id: str) -> str:
     return '8080' + weapon_id
 
 
+def add_escaping_character_to_reg(reg_expression: bytes) -> bytes:
+    """
+
+    :param reg_expression:
+    :return:
+    """
+
+    escaping_characters = [b'\\', b'[', b']', b'(', b')', b'|',
+                           b'^', b'$', b'.', b'?', b'*', b'+']
+    for ch in escaping_characters:
+        reg_expression = reg_expression.replace(ch, b'\\' + ch)
+
+    return reg_expression
+
 if __name__ == '__main__':
 
     slot_number: int = 1
     path = get_savefile_path()
     slot_data = get_slot_data(path, slot_number)
 
-    weapons = datasheets.weapons_data()
-    all_mentioned_weapons = []
-    for weapon_data in weapons:
-        weapon_name = weapon_data[0]
-        weapon_id = weapon_data[1]
+    # Looking for all weapons character has, whatever quantity
+    # and position in inventory or chest.
+    datasheet_weapons = datasheets.weapons()
+    all_weapons_having = []
+    for weapon in datasheet_weapons:
+        weapon_id = weapon[1]
+        weapon_name = weapon[2]
+        if bytes.fromhex(weapon_id) in slot_data and 'Scavenger' in weapon_name:
+            all_weapons_having.append([weapon_name, weapon_id])
 
-        search_string = bytes.fromhex(weapon_id)
-        count = slot_data.count(search_string)
-        if count > 0:
-            all_mentioned_weapons.append([weapon_name, weapon_id])
-
-    # print(*all_mentioned_weapons)
-
-    data_for_instances_search = slot_data[0x0010000:0x00030000]
+    # Looking for many instances of each weapon. In save-file structure
+    # is like this: [inventory instances]-[separator]-[chest instances]
+    # We need only inventory instances.
+    instances_range = savefile_structure.weapon_instances_search_range()
+    data_for_instances_search = slot_data[instances_range[0]:
+                                          instances_range[1]]
     separator = savefile_structure.inventory_and_chest_separator()
-    separator_position = data_for_instances_search.find(separator)
+    separator_pos = data_for_instances_search.find(separator)
 
-    # Looking for many instances of each weapon.
-    for name, id in all_mentioned_weapons:
+    inventory_list = []
+    for weapon in all_weapons_having:
+        weapon_name = weapon[0]
+        weapon_id = weapon[1]
 
-        # We look for a construction like that: XX XX 80 80 WW WW WW WW
-        # W - weapon ID
-        # 80 - weapon mark
-        # X - unique ID for an instance of weapon
-        search_string = bytes.fromhex(add_weapon_hex_mark(id))
-        # print(name, id)
-        try:
-            # TODO: need to make it much faster
-            escaping_characters = [b'\\', b'[', b']', b'(', b')', b'|',
-                                   b'^', b'$', b'.', b'?', b'*', b'+']
-            for ch in escaping_characters:
-                search_string = search_string.replace(ch, b'\\' + ch)
+        # In save-file we're looking for lines like: XXXX 8080 WWWWWWWW
+        # Where:
+        #   XXXX - ID of specific instance of a weapon
+        #   8080 - mark of a weapon
+        #   WWWWWWWW - weapon ID
+        # Each line represents an instance of a weapon
+        id_for_reg = bytes.fromhex(add_weapon_hex_mark(weapon_id))
+        id_for_reg = add_escaping_character_to_reg(id_for_reg)
+        reg_expression = b'.{8}(?<=' + id_for_reg + b')'
 
-            reg_expression = b'.{8}(?<=' + search_string + b')'
+        result = re.finditer(reg_expression,
+                             slot_data)
 
-            result = regex.findall(reg_expression, slot_data)
-            # print(result)
+        for match in result:
 
-            if len(result) == 0:
-                pass # print('Не найдено Экземпляров', name)
+            hex_slot_weapon = match.group()
+            instance_id = hex_slot_weapon[:4]
 
-            for hex_slot_weapon in result:
-                instance_position = data_for_instances_search.find(hex_slot_weapon[:4])
-                if instance_position < separator_position:
-                    print('В инвентаре', name)
-            #     if hex_slot_weapon[:4] in data_for_instances_search:
-            #       print(hex_slot_weapon)
-            #     else:
-            #         print('Не был найден экземпляр', name, hex_slot_weapon)
-            #     #       print(str(hex_slot_weapon))
-            # print('')
-        except:
-            print('error', name, id)
+            # As we found instance's ID, we can see, in what part this ID
+            # is located. If it's in inventory part, then that's it!
+            instance_position = data_for_instances_search.find(instance_id)
+            if instance_position > separator_pos:
+                continue
+
+            instance_dict = dict.fromkeys(['weapon_name', 'weapon_id',
+                                           'instance_id', 'position'])
+
+            instance_id = str(instance_id)[2:-1]
+            instance_dict['position'] = match.start()
+            instance_dict['instance_id'] = instance_id
+            instance_dict['weapon_id'] = weapon_id
+            instance_dict['weapon_name'] = weapon_name
+
+            inventory_list.append(instance_dict)
+
+    print(*inventory_list, sep='\n')
