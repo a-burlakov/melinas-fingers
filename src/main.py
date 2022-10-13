@@ -11,7 +11,7 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    return os.getcwd() + '\\test\ER0000_freedom_ashedofwar.sl2'
+    return os.getcwd() + '\\test\ER0000_freedom_13102022.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_all_weapoms_inventory.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
