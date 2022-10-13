@@ -1,5 +1,4 @@
 import os
-import regex
 import re
 import savefile_structure
 import datasheets
@@ -105,7 +104,7 @@ def add_weapon_hex_mark(weapon_id: str) -> str:
     return '8080' + weapon_id
 
 
-def add_escaping_character_to_reg(reg_expression: bytes) -> bytes:
+def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
     """
 
     :param reg_expression:
@@ -126,8 +125,9 @@ if __name__ == '__main__':
     path = get_savefile_path()
     slot_data = get_slot_data(path, slot_number)
 
-    # Looking for all weapons character has, whatever quantity
+    # Looking for all weapons mentioned in save-file, whatever quantity
     # and position in inventory or chest.
+    slot_data_for_weapons_search = slot_data[:]
     datasheet_weapons = datasheets.weapons()
     all_weapons_having = []
     for weapon in datasheet_weapons:
@@ -139,7 +139,7 @@ if __name__ == '__main__':
     # Looking for many instances of each weapon. In save-file structure
     # is like this: [inventory instances]-[separator]-[chest instances]
     # We need only inventory instances.
-    instances_range = savefile_structure.weapon_instances_search_range()
+    instances_range = savefile_structure.weapons_search_range()
     data_for_instances_search = slot_data[instances_range[0]:
                                           instances_range[1]]
     separator = savefile_structure.inventory_and_chest_separator()
@@ -155,16 +155,15 @@ if __name__ == '__main__':
         #   XXXX - ID of specific instance of a weapon
         #   8080 - mark of a weapon
         #   WWWWWWWW - weapon ID
-        # Each line represents an instance of a weapon
+        # Each line represents an instance of a weapon.
         id_for_reg = bytes.fromhex(add_weapon_hex_mark(weapon_id))
-        id_for_reg = add_escaping_character_to_reg(id_for_reg)
+        id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
         reg_expression = b'.{2}(?=' + id_for_reg + b')'
 
         result = re.finditer(reg_expression,
                              slot_data[:instances_range[0]+separator_pos])
 
         for match in result:
-
 
             instance_id = match.group() + bytes.fromhex('8080')
             instance_position = data_for_instances_search.find(instance_id)
@@ -176,15 +175,10 @@ if __name__ == '__main__':
             if instance_position > separator_pos:
                 continue
 
-            instance_dict = dict.fromkeys(['weapon_name', 'weapon_id',
-                                           'instance_id', 'position'])
-
-            instance_id = str(instance_id)[2:-1]
-            instance_dict['position'] = match.start()
-            instance_dict['instance_id'] = instance_id
-            instance_dict['weapon_id'] = weapon_id
-            instance_dict['weapon_name'] = weapon_name
-
+            instance_dict = {}
+            instance_dict.setdefault('position', match.start())
+            instance_dict.setdefault('weapon_id', weapon_id)
+            instance_dict.setdefault('weapon_name', weapon_name)
             inventory_list.append(instance_dict)
 
     print(*inventory_list, sep='\n')
