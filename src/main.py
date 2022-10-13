@@ -165,7 +165,7 @@ if __name__ == '__main__':
 
         for match in result:
 
-            instance_id = match.group() + b'\\x80\\x80'
+            instance_id = match.group() + bytes.fromhex('8080')
             instance_position = data_for_instances_search.find(instance_id)
             if instance_position < 0:
                 continue
