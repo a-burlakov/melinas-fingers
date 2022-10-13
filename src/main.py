@@ -119,6 +119,7 @@ def add_escaping_character_to_reg(reg_expression: bytes) -> bytes:
 
     return reg_expression
 
+
 if __name__ == '__main__':
 
     slot_number: int = 1
@@ -132,7 +133,7 @@ if __name__ == '__main__':
     for weapon in datasheet_weapons:
         weapon_id = weapon[1]
         weapon_name = weapon[2]
-        if bytes.fromhex(weapon_id) in slot_data and 'Scavenger' in weapon_name:
+        if bytes.fromhex(weapon_id) in slot_data[:0x00030000]:
             all_weapons_having.append([weapon_name, weapon_id])
 
     # Looking for many instances of each weapon. In save-file structure
@@ -157,19 +158,20 @@ if __name__ == '__main__':
         # Each line represents an instance of a weapon
         id_for_reg = bytes.fromhex(add_weapon_hex_mark(weapon_id))
         id_for_reg = add_escaping_character_to_reg(id_for_reg)
-        reg_expression = b'.{8}(?<=' + id_for_reg + b')'
+        reg_expression = b'.{2}(?=' + id_for_reg + b')'
 
         result = re.finditer(reg_expression,
-                             slot_data)
+                             slot_data[:instances_range[0]+separator_pos])
 
         for match in result:
 
-            hex_slot_weapon = match.group()
-            instance_id = hex_slot_weapon[:4]
+            instance_id = match.group() + b'\\x80\\x80'
+            instance_position = data_for_instances_search.find(instance_id)
+            if instance_position < 0:
+                continue
 
             # As we found instance's ID, we can see, in what part this ID
             # is located. If it's in inventory part, then that's it!
-            instance_position = data_for_instances_search.find(instance_id)
             if instance_position > separator_pos:
                 continue
 
