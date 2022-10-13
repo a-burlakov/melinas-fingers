@@ -1,3 +1,12 @@
+def range_before_save_slots() -> int:
+    """
+    Returns an ammount of sympols in HEX-save-file that goes before
+    first save-slot information starts.
+    :return:
+    """
+    return 0x0000310
+
+
 def slot_ranges(save_slot_number: int = 0) -> tuple | list:
     """
     Returns hex interval for the save slot in save file.

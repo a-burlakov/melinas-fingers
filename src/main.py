@@ -2,6 +2,8 @@ import os
 import re
 import savefile_structure
 import datasheets
+from pprint import pprint
+
 
 def get_savefile_path() -> str:
     """
@@ -92,18 +94,6 @@ def item_id_as_hex(item_id: str) -> str:
     return hex_little_endian
 
 
-def add_weapon_hex_mark(weapon_id: str) -> str:
-    """
-    Put two '80' hex codes in front of weapon ID.
-    It's needed because you can find weapons used by character using this mark.
-
-    :param weapon_id: id like "F0EF1000"
-    :return: string like "8080F0EF1000"
-    """
-
-    return '8080' + weapon_id
-
-
 def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
     """
 
@@ -156,7 +146,7 @@ if __name__ == '__main__':
         #   8080 - mark of a weapon
         #   WWWWWWWW - weapon ID
         # Each line represents an instance of a weapon.
-        id_for_reg = bytes.fromhex(add_weapon_hex_mark(weapon_id))
+        id_for_reg = bytes.fromhex('8080' + weapon_id)
         id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
         reg_expression = b'.{2}(?=' + id_for_reg + b')'
 
@@ -175,10 +165,17 @@ if __name__ == '__main__':
             if instance_position > separator_pos:
                 continue
 
+            instance_id = instance_id.hex(' ').replace(' ', '')
+            position_in_file = hex(instances_range[0]
+                                   + instance_position
+                                   + savefile_structure.range_before_save_slots())
+
             instance_dict = {}
-            instance_dict.setdefault('position', match.start())
-            instance_dict.setdefault('weapon_id', weapon_id)
             instance_dict.setdefault('weapon_name', weapon_name)
+            instance_dict.setdefault('weapon_id', weapon_id)
+            instance_dict.setdefault('instance_id', instance_id)
+            instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
-    print(*inventory_list, sep='\n')
+    print(*sorted(inventory_list, key=lambda x: int(x['position'], 16)),
+          sep='\n')
