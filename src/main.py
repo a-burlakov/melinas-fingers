@@ -140,11 +140,11 @@ if __name__ == '__main__':
         weapon_name = weapon[0]
         weapon_id = weapon[1]
 
-        # In save-file we're looking for lines like: XXXX 8080 WWWWWWWW
+        # In save-file we're looking for lines like: XX XX 80 80 WW WW WW WW
         # Where:
-        #   XXXX - ID of specific instance of a weapon
-        #   8080 - mark of a weapon
-        #   WWWWWWWW - weapon ID
+        #   XX XX - ID of specific instance of a weapon
+        #   80 80 - mark of a weapon
+        #   WW WW WW WW - weapon ID
         # Each line represents an instance of a weapon.
         id_for_reg = bytes.fromhex('8080' + weapon_id)
         id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
