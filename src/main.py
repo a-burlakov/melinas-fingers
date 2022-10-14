@@ -5,7 +5,6 @@ import datasheets
 import time
 from pynput.keyboard import Key, Controller, Listener
 import keyboard
-
 from win32gui import GetWindowText, GetForegroundWindow
 
 
@@ -50,7 +49,7 @@ def get_slot_names(file) -> list:
         return False
 
     names_ranges = savefile_structure.slot_names_ranges()
-    names = [data[x: y].decode('utf-16') for x,y in names_ranges]
+    names = [data[x: y].decode('utf-16') for x, y in names_ranges]
 
     for i, name in enumerate(names):
         if name == '\x00' * 16:
@@ -65,7 +64,6 @@ def endian_turnoff(hex: str) -> str:
     """
     Turns little-endian hex string to big-endian or visa versa,
     Example: 8097FA01 <-> 01FA9780
-
     :param hex: hex string
     :return: None
     """
@@ -93,7 +91,7 @@ def item_id_as_hex(item_id: str) -> str:
     if len(hex_big_endian) % 2 == 1:
         hex_big_endian = '0' + hex_big_endian
     hex_little_endian = endian_turnoff(hex_big_endian)
-    hex_little_endian += (needed_length - len(hex_little_endian))*'0'
+    hex_little_endian += (needed_length - len(hex_little_endian)) * '0'
 
     return hex_little_endian
 
@@ -213,33 +211,23 @@ def get_inventory_weapons():
 
     return inventory_list
 
+
 keyboard_input = Controller()
 
-def on_press(key):
 
+def on_press(key):
     current_window = (GetWindowText(GetForegroundWindow()))
     if 'ELDEN' in current_window:
-        # print(f'{key} pressed')
 
         while keyboard.is_pressed('u'):
-            execute_key_macross('esc|e|e')
-            go_to_beginning_of_list()
-            keyline = keyline_from_item_number(79)
-            execute_key_macross(keyline)
-            execute_key_macross('e|esc')
-            break
+            execute_key_macross(keyline_to_sort_all_lists())
+            # execute_key_macross('esc|e|e')
+            # go_to_beginning_of_list()
+            # keyline = keyline_from_item_number(79)
+            # execute_key_macross(keyline)
+            # execute_key_macross('e|esc')
+            # break
 
-    # except:
-    #     print('something')
-    #     pass
-
-def on_release(key):
-    pass
-    # print(f'{key} released')
-    # if key == Key.esc:
-    #     return False
-
-# Collect events until released
 
 def non_letter_keys() -> tuple:
     """
@@ -309,7 +297,27 @@ def non_letter_keys() -> tuple:
             'print_screen',
             'scroll_lock')
 
-def keyline_from_item_number(item_number: int ) -> str:
+def keyline_to_sort_all_lists() -> str:
+    """
+    Returns a keyline for a macros that sorts all lists to "date get - up".
+    Weapons, armor, talismans, items.
+    :return:
+    """
+
+    # 1. Weapons.
+    # 2. Armor.
+    # 3. Talismans.
+    # 4. Items.
+
+    keyline = 'esc|e|e|t|down|e|pause30|q|pause30|' \
+              'down|down|e|t|down|e|pause30|q|pause30|' \
+              'down|e|t|down|e|pause30|q|pause30|' \
+              'q|pause30|down|down|e|t|down|e|pause30|esc'
+
+    return keyline
+
+
+def keyline_from_item_number(item_number: int) -> str:
     """
     Generates a keyline to get to item having a number from a
     beginning of the list.
@@ -317,8 +325,8 @@ def keyline_from_item_number(item_number: int ) -> str:
     :return:
     """
 
-    v_amount: int = 0 # going to 5 items
-    right_amount: int = 0 # going to 1 item
+    v_amount: int = 0  # going to 5 items
+    right_amount: int = 0  # going to 1 item
 
     key_presses = []
     if item_number > 5:
@@ -342,11 +350,13 @@ def go_to_beginning_of_list(list_length: int = 0) -> None:
     :return:
     """
 
+    max_amount_c = list_length // 5
+
     keyboard_input.press(Key.left)
-    time4all = 1
+    time4all = max(0.4, max_amount_c * 0.04)
     time.sleep(0.01)
     time_start = time.time()
-    execute_key_macross('c|' * 30 + 'c')
+    execute_key_macross('c|' * (max_amount_c - 1) + 'c')
     time_finish = time.time()
     print(time_finish - time_start)
     time_remain = time4all - (time_finish - time_start)
@@ -356,11 +366,10 @@ def go_to_beginning_of_list(list_length: int = 0) -> None:
     time.sleep(0.01)
 
 
-
-def execute_key_macross(keyline: str) -> None:
+def execute_key_macross(keyline: str, sleep_time: float = 0.05) -> None:
     """
     Parses a line into a keys and simulates key presses.
-    Additional pause can be made with 'pauseN', where N is one Hundredth sec.
+    Additional pause can be made with 'pauseN', where N is one hundredth sec.
     :param keyline: line of keys divided with '|'
     :return:
     """
@@ -385,21 +394,10 @@ def execute_key_macross(keyline: str) -> None:
             time.sleep(0.02)
             keyboard_input.release(key_press)
 
-        time.sleep(0.02)
+        time.sleep(sleep_time)
+
 
 if __name__ == '__main__':
-
-    with Listener(
-            on_press=on_press,
-            on_release=on_release) as listener:
+    # For catching keyboard presses.
+    with Listener(on_press=on_press) as listener:
         listener.join()
-
-    # listener = Listener(
-    #     on_press=on_press,
-    #     on_release=on_release)
-    # listener.start()
-
-
-
-
-
