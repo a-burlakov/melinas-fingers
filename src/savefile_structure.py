@@ -50,7 +50,7 @@ def slot_names_ranges() -> tuple:
             (0x19031ba, 0x19031ba + 32))
 
 
-def weapons_search_range() -> tuple:
+def equipment_search_range() -> tuple:
     """
 
     :return:
