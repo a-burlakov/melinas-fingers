@@ -2,7 +2,12 @@ import os
 import re
 import savefile_structure
 import datasheets
-from pprint import pprint
+import time
+from pynput.keyboard import Key, Controller, Listener
+import keyboard
+import pyautogui
+
+from win32gui import GetWindowText, GetForegroundWindow
 
 
 def get_savefile_path() -> str:
@@ -109,7 +114,11 @@ def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
     return reg_expression
 
 
-if __name__ == '__main__':
+def get_inventory_weapons():
+    """
+    code keeper
+    :return:
+    """
 
     slot_number: int = 1
     path = get_savefile_path()
@@ -175,14 +184,15 @@ if __name__ == '__main__':
                                    + savefile_structure.range_before_save_slots())
 
             # Instance's ID is located in line that looks like:
-            # ID ID 80 80 ?? ?? ?? ?? NN NN
+            # ID ID 80 80 XX XX XX XX NN NN
             # Where:
             #   ID ID - instance's ID
-            #   80 80 ?? ?? ?? ?? - not interesting data
+            #   80 80 XX XX XX XX - not interesting data
             #   NN NN - additional ID that can be used to learn what order in
             #   inventory this instance has.
-            inventory_order_id = data_for_instances_search[instance_position+8:
-                                                           instance_position+10]
+            inventory_order_id = data_for_instances_search[
+                                 instance_position + 8:
+                                 instance_position + 10]
             inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
 
             # Order ID has two HEX numbers ("f1 21") but actual order goes
@@ -198,5 +208,149 @@ if __name__ == '__main__':
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
-    print(*sorted(inventory_list, key=lambda x: int(x['inventory_order_id'], 16)),
+    print(*sorted(inventory_list,
+                  key=lambda x: int(x['inventory_order_id'], 16)),
           sep='\n')
+
+    return inventory_list
+
+keyboard_in = Controller()
+
+def on_press(key):
+
+    current_window = (GetWindowText(GetForegroundWindow()))
+    if 'ELDEN' in current_window:
+        # print(f'{key} pressed')
+
+        while keyboard.is_pressed('u'):
+
+            execute_key_macross('esc|e|e|right|e|esc')
+            break
+
+    # except:
+    #     print('something')
+    #     pass
+
+def on_release(key):
+    pass
+    # print(f'{key} released')
+    # if key == Key.esc:
+    #     return False
+
+# Collect events until released
+
+def non_letter_keys() -> tuple:
+    """
+
+    :return:
+    """
+    return ('alt',
+            'alt_l',
+            'alt_r',
+            'alt_gr',
+            'backspace',
+            'caps_lock',
+            'cmd',
+            'cmd_r',
+            'ctrl',
+            'ctrl_l',
+            'ctrl_r',
+            'delete',
+            'down',
+            'end',
+            'enter',
+            'esc',
+            'f1',
+            'f2',
+            'f3',
+            'f4',
+            'f5',
+            'f6',
+            'f7',
+            'f8',
+            'f9',
+            'f10',
+            'f11',
+            'f12',
+            'f13',
+            'f14',
+            'f15',
+            'f16',
+            'f17',
+            'f18',
+            'f19',
+            'f20',
+            'f21',
+            'f22',
+            'f23',
+            'f24',
+            'home',
+            'left',
+            'page_down',
+            'page_up',
+            'right',
+            'shift',
+            'shift_r',
+            'space',
+            'tab',
+            'up',
+            'media_play_pause',
+            'media_volume_mute',
+            'media_volume_down',
+            'media_volume_up',
+            'media_previous',
+            'media_next',
+            'insert',
+            'menu',
+            'num_lock',
+            'pause',
+            'print_screen',
+            'scroll_lock')
+
+
+def execute_key_macross(keyline: str) -> None:
+    """
+    Parses a line into a keys and simulates key presses.
+    Additional pause can be made with 'pauseN', where N is one Hundredth sec.
+    :param keyline: line of keys divided with '|'
+    :return:
+    """
+
+    key_presses = keyline.split('|')
+
+    for key_press in key_presses:
+
+        # Additional pauses.
+        if key_press.startswith('pause'):
+            pause_time = int(key_press.replace('pause', ''))
+            time.sleep(pause_time / 100)
+            continue
+
+        # Key presses execution.
+        if key_press in non_letter_keys():
+            keyboard_in.press(Key[key_press])
+            time.sleep(0.05)
+            keyboard_in.release(Key[key_press])
+        else:
+            keyboard_in.press(key_press)
+            time.sleep(0.05)
+            keyboard_in.release(key_press)
+
+        time.sleep(0.05)
+
+if __name__ == '__main__':
+
+    with Listener(
+            on_press=on_press,
+            on_release=on_release) as listener:
+        listener.join()
+
+    # listener = Listener(
+    #     on_press=on_press,
+    #     on_release=on_release)
+    # listener.start()
+
+
+
+
+
