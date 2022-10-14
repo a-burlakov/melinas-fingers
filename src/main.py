@@ -123,6 +123,10 @@ if __name__ == '__main__':
     for weapon in datasheet_weapons:
         weapon_id = weapon[1]
         weapon_name = weapon[2]
+
+        # if 'Moonveil' not in weapon_name:
+        #     continue
+
         if bytes.fromhex(weapon_id) in slot_data[:0x00030000]:
             all_weapons_having.append([weapon_name, weapon_id])
 
@@ -140,9 +144,9 @@ if __name__ == '__main__':
         weapon_name = weapon[0]
         weapon_id = weapon[1]
 
-        # In save-file we're looking for lines like: XX XX 80 80 WW WW WW WW
+        # In save-file we're looking for lines like: ID ID 80 80 WW WW WW WW
         # Where:
-        #   XX XX - ID of specific instance of a weapon
+        #   ID ID - ID of specific instance of a weapon
         #   80 80 - mark of a weapon
         #   WW WW WW WW - weapon ID
         # Each line represents an instance of a weapon.
@@ -151,7 +155,7 @@ if __name__ == '__main__':
         reg_expression = b'.{2}(?=' + id_for_reg + b')'
 
         result = re.finditer(reg_expression,
-                             slot_data[:instances_range[0]+separator_pos])
+                             slot_data[:instances_range[0] + separator_pos])
 
         for match in result:
 
@@ -170,12 +174,29 @@ if __name__ == '__main__':
                                    + instance_position
                                    + savefile_structure.range_before_save_slots())
 
+            # Instance's ID is located in line that looks like:
+            # ID ID 80 80 ?? ?? ?? ?? NN NN
+            # Where:
+            #   ID ID - instance's ID
+            #   80 80 ?? ?? ?? ?? - not interesting data
+            #   NN NN - additional ID that can be used to learn what order in
+            #   inventory this instance has.
+            inventory_order_id = data_for_instances_search[instance_position+8:
+                                                           instance_position+10]
+            inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
+
+            # Order ID has two HEX numbers ("f1 21") but actual order goes
+            # on mirrored numbers ("21 f1", "21 f2", "21 f3" etc.)
+            inventory_order_id = inventory_order_id[2:4] \
+                                 + inventory_order_id[:2]
+
             instance_dict = {}
             instance_dict.setdefault('weapon_name', weapon_name)
             instance_dict.setdefault('weapon_id', weapon_id)
             instance_dict.setdefault('instance_id', instance_id)
+            instance_dict.setdefault('inventory_order_id', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
-    print(*sorted(inventory_list, key=lambda x: int(x['position'], 16)),
+    print(*sorted(inventory_list, key=lambda x: int(x['inventory_order_id'], 16)),
           sep='\n')
