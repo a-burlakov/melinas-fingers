@@ -5,7 +5,6 @@ import datasheets
 import time
 from pynput.keyboard import Key, Controller, Listener
 import keyboard
-import pyautogui
 
 from win32gui import GetWindowText, GetForegroundWindow
 
@@ -214,7 +213,7 @@ def get_inventory_weapons():
 
     return inventory_list
 
-keyboard_in = Controller()
+keyboard_input = Controller()
 
 def on_press(key):
 
@@ -223,8 +222,11 @@ def on_press(key):
         # print(f'{key} pressed')
 
         while keyboard.is_pressed('u'):
-
-            execute_key_macross('esc|e|e|right|e|esc')
+            execute_key_macross('esc|e|e')
+            go_to_beginning_of_list()
+            keyline = keyline_from_item_number(79)
+            execute_key_macross(keyline)
+            execute_key_macross('e|esc')
             break
 
     # except:
@@ -307,6 +309,53 @@ def non_letter_keys() -> tuple:
             'print_screen',
             'scroll_lock')
 
+def keyline_from_item_number(item_number: int ) -> str:
+    """
+    Generates a keyline to get to item having a number from a
+    beginning of the list.
+    :param item_number:
+    :return:
+    """
+
+    v_amount: int = 0 # going to 5 items
+    right_amount: int = 0 # going to 1 item
+
+    key_presses = []
+    if item_number > 5:
+        v_amount = item_number // 25
+
+    right_amount = item_number - (v_amount * 25) - 1
+
+    for _ in range(v_amount):
+        key_presses.append('v')
+
+    for _ in range(right_amount):
+        key_presses.append('right')
+
+    return '|'.join(key_presses)
+
+
+def go_to_beginning_of_list(list_length: int = 0) -> None:
+    """
+
+    :param list_length:
+    :return:
+    """
+
+    keyboard_input.press(Key.left)
+    time4all = 1
+    time.sleep(0.01)
+    time_start = time.time()
+    execute_key_macross('c|' * 30 + 'c')
+    time_finish = time.time()
+    print(time_finish - time_start)
+    time_remain = time4all - (time_finish - time_start)
+    if time_remain > 0:
+        time.sleep(time_remain)
+    keyboard_input.release(Key.left)
+    time.sleep(0.01)
+
+
 
 def execute_key_macross(keyline: str) -> None:
     """
@@ -328,15 +377,15 @@ def execute_key_macross(keyline: str) -> None:
 
         # Key presses execution.
         if key_press in non_letter_keys():
-            keyboard_in.press(Key[key_press])
-            time.sleep(0.05)
-            keyboard_in.release(Key[key_press])
+            keyboard_input.press(Key[key_press])
+            time.sleep(0.02)
+            keyboard_input.release(Key[key_press])
         else:
-            keyboard_in.press(key_press)
-            time.sleep(0.05)
-            keyboard_in.release(key_press)
+            keyboard_input.press(key_press)
+            time.sleep(0.02)
+            keyboard_input.release(key_press)
 
-        time.sleep(0.05)
+        time.sleep(0.02)
 
 if __name__ == '__main__':
 
