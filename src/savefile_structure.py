@@ -55,7 +55,7 @@ def equipment_search_range() -> tuple:
 
     :return:
     """
-    return (0x00010000, 0x00030000)
+    return (0x0000f000, 0x00030000)
 
 
 def inventory_and_chest_separator() -> bytes:

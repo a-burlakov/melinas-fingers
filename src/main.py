@@ -14,7 +14,7 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    return os.getcwd() + '\\test\ER0000_armor.sl2'
+    return os.getcwd() + '\\test\ER0000_talismans.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_all_weapoms_inventory.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
@@ -222,6 +222,44 @@ def get_equipment_in_inventory():
             instance_dict.setdefault('inventory_order_id', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
+
+    talisman_mark = '00A001000000'
+    for talisman in datasheets.talismans():
+        talisman_id = talisman[1]
+        talisman_name = talisman[2]
+
+        talisman_position = data_for_instances_search.find(bytes.fromhex(talisman_id + talisman_mark))
+        if talisman_position < 0:
+            continue
+
+        # As we found instance's ID, we can see, in what part this ID
+        # is located. If it's in inventory part, then that's it!
+        if talisman_position > separator_pos:
+            continue
+
+        position_in_file = hex(instances_range[0]
+                               + talisman_position
+                               + savefile_structure.range_before_save_slots())
+
+        # ID ID a0 01 00 00 00 NN NN
+        inventory_order_id = data_for_instances_search[
+                             talisman_position + 8:
+                             talisman_position + 10]
+        inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
+
+        # Order ID has two HEX numbers ("f1 21") but actual order goes
+        # on mirrored numbers ("21 f1", "21 f2", "21 f3" etc.)
+        inventory_order_id = inventory_order_id[2:4] \
+                             + inventory_order_id[:2]
+
+        instance_dict = {}
+        instance_dict.setdefault('equipment_type', 'Talisman')
+        instance_dict.setdefault('equipment_name', talisman_name)
+        instance_dict.setdefault('equipment_id', talisman_id)
+        instance_dict.setdefault('instance_id', '')
+        instance_dict.setdefault('inventory_order_id', inventory_order_id)
+        instance_dict.setdefault('position', position_in_file)
+        inventory_list.append(instance_dict)
 
     print(*sorted(inventory_list,
                   key=lambda x: (x['equipment_type'],
