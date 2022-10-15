@@ -50,12 +50,23 @@ def slot_names_ranges() -> tuple:
             (0x19031ba, 0x19031ba + 32))
 
 
-def equipment_search_range() -> tuple:
+def equipment_instances_search_range(slot_data: bytes, slot_name: str) -> tuple:
     """
 
     :return:
     """
-    return (0x0000f000, 0x00030000)
+
+    slot_name_hex = bytes(slot_name, 'utf-8')
+    slot_name_hex_bytes = [bytes.fromhex(hex(x)[2:]) for x in slot_name_hex]
+    slot_name_hex_bytes = [x + bytes.fromhex('00') for x in
+                           slot_name_hex_bytes]
+    slot_name_hex = b''.join(slot_name_hex_bytes)
+
+    slot_name_position = slot_data.find(slot_name_hex)
+
+    range_max = 0x00030000
+
+    return (slot_name_position, range_max)
 
 
 def inventory_and_chest_separator() -> bytes:

@@ -14,9 +14,9 @@ def get_savefile_path() -> str:
 
     :return: Path as string
     """
-    return os.getcwd() + '\\test\ER0000_talismans.sl2'
-    # return os.getcwd() + '\\test\ER0000_freedom_all_weapoms_inventory.sl2'
-    # return os.getcwd() + '\\test\ER0000_freedom_all_in_chest.sl2'
+    # return os.getcwd() + '\\test\ER0000_flail_in_chest.sl2'
+    return os.getcwd() + '\\test\ER0000_Talismans.sl2'
+    # return os.getcwd() + '\\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
     # return os.getcwd() + '\\test\ER0000_freedom_something_in_inventory.sl2'
 
 
@@ -60,7 +60,7 @@ def get_slot_names(file) -> list:
     return names
 
 
-def endian_turnoff(hex: str) -> str:
+def endian_turn(hex: str) -> str:
     """
     Turns little-endian hex string to big-endian or visa versa,
     Example: 8097FA01 <-> 01FA9780
@@ -89,7 +89,7 @@ def item_id_as_hex(item_id: str, max_length: int) -> str:
     hex_big_endian = hex(int(item_id))[2:]
     if len(hex_big_endian) % 2 == 1:
         hex_big_endian = '0' + hex_big_endian
-    hex_little_endian = endian_turnoff(hex_big_endian)
+    hex_little_endian = endian_turn(hex_big_endian)
     hex_little_endian += (max_length - len(hex_little_endian)) * '0'
 
     return hex_little_endian
@@ -116,13 +116,12 @@ def get_equipment_in_inventory():
     :return:
     """
 
-    # TODO: Поменять комментарии и заменить некоторые функции с оружия на обмундирование
-
     slot_number: int = 1
-    path = get_savefile_path()
-    slot_data = get_slot_data(path, slot_number)
+    save_file_path = get_savefile_path()
+    slot_data = get_slot_data(save_file_path, slot_number)
+    slot_name = get_slot_names(save_file_path)[slot_number - 1]
 
-    # Looking for all weapons mentioned in save-file, whatever quantity
+    # Looking for all equipment mentioned in save-file, whatever quantity
     # and position in inventory or chest.
     slot_data_for_equipment_search = slot_data[:0x00030000]
     all_equipment_having = []
@@ -138,10 +137,11 @@ def get_equipment_in_inventory():
         if bytes.fromhex(armor_id) in slot_data_for_equipment_search:
             all_equipment_having.append([armor_name, armor_id, 'Armor'])
 
-    # Looking for many instances of each weapon. In save-file structure
+    # Looking for many instances of each equipment. In save-file structure
     # is like this: [inventory instances]-[separator]-[chest instances]
-    # We need only inventory instances.
-    instances_range = savefile_structure.equipment_search_range()
+    # We need only inventory instances, so first we need to find the separator.
+
+    instances_range = savefile_structure.equipment_instances_search_range(slot_data, slot_name)
     data_for_instances_search = slot_data[instances_range[0]:
                                           instances_range[1]]
     separator = savefile_structure.inventory_and_chest_separator()
@@ -156,12 +156,12 @@ def get_equipment_in_inventory():
         if equipment_type == 'Armor':
             equipment_mark = '8090'
 
-        # In save-file we're looking for lines like: ID ID 80 80 WW WW WW WW
+        # In save-file we're looking for lines like: ID ID 80 MM WW WW WW (WW)
         # Where:
-        #   ID ID - ID of specific instance of a weapon
-        #   80 80 - mark of a weapon
-        #   WW WW WW WW - weapon ID
-        # Each line represents an instance of a weapon.
+        #   ID ID - ID of specific instance of equipment.
+        #   80 MM - mark of equipment. "80 80" for weapon, "80 90" for armor.
+        #   WW WW WW (WW) - equipment ID. Weapon has 4 pieces, armor has 3.
+        # Each line represents an instance of equipment.
         id_for_reg = bytes.fromhex(equipment_mark + equipment_id)
         id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
         reg_expression = b'.{2}(?=' + id_for_reg + b')'
@@ -177,7 +177,7 @@ def get_equipment_in_inventory():
                 continue
 
             # As we found instance's ID, we can see, in what part this ID
-            # is located. If it's in inventory part, then that's it!
+            # is located. If it's in inventory part, then that's it.
             if instance_position > separator_pos:
                 continue
 
@@ -186,13 +186,14 @@ def get_equipment_in_inventory():
                                    + instance_position
                                    + savefile_structure.range_before_save_slots())
 
+            # We have to learn in what order equipment is placed in inventory.
             # Instance's ID is located in line that looks like:
             # ID ID 80 80 XX XX XX XX NN NN
             # Where:
             #   ID ID - instance's ID
             #   80 80 XX XX XX XX - not interesting data
             #   NN NN - additional ID that can be used to learn what order in
-            #   inventory this instance has.
+            #           inventory this instance has.
             inventory_order_id = data_for_instances_search[
                                  instance_position + 8:
                                  instance_position + 10]
@@ -203,8 +204,9 @@ def get_equipment_in_inventory():
             inventory_order_id = inventory_order_id[2:4] \
                                  + inventory_order_id[:2]
 
+            # We need to check what type of armor an instance has.
             if equipment_type == 'Armor':
-                equipment_id_decimal = str(int(endian_turnoff(equipment_id), 16))
+                equipment_id_decimal = str(int(endian_turn(equipment_id), 16))
                 if equipment_id_decimal.endswith('000'):
                     equipment_type += '_Head'
                 elif equipment_id_decimal.endswith('100'):
@@ -223,17 +225,25 @@ def get_equipment_in_inventory():
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
+    # Ta lismans are located in save-file simmilar to armor and weapons, but
+    # not identical.
+    # Talisman line looks like: XX XX 00A001000000 NN NN, where
+    #   XX XX - talisman ID.
+    #   00A001000000 - always identical part
+    #   NN NN - order ID.
+    #
+    # Inventory/Chest search is identical to weapons and armor.
+    # Talismans don't have instances, you can only have one.
     talisman_mark = '00A001000000'
     for talisman in datasheets.talismans():
         talisman_id = talisman[1]
         talisman_name = talisman[2]
 
-        talisman_position = data_for_instances_search.find(bytes.fromhex(talisman_id + talisman_mark))
+        talisman_search = bytes.fromhex(talisman_id + talisman_mark)
+        talisman_position = data_for_instances_search.find(talisman_search)
         if talisman_position < 0:
             continue
 
-        # As we found instance's ID, we can see, in what part this ID
-        # is located. If it's in inventory part, then that's it!
         if talisman_position > separator_pos:
             continue
 
@@ -241,14 +251,10 @@ def get_equipment_in_inventory():
                                + talisman_position
                                + savefile_structure.range_before_save_slots())
 
-        # ID ID a0 01 00 00 00 NN NN
         inventory_order_id = data_for_instances_search[
                              talisman_position + 8:
                              talisman_position + 10]
         inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
-
-        # Order ID has two HEX numbers ("f1 21") but actual order goes
-        # on mirrored numbers ("21 f1", "21 f2", "21 f3" etc.)
         inventory_order_id = inventory_order_id[2:4] \
                              + inventory_order_id[:2]
 
@@ -440,7 +446,8 @@ def keyline_to_find_item_number(item_number: int) -> str:
 
     # TODO: Сделать так, чтобы можно было вперёд пройти на 5 раз,
     # назад на несколько. Но для этого нужен точный размер инвентаря,
-    # а также учитывать, как работает кнопка V...
+    # а также учитывать, как работает кнопка V ближе к концу - она же
+    # не всегда спускается на 25, она может спуститься в самый юго-запад...
 
     v_amount: int = 0  # going to 5 items
     right_amount: int = 0  # going to 1 item
