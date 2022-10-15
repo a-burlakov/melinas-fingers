@@ -1,8 +1,12 @@
+"""
+TODO: need to describe a save-file map
+"""
+
+
 def range_before_save_slots() -> int:
     """
-    Returns an ammount of sympols in HEX-save-file that goes before
+    Returns an amount of symbols in HEX-save-file that goes before
     first save-slot information starts.
-    :return:
     """
     return 0x0000310
 
@@ -10,20 +14,18 @@ def range_before_save_slots() -> int:
 def slot_ranges(save_slot_number: int = 0) -> tuple | list:
     """
     Returns hex interval for the save slot in save file.
-    If save_slot_number is 0, returns list of all intervals.
-
-    :param save_slot_number: number of specific save slot (begins with "1")
-    :return:
+    If save_slot_number is 0, returns a list of all 10 intervals.
     """
 
     between_slots = 16
-    width = 2621456
-    intervals = [(0x0000310, 0x0280310)]  # first save file interval
+    save_slot_width = 2621456
+
+    intervals = [(range_before_save_slots(), 0x0280310)]  # First save file.
     for _ in range(9):
         last_interval = intervals[-1]
-        intervals.append(
-            (last_interval[1] + between_slots, last_interval[1] + width)
-        )
+        new_interval_begin = last_interval[1] + between_slots
+        new_interval_end = last_interval[1] + save_slot_width
+        intervals.append((new_interval_begin, new_interval_end))
 
     if save_slot_number == 0:
         return intervals
@@ -35,7 +37,6 @@ def slot_names_ranges() -> tuple:
     """
     Returns HEX-ranges of places in save-file that keeps save slot names
     (characters names).
-    :return:
     """
 
     return ((0x1901d0e, 0x1901d0e + 32),
@@ -50,10 +51,12 @@ def slot_names_ranges() -> tuple:
             (0x19031ba, 0x19031ba + 32))
 
 
-def equipment_instances_search_range(slot_data: bytes, slot_name: str) -> tuple:
+def instances_search_range(slot_data: bytes,
+                           slot_name: str) -> tuple:
     """
-
-    :return:
+    Seeks for a range in which can be found instances of equipment in specific
+    save slot data. Minimal range is a position of slot data name.
+    Max range can't be calculated and is taken with a margin.
     """
 
     slot_name_hex = bytes(slot_name, 'utf-8')
@@ -64,15 +67,14 @@ def equipment_instances_search_range(slot_data: bytes, slot_name: str) -> tuple:
 
     slot_name_position = slot_data.find(slot_name_hex)
 
-    range_max = 0x00030000
+    range_max = 0x00035000
 
-    return (slot_name_position, range_max)
+    return slot_name_position, range_max
 
 
 def inventory_and_chest_separator() -> bytes:
     """
     Returns a HEX-string that separates inventory and chest block for
     weapon searching.
-    :return:
     """
     return bytes.fromhex('ffffffff00000000') * 6

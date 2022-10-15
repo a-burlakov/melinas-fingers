@@ -1,6 +1,6 @@
 import os
 import re
-import savefile_structure
+import savefile_structure as savefile
 import datasheets
 import time
 from pynput.keyboard import Key, Controller, Listener
@@ -30,7 +30,7 @@ def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
     """
     with open(filepath, "rb") as fh:
         data = fh.read()
-        slot_interval = savefile_structure.slot_ranges(save_slot_number)
+        slot_interval = savefile.slot_ranges(save_slot_number)
 
         return data[slot_interval[0]:slot_interval[1]]
 
@@ -48,7 +48,7 @@ def get_slot_names(file) -> list:
     except FileNotFoundError as e:
         return False
 
-    names_ranges = savefile_structure.slot_names_ranges()
+    names_ranges = savefile.slot_names_ranges()
     names = [data[x: y].decode('utf-16') for x, y in names_ranges]
 
     for i, name in enumerate(names):
@@ -60,21 +60,21 @@ def get_slot_names(file) -> list:
     return names
 
 
-def endian_turn(hex: str) -> str:
+def endian_turn(hex_string: str) -> str:
     """
     Turns little-endian hex string to big-endian or visa versa,
     Example: 8097FA01 <-> 01FA9780
-    :param hex: hex string
+    :param hex_string: hex string
     :return: None
     """
 
-    if len(hex) < 2:
-        return hex
+    if len(hex_string) < 2:
+        return hex_string
 
-    if len(hex) % 2 == 1:
-        return hex
+    if len(hex_string) % 2 == 1:
+        return hex_string
 
-    pairs = [hex[i:i + 2] for i in range(0, len(hex), 2)]
+    pairs = [hex_string[i:i + 2] for i in range(0, len(hex_string), 2)]
 
     return ''.join(reversed(pairs))
 
@@ -82,8 +82,6 @@ def endian_turn(hex: str) -> str:
 def item_id_as_hex(item_id: str, max_length: int) -> str:
     """
 
-    :param item_id:
-    :return:
     """
 
     hex_big_endian = hex(int(item_id))[2:]
@@ -141,10 +139,10 @@ def get_equipment_in_inventory():
     # is like this: [inventory instances]-[separator]-[chest instances]
     # We need only inventory instances, so first we need to find the separator.
 
-    instances_range = savefile_structure.equipment_instances_search_range(slot_data, slot_name)
+    instances_range = savefile.instances_search_range(slot_data, slot_name)
     data_for_instances_search = slot_data[instances_range[0]:
                                           instances_range[1]]
-    separator = savefile_structure.inventory_and_chest_separator()
+    separator = savefile.inventory_and_chest_separator()
     separator_pos = data_for_instances_search.find(separator)
 
     inventory_list = []
@@ -184,7 +182,7 @@ def get_equipment_in_inventory():
             instance_id = instance_id.hex(' ').replace(' ', '')
             position_in_file = hex(instances_range[0]
                                    + instance_position
-                                   + savefile_structure.range_before_save_slots())
+                                   + savefile.range_before_save_slots())
 
             # We have to learn in what order equipment is placed in inventory.
             # Instance's ID is located in line that looks like:
@@ -201,8 +199,8 @@ def get_equipment_in_inventory():
 
             # Order ID has two HEX numbers ("f1 21") but actual order goes
             # on mirrored numbers ("21 f1", "21 f2", "21 f3" etc.)
-            inventory_order_id = inventory_order_id[2:4] \
-                                 + inventory_order_id[:2]
+            inventory_order_id = inventory_order_id[2:4] + \
+                                 inventory_order_id[:2]
 
             # We need to check what type of armor an instance has.
             if equipment_type == 'Armor':
@@ -249,14 +247,13 @@ def get_equipment_in_inventory():
 
         position_in_file = hex(instances_range[0]
                                + talisman_position
-                               + savefile_structure.range_before_save_slots())
+                               + savefile.range_before_save_slots())
 
         inventory_order_id = data_for_instances_search[
                              talisman_position + 8:
                              talisman_position + 10]
         inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
-        inventory_order_id = inventory_order_id[2:4] \
-                             + inventory_order_id[:2]
+        inventory_order_id = inventory_order_id[2:4] + inventory_order_id[:2]
 
         instance_dict = {}
         instance_dict.setdefault('equipment_type', 'Talisman')
@@ -279,6 +276,10 @@ keyboard_input = Controller()
 
 
 def on_press(key):
+    """
+
+
+    """
     current_window = (GetWindowText(GetForegroundWindow()))
     if 'ELDEN' in current_window:
 
@@ -289,14 +290,15 @@ def on_press(key):
             execute_key_macross('e|esc|y')
 
         while keyboard.is_pressed('i'):
-            execute_key_macross('esc|pause10|e|r|esc|esc|e|e|pause10') # reopen, fast
+            execute_key_macross(
+                'esc|pause10|e|r|esc|esc|e|e|pause10')  # reopen, fast
             execute_key_macross(keyline_to_find_item_number(8), 0.02)
             execute_key_macross('e|esc|ctrl')
+
 
 def non_letter_keys() -> tuple:
     """
 
-    :return:
     """
     return ('alt',
             'alt_l',
@@ -361,10 +363,10 @@ def non_letter_keys() -> tuple:
             'print_screen',
             'scroll_lock')
 
+
 def sort_all_lists() -> None:
     """
 
-    :return:
     """
 
     execute_key_macross(keyline_to_sort_all_lists())
@@ -523,10 +525,8 @@ def execute_key_macross(keyline: str, sleep_time: float = 0.05) -> None:
 
 
 if __name__ == '__main__':
-
     get_equipment_in_inventory()
 
     # # For catching keyboard presses.
     # with Listener(on_press=on_press) as listener:
     #     listener.join()
-
