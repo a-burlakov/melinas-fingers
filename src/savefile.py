@@ -8,6 +8,18 @@ import re
 import datasheets
 
 
+def get_savefile_path() -> str:
+    """
+    Returns the path to the relevant Elden Ring save file.
+
+    :return: Path as string
+    """
+    return os.getcwd() + r'\test\ER0000_controls_test.sl2'
+    # return os.getcwd() + r'\test\ER0000_Talismans.sl2'
+    # return os.getcwd() + r'\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
+    # return os.getcwd() + r'\test\ER0000_freedom_something_in_inventory.sl2'
+
+
 def range_before_save_slots() -> int:
     """
     Returns an amount of symbols in HEX-save-file that goes before
@@ -56,6 +68,134 @@ def slot_names_ranges() -> tuple:
             (0x19031ba, 0x19031ba + 32))
 
 
+def get_controls():
+    """
+    code keeper
+    :return:
+    """
+
+    slot_number: int = 1
+    save_file_path = get_savefile_path()
+    slot_data = get_slot_data(save_file_path)
+
+    control_keys = control_keys_ranges()
+    for key, value in control_keys.items():
+        hex_string = slot_data[value:value + 1]
+        control_keys[key] = int(hex_string.hex(), 16)
+        control_keys[key] = control_keys_values().get(control_keys[key], '')
+
+    print(*control_keys.items(), sep='\n')
+
+    pass
+
+
+def control_keys_ranges() -> dict:
+    """
+    Returns HEX-ranges of places in save-file that keeps controls for some
+    actions that could be used in macros.
+    """
+
+    return {
+        'roll': 0x01903541,
+        'jump': 0x01903555,
+        'crouch': 0x0190352d,
+        'reset_camera': 0x019035b9,
+        'switch_sorcery': 0x019035cd,
+        'switch_item': 0x019035e1,
+        'attack': 0x0190361d,
+        'strong_attack': 0x019035cd,
+        'guard': 0x01903645,
+        'skill': 0x01903659,
+        'use_item': 0x0190366d,
+        'use': 0x01903681,
+    }
+
+
+def control_keys_values() -> dict:
+    """
+    Returns values for keys that are used in save-file to define what key is
+    used for a control. Values are in decimal.
+    For example, "Num4" ("144" dec.) would be "90" in HEX-file.
+    """
+
+    return {
+        128: 'F1',
+        129: 'F2',
+        130: 'F3',
+        131: 'F4',
+        132: 'F5',
+        133: 'F6',
+        134: 'F7',
+        135: 'F8',
+        136: 'F9',
+        137: 'F10',
+        156: 'F11',
+        157: 'F12',
+        80: '0',
+        71: '1',
+        72: '2',
+        73: '3',
+        74: '4',
+        75: '5',
+        76: '6',
+        77: '7',
+        78: '8',
+        79: '9',
+        151: 'Num0',
+        148: 'Num1',
+        149: 'Num2',
+        150: 'Num3',
+        144: 'Num4',
+        145: 'Num5',
+        146: 'Num6',
+        140: 'Num7',
+        141: 'Num8',
+        142: 'Num9',
+        99: 'A',
+        117: 'B',
+        115: 'C',
+        101: 'D',
+        87: 'E',
+        102: 'F',
+        103: 'G',
+        104: 'H',
+        92: 'I',
+        105: 'J',
+        106: 'K',
+        107: 'L',
+        119: 'M',
+        118: 'N',
+        93: 'O',
+        94: 'P',
+        85: 'Q',
+        88: 'R',
+        100: 'S',
+        89: 'T',
+        91: 'U',
+        116: 'V',
+        86: 'W',
+        114: 'X',
+        90: 'Y',
+        113: 'Z',
+        84: 'Tab',
+        111: 'Shift (left)',
+        123: 'Shift (right)',
+        98: 'Control (left)',
+        226: 'Control (right)',
+        83: 'Backspace',
+        126: 'Space',
+        97: 'Enter (main)',
+        225: 'Enter (numpad)',
+        125: 'Alt (left)',
+        268: 'Home',
+        188: 'PageUp',
+        194: 'End',
+        196: 'PageDown',
+        197: 'Insert',
+        198: 'Delete'
+    }
+
+
 def instances_search_range(slot_data: bytes,
                            slot_name: str) -> tuple:
     """
@@ -85,28 +225,20 @@ def inventory_and_chest_separator() -> bytes:
     return bytes.fromhex('ffffffff00000000') * 6
 
 
-def get_savefile_path() -> str:
-    """
-    Returns the path to the relevant Elden Ring save file.
-
-    :return: Path as string
-    """
-    return os.getcwd() + r'\test\ER0000_before.sl2'
-    # return os.getcwd() + r'\test\ER0000_Talismans.sl2'
-    # return os.getcwd() + r'\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
-    # return os.getcwd() + r'\test\ER0000_freedom_something_in_inventory.sl2'
-
-
-def get_slot_data(filepath: str, save_slot_number: int) -> bytes:
+def get_slot_data(filepath: str, save_slot_number: int = 0) -> bytes:
     """
     Returns hex data of save file related to specific save slot.
-
+    Returns full data of save file is safe slot is not specified.
     :param filepath: path to savefile
     :param save_slot_number: number of specific save slot (begins with "1")
     :return:
     """
     with open(filepath, "rb") as fh:
         data = fh.read()
+
+        if not save_slot_number:
+            return data
+
         slot_interval = slot_ranges(save_slot_number)
 
         return data[slot_interval[0]:slot_interval[1]]
@@ -331,6 +463,37 @@ def get_equipment_in_inventory():
         instance_dict.setdefault('equipment_type', 'Talisman')
         instance_dict.setdefault('equipment_name', talisman_name)
         instance_dict.setdefault('equipment_id', talisman_id)
+        instance_dict.setdefault('instance_id', '')
+        instance_dict.setdefault('inventory_order_id', inventory_order_id)
+        instance_dict.setdefault('position', position_in_file)
+        inventory_list.append(instance_dict)
+
+    # Chosen spells can be found pretty easily.
+    # Spell line looks like SS SS 00 00 FF FF
+    # Where:
+    #   SS SS - spell ID
+    #   00 00 FF FF - mark of chosen spell
+    # In save-file these lines are in order identical to order in game
+    for spell in datasheets.spells():
+        spell_id = spell[1]
+        spell_name = spell[2]
+        spell_mark = '0000FFFF'
+        spell_search = bytes.fromhex(spell_id + spell_mark)
+
+        spell_position = data_for_instances_search.find(spell_search)
+        if spell_position < 0:
+            continue
+
+        position_in_file = hex(instances_range[0]
+                               + spell_position
+                               + range_before_save_slots())
+
+        inventory_order_id = position_in_file[2:]
+
+        instance_dict = {}
+        instance_dict.setdefault('equipment_type', 'Spell')
+        instance_dict.setdefault('equipment_name', spell_name)
+        instance_dict.setdefault('equipment_id', spell_id)
         instance_dict.setdefault('instance_id', '')
         instance_dict.setdefault('inventory_order_id', inventory_order_id)
         instance_dict.setdefault('position', position_in_file)

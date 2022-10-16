@@ -48,6 +48,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         self.save_file_location = ''
+        self.current_save_slots = []
+        self.current_macros = []
 
         self.init_ui()
 
@@ -131,7 +133,9 @@ def start_application():
 
 
 if __name__ == '__main__':
-    start_application()
+    # start_application()
+
+    savefile.get_controls()
 
     # keyboard.add_hotkey('ctrl+p', lambda: print('You pressed p'))
     # keyboard.add_hotkey('o', lambda _: sort_all_lists())
