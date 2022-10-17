@@ -166,8 +166,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.center_window()
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_AddMacros.clicked.connect(self.AddMacros_Click)
-        self.comboBox_SaveSlots.currentTextChanged.connect(self.comboBox_SaveSlots_OnChange)
-
+        self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
+        self.comboBox_SaveSlots.activated.connect(self.comboBox_SaveSlots_OnChange)
+        self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
+        self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
         # Macros table.
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
         self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
@@ -199,7 +201,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             for save_slot in self.save_slots:
                     self.comboBox_SaveSlots.addItem(f'{save_slot.id}. {save_slot.name}')
         else:
-            self.comboBox_SaveSlots.addItem('< Choose save file! >')
+            self.comboBox_SaveSlots.addItem('<Choose save file!>')
 
         self.comboBox_SaveSlots.setEnabled(len(self.save_slots) > 0)
 
@@ -209,6 +211,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         print('wow')
 
+    def tableWidget_Macros_Clicked(self, index):
+        """
+
+        :return:
+        """
+        macro_id = int(self.tableWidget_Macros.item(index, 0).text())
+        self.current_macro = next(x for x in self.macros if x.id == macro_id)
+
+        self.MacroArea_Refresh()
+
+    def lineEdit_MacroName_OnChange(self):
+        """
+
+        """
+        self.current_macro.name = self.lineEdit_MacroName.text()
+        self.tableWidget_Macros_Refresh()
 
     def OpenSaveFile_Click(self):
         """
@@ -245,11 +263,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         new_macro = Macro()
-        new_macro.name = '< enter hotkey name >'
+        new_macro.name = '<hotkey name>'
         new_macro.id = self.get_new_macro_id()
 
         self.macros.append(new_macro)
         self.current_macro = new_macro
+
+        self.tableWidget_Macros_Refresh()
+        self.MacroArea_Refresh()
+        self.tabWidget_Pages_Refresh()
+
+    def DeleteMacros_Click(self):
+        """
+
+        :return:
+        """
+
+
+        self.macros.remove(self.current_macro)
+        self.current_macro = Macro()
 
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
@@ -262,7 +294,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         if len(self.macros):
-            max_id = max(self.macros, key=lambda macro: macro.id)
+            max_id = max(self.macros, key=lambda macro: macro.id).id
             new_id = max_id + 1
         else:
             new_id = new_id = self.current_save_slot.id * 1000 + 1
@@ -284,7 +316,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         for i, macro in enumerate(self.macros):
             self.tableWidget_Macros.insertRow(i)
-            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(macro.id))
+            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(str(macro.id)))
             self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
             self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(macro.hotkey))
 
@@ -293,11 +325,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         :return:
         """
+        # TODO: обнулять значения всех полей
+        macro_is_chosen = (self.current_macro.id > 0)
+        self.lineEdit_MacroName.setEnabled(macro_is_chosen)
+        self.button_DeleteMacros.setEnabled(macro_is_chosen)
+        self.comboBox_MacroKey.setEnabled(macro_is_chosen)
+        self.comboBox_MacroType.setEnabled(macro_is_chosen)
+        self.checkBox_MacroKeyAlt.setEnabled(macro_is_chosen)
+        self.checkBox_MacroKeyCtrl.setEnabled(macro_is_chosen)
+        self.checkBox_MacroKeyShift.setEnabled(macro_is_chosen)
 
-        self.lineEdit.setText(self.current_macro.name)
-
-        pass
-
+        if macro_is_chosen:
+            self.lineEdit_MacroName.setText(self.current_macro.name)
 
     def tabWidget_Pages_Refresh(self):
         """
