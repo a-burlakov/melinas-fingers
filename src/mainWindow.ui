@@ -115,8 +115,8 @@
    <widget class="QPushButton" name="button_DeleteMacros">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>300</y>
+      <x>1190</x>
+      <y>80</y>
       <width>93</width>
       <height>28</height>
      </rect>
@@ -319,7 +319,8 @@
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-color: rgb(0, 0, 0);</string>
+     <string notr="true">border-color: rgb(0, 0, 0);
+background: transparent</string>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -328,26 +329,12 @@
      <bool>false</bool>
     </property>
     <widget class="QWidget" name="Equipment">
+     <property name="styleSheet">
+      <string notr="true">background: transparent</string>
+     </property>
      <attribute name="title">
       <string>Equipment</string>
      </attribute>
-     <widget class="QGraphicsView" name="graphicsView_3">
-      <property name="geometry">
-       <rect>
-        <x>-250</x>
-        <y>0</y>
-        <width>1391</width>
-        <height>891</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-image: url(:/newPrefix/images/ui14.png);
-background-image: url(:/newPrefix/images/ui16.png);</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="Magic">
      <attribute name="title">
@@ -865,8 +852,8 @@ background-image: url(:/newPrefix/images/ui16.png);</string>
      <rect>
       <x>0</x>
       <y>-10</y>
-      <width>1341</width>
-      <height>891</height>
+      <width>1601</width>
+      <height>911</height>
      </rect>
     </property>
     <property name="sizePolicy">
