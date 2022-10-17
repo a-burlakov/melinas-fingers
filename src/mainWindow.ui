@@ -10,6 +10,12 @@
     <height>845</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -74,16 +80,6 @@
      </property>
     </item>
    </widget>
-   <widget class="QTableWidget" name="tableWidget_Marroses">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>200</y>
-      <width>201</width>
-      <height>591</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="button_AddMacros">
     <property name="geometry">
      <rect>
@@ -110,15 +106,25 @@
      <string>Delete</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_MacrosType">
+   <widget class="QComboBox" name="comboBox_MacroType">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>100</y>
-      <width>161</width>
+      <x>420</x>
+      <y>170</y>
+      <width>181</width>
       <height>41</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>&lt; Choose hotkey type &gt;</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Built-in</string>
+     </property>
+    </item>
     <item>
      <property name="text">
       <string>Equipment</string>
@@ -136,25 +142,15 @@
     </item>
     <item>
      <property name="text">
-      <string>Built-in</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>done-by-myself hotkey</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Hotkeys group</string>
+      <string>DIY</string>
      </property>
     </item>
    </widget>
-   <widget class="QCheckBox" name="checkBox_MacrosKeyShift">
+   <widget class="QCheckBox" name="checkBox_MacroKeyShift">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>130</y>
+      <x>1080</x>
+      <y>160</y>
       <width>75</width>
       <height>20</height>
      </rect>
@@ -163,11 +159,11 @@
      <string>+ Shift</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_MacrosKeyAlt">
+   <widget class="QCheckBox" name="checkBox_MacroKeyAlt">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>160</y>
+      <x>1080</x>
+      <y>190</y>
       <width>75</width>
       <height>20</height>
      </rect>
@@ -176,11 +172,11 @@
      <string>+ Alt</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_MacrosKeyCtrl">
+   <widget class="QCheckBox" name="checkBox_MacroKeyCtrl">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>100</y>
+      <x>1080</x>
+      <y>130</y>
       <width>75</width>
       <height>20</height>
      </rect>
@@ -205,8 +201,8 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>70</y>
+      <x>420</x>
+      <y>150</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -218,37 +214,30 @@
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>70</y>
-      <width>81</width>
-      <height>16</height>
+      <x>1080</x>
+      <y>60</y>
+      <width>51</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Key:</string>
     </property>
    </widget>
-   <widget class="QListView" name="listView_MacrosKey">
-    <property name="geometry">
-     <rect>
-      <x>490</x>
-      <y>100</y>
-      <width>151</width>
-      <height>81</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QTabWidget" name="tabWidget_Pages">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>200</y>
-      <width>1021</width>
-      <height>591</height>
+      <x>420</x>
+      <y>230</y>
+      <width>871</width>
+      <height>561</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>0</number>
+    </property>
+    <property name="documentMode">
+     <bool>false</bool>
     </property>
     <widget class="QWidget" name="Equipment">
      <attribute name="title">
@@ -466,6 +455,204 @@
     </property>
     <property name="text">
      <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tableWidget_Macros">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>230</y>
+      <width>351</width>
+      <height>561</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="horizontalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOff</enum>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
+    <property name="autoScroll">
+     <bool>false</bool>
+    </property>
+    <property name="tabKeyNavigation">
+     <bool>false</bool>
+    </property>
+    <property name="showDropIndicator" stdset="0">
+     <bool>false</bool>
+    </property>
+    <property name="dragDropOverwriteMode">
+     <bool>false</bool>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="showGrid">
+     <bool>false</bool>
+    </property>
+    <property name="gridStyle">
+     <enum>Qt::NoPen</enum>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+    <property name="cornerButtonEnabled">
+     <bool>false</bool>
+    </property>
+    <attribute name="horizontalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>225</number>
+    </attribute>
+    <attribute name="horizontalHeaderHighlightSections">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="horizontalHeaderStretchLastSection">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="verticalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="verticalHeaderDefaultSectionSize">
+     <number>27</number>
+    </attribute>
+    <attribute name="verticalHeaderHighlightSections">
+     <bool>false</bool>
+    </attribute>
+    <row>
+     <property name="text">
+      <string>New Row</string>
+     </property>
+    </row>
+    <row>
+     <property name="text">
+      <string>New Row</string>
+     </property>
+    </row>
+    <column>
+     <property name="text">
+      <string>MacroId</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>MacroName</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Hotkey</string>
+     </property>
+     <property name="font">
+      <font>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="textAlignment">
+      <set>AlignLeading|AlignVCenter</set>
+     </property>
+    </column>
+    <item row="0" column="0">
+     <property name="text">
+      <string>123</string>
+     </property>
+    </item>
+    <item row="0" column="1">
+     <property name="text">
+      <string>Crouch Poke</string>
+     </property>
+    </item>
+    <item row="0" column="2">
+     <property name="text">
+      <string>T</string>
+     </property>
+    </item>
+    <item row="1" column="0">
+     <property name="text">
+      <string>321</string>
+     </property>
+    </item>
+    <item row="1" column="1">
+     <property name="text">
+      <string>Sort All</string>
+     </property>
+    </item>
+    <item row="1" column="2">
+     <property name="text">
+      <string>Shift + BackSpace</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_MacroComment">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>100</y>
+      <width>171</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hotkey comment:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>110</y>
+      <width>191</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>90</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hotkey name:</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_MacroKey">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>90</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
     </property>
    </widget>
   </widget>
