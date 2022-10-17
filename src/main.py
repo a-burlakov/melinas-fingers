@@ -94,23 +94,22 @@ def available_hotkey_buttons() -> tuple:
     )
 
 
-
 class SaveSlot:
     """
 
     """
-    def __init__(self):
 
-        self.id = ''
-        self.name = ''
-        self.weapon_list = []
-        self.armor_head_list = []
-        self.armor_torso_list = []
-        self.armor_hands_list = []
-        self.armor_legs_list = []
-        self.talisman_list = []
-        self.spell_list = []
-        self.item_list = []
+    def __init__(self):
+        self.id: int = 0
+        self.name: str = ''
+        self.weapon_list: list = []
+        self.armor_head_list: list = []
+        self.armor_torso_list: list = []
+        self.armor_hands_list: list = []
+        self.armor_legs_list: list = []
+        self.talisman_list: list = []
+        self.spell_list: list = []
+        self.item_list: list = []
 
 
 class Macro:
@@ -119,28 +118,29 @@ class Macro:
     """
 
     def __init__(self):
-
-        self.id = ''
-        self.name = ''
-        self.type = ''
-        self.hotkey = ''
-        self.hotkey_ctrl = False
-        self.hotkey_shift = False
-        self.hotkey_alt = False
+        self.id: int = 0
+        self.name: str = ''
+        self.type: str = ''
+        self.hotkey: str = ''
+        self.hotkey_ctrl: bool = False
+        self.hotkey_shift: bool = False
+        self.hotkey_alt: bool = False
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, *args, **kwargs):
+
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        self.save_file_location = ''
-        self.save_slots = []
-        self.current_save_slot = []
-        self.macros = []
-        self.current_macro = []
-        self.settings = {}
-        self.game_controls = {}
+        self.save_file_location: str = ''
+        self.save_slots: list = []
+        self.current_save_slot: SaveSlot = SaveSlot()
+        self.macros: list = []
+        self.current_macro: Macro = Macro()
+        self.settings: dict = {}
+        self.game_controls: dict = {}
+
         self.init_ui()
 
         # Here must be an attempt to get things from outer file.
@@ -149,7 +149,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.save_file_location:
             self.save_file_location = self.calculated_save_file_path()
 
-        self.after_save_file_location_changing()
+        self.fill_save_slots()
+        self.comboBox_SaveSlots_Refresh()
+        self.tableWidget_Macros_Refresh()
+        self.MacroArea_Refresh()
+        self.tabWidget_Pages_Refresh()
 
         self.show()
 
@@ -160,32 +164,55 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.center_window()
-        self.button_OpenSaveFile.clicked.connect(self.open_save_file)
+        self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
+        self.button_AddMacros.clicked.connect(self.AddMacros_Click)
+        self.comboBox_SaveSlots.currentTextChanged.connect(self.comboBox_SaveSlots_OnChange)
 
         # Macros table.
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.tableWidget_Macros.setColumnHidden(0, True) # Hide ID column
+        self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
 
+    def fill_save_slots(self):
+        """
 
-    def after_save_file_location_changing(self):
+        """
+
+        self.save_slots.clear()
+        if self.save_file_location:
+            names = savefile.get_slot_names(self.save_file_location)
+            for i, name in enumerate(names, 1):
+                if name:
+                    save_slot = SaveSlot()
+                    save_slot.id = i
+                    save_slot.name = name
+                    self.save_slots.append(save_slot)
+            self.current_save_slot = self.save_slots[0]
+
+    def comboBox_SaveSlots_Refresh(self):
         """
 
         """
 
         # Init save-slots.
         self.comboBox_SaveSlots.clear()
-        if self.save_file_location:
-            names = savefile.get_slot_names(self.save_file_location)
-            for i, name in enumerate(names, 1):
-                if name:
-                    self.comboBox_SaveSlots.addItem(f'{i}. {name}')
+        if self.save_slots:
+            for save_slot in self.save_slots:
+                    self.comboBox_SaveSlots.addItem(f'{save_slot.id}. {save_slot.name}')
         else:
             self.comboBox_SaveSlots.addItem('< Choose save file! >')
 
-    def open_save_file(self):
+        self.comboBox_SaveSlots.setEnabled(len(self.save_slots) > 0)
+
+    def comboBox_SaveSlots_OnChange(self):
         """
 
-        :return:
+        """
+        print('wow')
+
+
+    def OpenSaveFile_Click(self):
+        """
+
         """
 
         start_folder = str(Path.home())
@@ -205,7 +232,79 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if location:
             self.save_file_location = location
-            self.after_save_file_location_changing()
+            self.fill_save_slots()
+            self.comboBox_SaveSlots_Refresh()
+            self.tableWidget_Macros_Refresh()
+            self.MacroArea_Refresh()
+            self.tabWidget_Pages_Refresh()
+
+    def AddMacros_Click(self):
+        """
+
+        :return:
+        """
+
+        new_macro = Macro()
+        new_macro.name = '< enter hotkey name >'
+        new_macro.id = self.get_new_macro_id()
+
+        self.macros.append(new_macro)
+        self.current_macro = new_macro
+
+        self.tableWidget_Macros_Refresh()
+        self.MacroArea_Refresh()
+        self.tabWidget_Pages_Refresh()
+
+    def get_new_macro_id(self):
+        """
+
+        :return:
+        """
+
+        if len(self.macros):
+            max_id = max(self.macros, key=lambda macro: macro.id)
+            new_id = max_id + 1
+        else:
+            new_id = new_id = self.current_save_slot.id * 1000 + 1
+
+        return new_id
+
+    def tableWidget_Macros_Refresh(self):
+        """
+
+        :return:
+        """
+
+        self.button_AddMacros.setEnabled(len(self.save_slots) > 0)
+        self.button_DeleteMacros.setEnabled(len(self.save_slots) > 0)
+
+        # Clearing table.
+        while self.tableWidget_Macros.rowCount():
+            self.tableWidget_Macros.removeRow(0)
+
+        for i, macro in enumerate(self.macros):
+            self.tableWidget_Macros.insertRow(i)
+            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(macro.id))
+            self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
+            self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(macro.hotkey))
+
+    def MacroArea_Refresh(self):
+        """
+
+        :return:
+        """
+
+        self.lineEdit.setText(self.current_macro.name)
+
+        pass
+
+
+    def tabWidget_Pages_Refresh(self):
+        """
+
+        :return:
+        """
+        pass
 
     def center_window(self):
         qr = self.frameGeometry()
@@ -259,7 +358,6 @@ def start_application():
 
 
 if __name__ == '__main__':
-
     start_application()
 
     # savefile.get_controls()
