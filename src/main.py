@@ -18,11 +18,11 @@ def available_hotkey_buttons() -> tuple:
     """
 
     return (
-        "F1"
-        "F2"
-        "F3"
-        "F4"
-        "F5"
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
         "F6",
         "F7",
         "F8",
@@ -85,7 +85,7 @@ def available_hotkey_buttons() -> tuple:
         "End",
         "PageDown",
         "Insert",
-        "Delete",
+        "Delete"
     )
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -210,19 +210,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_MacroKeyShift.clicked.connect(self.MacroKeyShift_Click)
         self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
         for key in available_hotkey_buttons():
-            self.comboBox_MacroKey.addItem(key[0])
-            self.comboBox_ControlKeyJump.addItem(key[0])
-            self.comboBox_ControlKeyRoll.addItem(key[0])
-            self.comboBox_ControlKeyCrouch.addItem(key[0])
-            self.comboBox_ControlKeyResetCamera.addItem(key[0])
-            self.comboBox_ControlKeyAttack.addItem(key[0])
-            self.comboBox_ControlKeyStrongAttack.addItem(key[0])
-            self.comboBox_ControlKeySkill.addItem(key[0])
-            self.comboBox_ControlKeySwitchItem.addItem(key[0])
-            self.comboBox_ControlKeySwitchSpell.addItem(key[0])
-            self.comboBox_ControlKeyGuard.addItem(key[0])
-            self.comboBox_ControlKeyUseItem.addItem(key[0])
-            self.comboBox_ControlKeyUse.addItem(key[0])
+            self.comboBox_MacroKey.addItem(key)
+            self.comboBox_ControlKeyJump.addItem(key)
+            self.comboBox_ControlKeyRoll.addItem(key)
+            self.comboBox_ControlKeyCrouch.addItem(key)
+            self.comboBox_ControlKeyResetCamera.addItem(key)
+            self.comboBox_ControlKeyAttack.addItem(key)
+            self.comboBox_ControlKeyStrongAttack.addItem(key)
+            self.comboBox_ControlKeySkill.addItem(key)
+            self.comboBox_ControlKeySwitchItem.addItem(key)
+            self.comboBox_ControlKeySwitchSpell.addItem(key)
+            self.comboBox_ControlKeyGuard.addItem(key)
+            self.comboBox_ControlKeyUseItem.addItem(key)
+            self.comboBox_ControlKeyUse.addItem(key)
 
         # Macros table.
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
