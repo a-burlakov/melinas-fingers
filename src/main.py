@@ -76,15 +76,15 @@ def available_hotkey_buttons() -> tuple:
         ("Y", "Y"),
         ("Z", "Z"),
         ("Tab", "Tab"),
-        ("Shift (left)", "Shift (left)"),
-        ("Shift (right)", "Shift (right)"),
-        ("Control (left)", "Control (left)"),
-        ("Control (right)", "Control (right)"),
+        # ("LShift", "Shift (left)"),
+        # ("RShift", "Shift (right)"),
+        # ("LCtrl", "Control (left)"),
+        # ("RCtrl", "Control (right)"),
         ("Space", "Space"),
         ("Backspace", "Backspace"),
-        ("Enter (main)", "Enter (main)"),
-        ("Enter (numpad)", "Enter (numpad)"),
-        ("Alt (left)", "Alt (left)"),
+        ("Enter", "Enter (main)"),
+        # ("Enter (num)", "Enter (numpad)"),
+        # ("LAlt", "Alt (left)"),
         ("Home", "Home"),
         ("PageUp", "PageUp"),
         ("End", "End"),
@@ -102,6 +102,7 @@ class SaveSlot:
     def __init__(self):
         self.id: int = 0
         self.name: str = ''
+        self.macros: list = []
         self.weapon_list: list = []
         self.armor_head_list: list = []
         self.armor_torso_list: list = []
@@ -136,7 +137,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.save_file_location: str = ''
         self.save_slots: list = []
         self.current_save_slot: SaveSlot = SaveSlot()
-        self.macros: list = []
         self.current_macro: Macro = Macro()
         self.settings: dict = {}
         self.game_controls: dict = {}
@@ -166,10 +166,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.center_window()
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_AddMacros.clicked.connect(self.AddMacros_Click)
-        self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
         self.comboBox_SaveSlots.activated.connect(self.comboBox_SaveSlots_OnChange)
         self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
         self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
+        # self.comboBox_MacroType.activated.connect(self.)
+        self.comboBox_MacroKey.activated.connect(self.comboBox_MacroKey_OnChange)
+        self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
+        self.checkBox_MacroKeyCtrl.clicked.connect(self.MacroKeyCtrl_Click)
+        self.checkBox_MacroKeyShift.clicked.connect(self.MacroKeyShift_Click)
+        self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
+        for key in available_hotkey_buttons():
+            self.comboBox_MacroKey.addItem(key[0])
         # Macros table.
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
         self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
@@ -199,7 +206,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_SaveSlots.clear()
         if self.save_slots:
             for save_slot in self.save_slots:
-                    self.comboBox_SaveSlots.addItem(f'{save_slot.id}. {save_slot.name}')
+                self.comboBox_SaveSlots.addItem(f'{save_slot.id}. {save_slot.name}')
         else:
             self.comboBox_SaveSlots.addItem('<Choose save file!>')
 
@@ -209,7 +216,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
-        print('wow')
+        current_text = self.comboBox_SaveSlots.currentText()
+        slot_id = int(current_text.split('.')[0])
+        self.current_save_slot = next(x for x in self.save_slots if x.id == slot_id)
+        self.current_macro = Macro()
+
+        self.tableWidget_Macros_Refresh()
+        self.MacroArea_Refresh()
+        self.tabWidget_Pages_Refresh()
 
     def tableWidget_Macros_Clicked(self, index):
         """
@@ -217,9 +231,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
         macro_id = int(self.tableWidget_Macros.item(index, 0).text())
-        self.current_macro = next(x for x in self.macros if x.id == macro_id)
+        self.current_macro = next(x for x in self.current_save_slot.macros if x.id == macro_id)
 
         self.MacroArea_Refresh()
+
+    def tableWidget_Macros_Refresh(self):
+        """
+
+        :return:
+        """
+
+        self.button_AddMacros.setEnabled(len(self.save_slots) > 0)
+        self.button_DeleteMacros.setEnabled(len(self.save_slots) > 0)
+
+        # Clearing table.
+        while self.tableWidget_Macros.rowCount():
+            self.tableWidget_Macros.removeRow(0)
+
+        for i, macro in enumerate(self.current_save_slot.macros):
+
+            hotkey_list = []
+            hotkey = ''
+            if macro.hotkey:
+                if macro.hotkey_ctrl:
+                    hotkey_list.append('Ctrl')
+                if macro.hotkey_shift:
+                    hotkey_list.append('Shift')
+                if macro.hotkey_alt:
+                    hotkey_list.append('Alt')
+                hotkey_list.append(macro.hotkey)
+                hotkey = '+'.join(hotkey_list)
+
+            self.tableWidget_Macros.insertRow(i)
+            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(str(macro.id)))
+            self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
+            self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(hotkey))
 
     def lineEdit_MacroName_OnChange(self):
         """
@@ -263,15 +309,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         new_macro = Macro()
-        new_macro.name = '<hotkey name>'
+        new_macro.name = '< hotkey name >'
         new_macro.id = self.get_new_macro_id()
 
-        self.macros.append(new_macro)
+        self.current_save_slot.macros.append(new_macro)
         self.current_macro = new_macro
 
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
         self.tabWidget_Pages_Refresh()
+
+    def comboBox_MacroKey_OnChange(self):
+        """
+
+        """
+
+        current_text = self.comboBox_MacroKey.currentText()
+        self.current_macro.hotkey = current_text
+
+        self.tableWidget_Macros_Refresh()
+
+    def MacroKeyCtrl_Click(self):
+        """
+
+        """
+
+        checked = self.checkBox_MacroKeyCtrl.isChecked()
+        self.current_macro.hotkey_ctrl = checked
+        self.tableWidget_Macros_Refresh()
+
+    def MacroKeyShift_Click(self):
+        """
+
+        """
+        checked = self.checkBox_MacroKeyShift.isChecked()
+        self.current_macro.hotkey_shift = checked
+        self.tableWidget_Macros_Refresh()
+
+    def MacroKeyAlt_Click(self):
+        """
+
+        """
+
+        checked = self.checkBox_MacroKeyAlt.isChecked()
+        self.current_macro.hotkey_alt = checked
+        self.tableWidget_Macros_Refresh()
 
     def DeleteMacros_Click(self):
         """
@@ -280,7 +362,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
 
-        self.macros.remove(self.current_macro)
+        self.current_save_slot.macros.remove(self.current_macro)
         self.current_macro = Macro()
 
         self.tableWidget_Macros_Refresh()
@@ -293,39 +375,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
 
-        if len(self.macros):
-            max_id = max(self.macros, key=lambda macro: macro.id).id
+        if len(self.current_save_slot.macros):
+            max_id = max(self.current_save_slot.macros, key=lambda macro: macro.id).id
             new_id = max_id + 1
         else:
             new_id = new_id = self.current_save_slot.id * 1000 + 1
 
         return new_id
 
-    def tableWidget_Macros_Refresh(self):
-        """
-
-        :return:
-        """
-
-        self.button_AddMacros.setEnabled(len(self.save_slots) > 0)
-        self.button_DeleteMacros.setEnabled(len(self.save_slots) > 0)
-
-        # Clearing table.
-        while self.tableWidget_Macros.rowCount():
-            self.tableWidget_Macros.removeRow(0)
-
-        for i, macro in enumerate(self.macros):
-            self.tableWidget_Macros.insertRow(i)
-            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(str(macro.id)))
-            self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
-            self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(macro.hotkey))
-
     def MacroArea_Refresh(self):
         """
 
         :return:
         """
-        # TODO: обнулять значения всех полей
+
         macro_is_chosen = (self.current_macro.id > 0)
         self.lineEdit_MacroName.setEnabled(macro_is_chosen)
         self.button_DeleteMacros.setEnabled(macro_is_chosen)
@@ -337,6 +400,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if macro_is_chosen:
             self.lineEdit_MacroName.setText(self.current_macro.name)
+            self.checkBox_MacroKeyShift.setChecked(self.current_macro.hotkey_shift)
+            self.checkBox_MacroKeyAlt.setChecked(self.current_macro.hotkey_alt)
+            self.checkBox_MacroKeyCtrl.setChecked(self.current_macro.hotkey_ctrl)
+        else:
+            self.lineEdit_MacroName.setText('')
+            self.comboBox_MacroType.setCurrentIndex(0)
+            self.comboBox_MacroKey.setCurrentIndex(0)
+            self.checkBox_MacroKeyShift.setChecked(False)
+            self.checkBox_MacroKeyAlt.setChecked(False)
+            self.checkBox_MacroKeyCtrl.setChecked(False)
 
     def tabWidget_Pages_Refresh(self):
         """
