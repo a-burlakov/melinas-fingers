@@ -68,27 +68,6 @@ def slot_names_ranges() -> tuple:
             (0x19031ba, 0x19031ba + 32))
 
 
-def get_controls():
-    """
-    code keeper
-    :return:
-    """
-
-    slot_number: int = 1
-    save_file_path = get_savefile_path()
-    slot_data = get_slot_data(save_file_path)
-
-    control_keys = control_keys_ranges()
-    for key, value in control_keys.items():
-        hex_string = slot_data[value:value + 1]
-        control_keys[key] = int(hex_string.hex(), 16)
-        control_keys[key] = control_keys_values().get(control_keys[key], '')
-
-    print(*control_keys.items(), sep='\n')
-
-    pass
-
-
 def control_keys_ranges() -> dict:
     """
     Returns HEX-ranges of places in save-file that keeps controls for some
@@ -100,7 +79,7 @@ def control_keys_ranges() -> dict:
         'jump': 0x01903555,
         'crouch': 0x0190352d,
         'reset_camera': 0x019035b9,
-        'switch_sorcery': 0x019035cd,
+        'switch_spell': 0x019035cd,
         'switch_item': 0x019035e1,
         'attack': 0x0190361d,
         'strong_attack': 0x019035cd,
@@ -312,14 +291,12 @@ def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
     return reg_expression
 
 
-def get_equipment_in_inventory():
+def get_all_equipment(save_file_path: str, slot_number: int):
     """
     code keeper
     :return:
     """
 
-    slot_number: int = 1
-    save_file_path = get_savefile_path()
     slot_data = get_slot_data(save_file_path, slot_number)
     slot_name = get_slot_names(save_file_path)[slot_number - 1]
 
@@ -331,7 +308,7 @@ def get_equipment_in_inventory():
         weapon_id = weapon[1]
         weapon_name = weapon[2]
         if bytes.fromhex(weapon_id) in slot_data_for_equipment_search:
-            all_equipment_having.append([weapon_name, weapon_id, 'Weapon'])
+            all_equipment_having.append([weapon_name, weapon_id, 'Weapons'])
 
     for armor in datasheets.armor():
         armor_id = armor[1]
@@ -388,14 +365,16 @@ def get_equipment_in_inventory():
                                    + instance_position
                                    + range_before_save_slots())
 
-            # We have to learn in what order equipment is placed in inventory.
+            # We have to learn in what order equipment is placed in inventory
+            # if inventory is sorted as "Ascending Order of Acquisition".
             # Instance's ID is located in line that looks like:
             # ID ID 80 80 XX XX XX XX NN NN
             # Where:
             #   ID ID - instance's ID
             #   80 80 XX XX XX XX - not interesting data
             #   NN NN - additional ID that can be used to learn what order in
-            #           inventory this instance has.
+            #           inventory this instance has if inventory is sorted as
+            #           "Ascending Order of Acquisition".
             inventory_order_id = data_for_instances_search[
                                  instance_position + 8:
                                  instance_position + 10]
@@ -460,7 +439,7 @@ def get_equipment_in_inventory():
         inventory_order_id = inventory_order_id[2:4] + inventory_order_id[:2]
 
         instance_dict = {}
-        instance_dict.setdefault('equipment_type', 'Talisman')
+        instance_dict.setdefault('equipment_type', 'Talismans')
         instance_dict.setdefault('equipment_name', talisman_name)
         instance_dict.setdefault('equipment_id', talisman_id)
         instance_dict.setdefault('instance_id', '')
@@ -473,7 +452,7 @@ def get_equipment_in_inventory():
     # Where:
     #   SS SS - spell ID
     #   00 00 FF FF - mark of chosen spell
-    # In save-file these lines are in order identical to order in game
+    # In save-file these lines are in order identical to order in game.
     for spell in datasheets.spells():
         spell_id = spell[1]
         spell_name = spell[2]
@@ -491,7 +470,7 @@ def get_equipment_in_inventory():
         inventory_order_id = position_in_file[2:]
 
         instance_dict = {}
-        instance_dict.setdefault('equipment_type', 'Spell')
+        instance_dict.setdefault('equipment_type', 'Spells')
         instance_dict.setdefault('equipment_name', spell_name)
         instance_dict.setdefault('equipment_id', spell_id)
         instance_dict.setdefault('instance_id', '')
@@ -499,9 +478,20 @@ def get_equipment_in_inventory():
         instance_dict.setdefault('position', position_in_file)
         inventory_list.append(instance_dict)
 
-    print(*sorted(inventory_list,
-                  key=lambda x: (x['equipment_type'],
-                                 int(x['inventory_order_id'], 16))),
-          sep='\n')
+    sorted_equipment = sorted(inventory_list,
+                              key=lambda x: (x['equipment_type'],
+                                             int(x['inventory_order_id'], 16)))
+    result = {
+        'Weapons': [],
+        'Talismans': [],
+        'Armor_Head': [],
+        'Armor_Torso': [],
+        'Armor_Hands': [],
+        'Armor_Legs': [],
+        'Spells': [],
+    }
 
-    return inventory_list
+    for equipment in sorted_equipment:
+        result[equipment['equipment_type']].append(equipment)
+
+    return result

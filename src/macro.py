@@ -8,18 +8,51 @@ from win32gui import GetWindowText, GetForegroundWindow
 
 keyboard_input = Controller()
 
+class Macro:
+    """
+
+    """
+
+    def __init__(self):
+        self.id: int = 0
+        self.name: str = ''
+        self.type: str = ''
+        self.hotkey: str = ''
+        self.hotkey_ctrl: bool = False
+        self.hotkey_shift: bool = False
+        self.hotkey_alt: bool = False
+
+    def __str__(self):
+        return f'id: {self.id}, name: {self.name}, hotkey: {self.hotkey}'
+
+    def hotkey_string(self):
+
+        hotkey_list = []
+        hotkey = ''
+        if self.hotkey:
+            if self.hotkey_ctrl:
+                hotkey_list.append('ctrl')
+            if self.hotkey_shift:
+                hotkey_list.append('shift')
+            if self.hotkey_alt:
+                hotkey_list.append('alt')
+            hotkey_list.append(self.hotkey)
+            hotkey = '+'.join(hotkey_list)
+
+        return hotkey
+
+    def execute(self):
+        """
+
+        """
+
+        print(self.id, self.name, self.hotkey_string())
 
 def on_press(key):
     """
 
 
     """
-    current_window_text = (GetWindowText(GetForegroundWindow()))
-    if 'ELDEN' not in current_window_text:
-        return
-
-    while keyboard.is_pressed('o'):
-        sort_all_lists()
 
     while keyboard.is_pressed('u'):
         execute_key_macros('esc|pause10|e|e')
@@ -49,12 +82,87 @@ def non_letter_keys() -> tuple:
             'print_screen', 'scroll_lock')
 
 
-def sort_all_lists() -> None:
+def game_control_keys() -> tuple:
     """
 
     """
 
-    execute_key_macros(keyline_to_sort_all_lists())
+    return (
+        'roll',
+        'jump',
+        'crouch',
+        'reset_camera',
+        'switch_spell',
+        'switch_item',
+        'attack',
+        'strong_attack',
+        'guard',
+        'skill',
+        'use_item',
+        'use'
+    )
+
+def built_in_macros() -> list:
+    """
+
+    """
+
+    macros_list = [
+        {'name': 'Sort all lists to: Asc. Order of Acquisition',
+         'macro': keyline_to_sort_all_lists(),
+         'comment': 'commentary'},
+        {'name': 'Crouch attack',
+         'macro': 'crouch|attack',
+         'comment': 'commentary'},
+        {'name': 'Stance attack',
+         'macro': 'crouch|skill|attack',
+         'comment': 'commentary'},
+        {'name': 'Stance strong attack',
+         'macro': 'crouch|skill|strong_attack',
+         'comment': 'commentary'},
+        {'name': 'Two hand a weapon',
+         'macro': 'use|attack',
+         'comment': 'commentary'},
+        {'name': 'Two hand a weapon (left)',
+         'macro': 'use|guard',
+         'comment': 'commentary'},
+        {'name': 'Next weapon (right)',
+         'macro': keyline_to_choose_next_weapon(),
+         'comment': 'commentary'},
+        {'name': 'Previous weapon (right)',
+         'macro': keyline_to_choose_previous_weapon(),
+         'comment': 'commentary'},
+        {'name': 'Next weapon (left)',
+         'macro': keyline_to_choose_next_weapon(left_hand=True),
+         'comment': 'commentary'},
+        {'name': 'Previous weapon (left)',
+         'macro': keyline_to_choose_previous_weapon(left_hand=True),
+         'comment': 'commentary'},
+        {'name': 'Endless invasion attempts (wide)',
+         'macro': f'{keyline_to_invade_as_bloody_finger(True)}|pause400|{keyline_to_invade_as_recusant(True)}|pause400' * 50,
+         'comment': 'commentary'},
+        {'name': 'Endless invasion attempts (local)',
+         'macro': f'{keyline_to_invade_as_bloody_finger()}|pause400|{keyline_to_invade_as_recusant()}|pause400' * 50,
+         'comment': 'commentary'}
+    ]
+
+    # Use item macros.
+    for i in range(1, 11):
+        macros_list.append({
+            'name': f'Use item #{str(i)}',
+            'macro': f'switch_item_press200{"|switch_item" * (i - 1)}use_item|',
+            'comment': 'commentary'
+        })
+
+    # Switch to spell macros.
+    for i in range(1, 13):
+        macros_list.append({
+            'name': f'Switch to spell #{str(i)}',
+            'macro': f'switch_spell_press200{"|switch_spell" * (i - 1)}',
+            'comment': 'commentary'
+        })
+
+    return macros_list
 
 
 def keyline_to_sort_all_lists() -> str:
@@ -75,21 +183,6 @@ def keyline_to_sort_all_lists() -> str:
               'q|pause30|down|down|e|t|down|e|pause30|esc'
 
     return keyline
-
-
-def trying_to_invade() -> None:
-    """
-
-    :return:
-    """
-
-    tries = 3
-    for _ in range(tries):
-        execute_key_macros(keyline_to_invade_as_bloody_finger())
-        time.sleep(4)
-        execute_key_macros(keyline_to_invade_as_recusant())
-        time.sleep(4)
-
 
 def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
     """
@@ -118,12 +211,12 @@ def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
     if wide_invade:
         keyline += "|right"
 
-    keyline += '|e|esc/'
+    keyline += '|e|esc'
 
     return keyline
 
 
-def keyline_to_choose_next_weapon(weapons_pass: int = 0) -> str:
+def keyline_to_choose_next_weapon(weapons_pass: int = 0, left_hand = False) -> str:
     """
     Returns a macros keyline that chooses next weapon.
     :param weapons_pass: how many weapons will be passed before choosing.
@@ -131,19 +224,20 @@ def keyline_to_choose_next_weapon(weapons_pass: int = 0) -> str:
 
     right_amount = weapons_pass + 1
 
-    keyline = f'esc|e|e|{"right|" * right_amount}|e|esc'
+    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"right|" * right_amount}|e|esc'
     return keyline
 
 
-def keyline_to_choose_previous_weapon(weapons_pass: int = 0) -> str:
+def keyline_to_choose_previous_weapon(weapons_pass: int = 0, left_hand = False) -> str:
     """
-    Returns a macros keyline that chooses previous weapon.
+    Returns a macro keyline that chooses previous weapon.
     :param weapons_pass: how many weapons will be passed before choosing.
     """
 
     left_amount = weapons_pass + 1
 
-    keyline = f'esc|e|e|{"left|" * left_amount}|e|esc'
+    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"left|" * left_amount}|e|esc'
+
     return keyline
 
 
@@ -187,7 +281,7 @@ def go_to_beginning_of_list(list_length: int = 50) -> None:
     max_amount_c = list_length // 25
 
     keyboard_input.press(Key.left)
-    # TODO: опытным путем подобрать 0.4 на что-то по возможности меньшее
+    # TODO: убрать это дело вообще, но подумать, действительно ли оно не нужно
     time4all = max(0.4, max_amount_c * 0.017)
     time.sleep(0.01)
     time_start = time.time()
@@ -201,7 +295,7 @@ def go_to_beginning_of_list(list_length: int = 50) -> None:
     time.sleep(0.01)
 
 
-def execute_key_macros(keyline: str, sleep_time: float = 0.05) -> None:
+def execute_key_macros(keyline: str, sleep_time: float = 0.03) -> None:
     """
     Parses a line into a keys and simulates key presses.
     Additional pause can be made with 'pauseN', where N is one hundredth sec.
@@ -211,6 +305,7 @@ def execute_key_macros(keyline: str, sleep_time: float = 0.05) -> None:
     """
 
     key_presses = keyline.split('|')
+    press_time = sleep_time
 
     for key_press in key_presses:
 
@@ -220,14 +315,28 @@ def execute_key_macros(keyline: str, sleep_time: float = 0.05) -> None:
             time.sleep(pause_time / 100)
             continue
 
+        # Additional press time.
+        if '_press' in key_press:
+            parts = key_press.partition('_press')
+            key_press = parts[0]
+            press_time = parts[2]
+
+        # TODO: сделать ветку на то, если key_press является командой игры, например "strong_attack".
+        # Нужен список таких команд, проверка, является ли команда командой игры,
+        # и поиск соответствия для нее команде из списка (командаигры - кнопка),
+        # список есть в savefile.get_controls()
+
+        if key_press in game_control_keys():
+            key_press = ''
+
         # Key presses execution.
         if key_press in non_letter_keys():
             keyboard_input.press(Key[key_press])
-            time.sleep(0.02)
+            time.sleep(press_time)
             keyboard_input.release(Key[key_press])
         else:
             keyboard_input.press(key_press)
-            time.sleep(0.02)
+            time.sleep(press_time)
             keyboard_input.release(key_press)
 
         time.sleep(sleep_time)
