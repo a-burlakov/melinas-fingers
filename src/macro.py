@@ -46,6 +46,14 @@ class Macro:
 
         """
 
+        current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        if 'elden' not in current_window_text.lower() \
+                and 'melina' not in current_window_text.lower():
+            return
+
+        # TODO: Если поймали кнопку, отвечающую за блок алгоритма, то нажимаем ее. Возможно, установить булево значение какое-нибудь в макрос.
+
+
         print(self.id, self.name, self.hotkey_string())
 
 def on_press(key):
@@ -99,7 +107,7 @@ def game_control_keys() -> tuple:
         'guard',
         'skill',
         'use_item',
-        'use'
+        'event_action'
     )
 
 def built_in_macros() -> list:
@@ -108,7 +116,7 @@ def built_in_macros() -> list:
     """
 
     macros_list = [
-        {'name': 'Sort all lists to: Asc. Order of Acquisition',
+        {'name': 'Sort all lists: Asc. Order of Acquisition',
          'macro': keyline_to_sort_all_lists(),
          'comment': 'commentary'},
         {'name': 'Crouch attack',

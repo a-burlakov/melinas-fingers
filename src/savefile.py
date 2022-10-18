@@ -7,6 +7,24 @@ import re
 
 import datasheets
 
+class SaveSlot:
+    """
+
+    """
+
+    def __init__(self):
+        self.id: int = 0
+        self.name: str = ''
+        self.macros: list = []
+        self.weapon_list: list = []
+        self.armor_head_list: list = []
+        self.armor_torso_list: list = []
+        self.armor_hands_list: list = []
+        self.armor_legs_list: list = []
+        self.talisman_list: list = []
+        self.spell_list: list = []
+        # self.item_list: list = []
+
 
 def get_savefile_path() -> str:
     """
@@ -86,7 +104,7 @@ def control_keys_ranges() -> dict:
         'guard': 0x01903645,
         'skill': 0x01903659,
         'use_item': 0x0190366d,
-        'use': 0x01903681,
+        'event_action': 0x01903681,
     }
 
 

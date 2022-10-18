@@ -1,119 +1,92 @@
 import os
 import sys
 import savefile
-from win32gui import GetWindowText, GetForegroundWindow
+# from win32gui import GetWindowText, GetForegroundWindow
 from mainWindow import Ui_MainWindow
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from pathlib import Path
 from macro import Macro
-
+from savefile import SaveSlot
 import keyboard
 
 
 def available_hotkey_buttons() -> tuple:
     """
     List of keyboard buttons that can be used for hotkey assign.
-    [0] - for user.
-    [1] - for inner use.
     """
 
     return (
-        ("F1", "F1"),
-        ("F2", "F2"),
-        ("F3", "F3"),
-        ("F4", "F4"),
-        ("F5", "F5"),
-        ("F6", "F6"),
-        ("F7", "F7"),
-        ("F8", "F8"),
-        ("F9", "F9"),
-        ("F10", "F10"),
-        ("F11", "F11"),
-        ("F12", "F12"),
-        ("0", "0"),
-        ("1", "1"),
-        ("2", "2"),
-        ("3", "3"),
-        ("4", "4"),
-        ("5", "5"),
-        ("6", "6"),
-        ("7", "7"),
-        ("8", "8"),
-        ("9", "9"),
-        ("Num0", "Num0"),
-        ("Num1", "Num1"),
-        ("Num2", "Num2"),
-        ("Num3", "Num3"),
-        ("Num4", "Num4"),
-        ("Num5", "Num5"),
-        ("Num6", "Num6"),
-        ("Num7", "Num7"),
-        ("Num8", "Num8"),
-        ("Num9", "Num9"),
-        ("A", "A"),
-        ("B", "B"),
-        ("C", "C"),
-        ("D", "D"),
-        ("E", "E"),
-        ("F", "F"),
-        ("G", "G"),
-        ("H", "H"),
-        ("I", "I"),
-        ("J", "J"),
-        ("K", "K"),
-        ("L", "L"),
-        ("M", "M"),
-        ("N", "N"),
-        ("O", "O"),
-        ("P", "P"),
-        ("Q", "Q"),
-        ("R", "R"),
-        ("S", "S"),
-        ("T", "T"),
-        ("U", "U"),
-        ("V", "V"),
-        ("W", "W"),
-        ("X", "X"),
-        ("Y", "Y"),
-        ("Z", "Z"),
-        ("Tab", "Tab"),
-        # ("LShift", "Shift (left)"),
-        # ("RShift", "Shift (right)"),
-        # ("LCtrl", "Control (left)"),
-        # ("RCtrl", "Control (right)"),
-        ("Space", "Space"),
-        ("Backspace", "Backspace"),
-        ("Enter", "Enter (main)"),
-        # ("Enter (num)", "Enter (numpad)"),
-        # ("LAlt", "Alt (left)"),
-        ("Home", "Home"),
-        ("PageUp", "PageUp"),
-        ("End", "End"),
-        ("PageDown", "PageDown"),
-        ("Insert", "Insert"),
-        ("Delete", "Delete")
+        "F1"
+        "F2"
+        "F3"
+        "F4"
+        "F5"
+        "F6",
+        "F7",
+        "F8",
+        "F9",
+        "F10",
+        "F11",
+        "F12",
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "Num0",
+        "Num1",
+        "Num2",
+        "Num3",
+        "Num4",
+        "Num5",
+        "Num6",
+        "Num7",
+        "Num8",
+        "Num9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "Tab",
+        "Space",
+        "Backspace",
+        "Enter",
+        "Home",
+        "PageUp",
+        "End",
+        "PageDown",
+        "Insert",
+        "Delete",
     )
-
-
-class SaveSlot:
-    """
-
-    """
-
-    def __init__(self):
-        self.id: int = 0
-        self.name: str = ''
-        self.macros: list = []
-        self.weapon_list: list = []
-        self.armor_head_list: list = []
-        self.armor_torso_list: list = []
-        self.armor_hands_list: list = []
-        self.armor_legs_list: list = []
-        self.talisman_list: list = []
-        self.spell_list: list = []
-        # self.item_list: list = []
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -125,7 +98,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.save_slots: list = []
         self.current_save_slot: SaveSlot = SaveSlot()
         self.current_macro: Macro = Macro()
-        self.settings: dict = {}
+        self.settings: dict = {
+            '': ''
+        }
         self.game_controls: dict = {
             'roll': '',
             'jump': '',
@@ -138,7 +113,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'guard': '',
             'skill': '',
             'use_item': '',
-            'use': ''
+            'event_action': ''
         }
 
         self.init_ui()
@@ -185,31 +160,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         try:
             keyboard.remove_all_hotkeys()
+            keyboard._hotkeys.clear()
         except:
             pass
-        # if hasattr(keyboard, 'hotkeys') and len() > 0:
-        #     keyboard.unhook_all_hotkeys()
-        #     print('hotkeys removed')
+
+
+
 
         for macro in self.current_save_slot.macros:
             hotkey_string = macro.hotkey_string()
-            keyboard.add_hotkey(hotkey_string, lambda: self.macro_press_hotkey(macro), suppress=True, trigger_on_release=True)
-            print(len(keyboard._hotkeys))
-
-    def macro_press_hotkey(self, macro: Macro):
-        """
-        execute macro
-        """
-
-        print(macro)
-        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower() \
-        #         and 'melina' not in current_window_text.lower():
-        #     return
-        #
-        # # TODO: Если поймали кнопку, отвечающую за блок алгоритма, то нажимаем ее. Возможно, установить булево значение какое-нибудь в макрос.
-        #
-        # macro.execute()
+            if hotkey_string not in keyboard._hotkeys:  # for several hotkeys with same keys
+                keyboard.add_hotkey(hotkey_string,
+                                    macro.execute,
+                                    suppress=True,
+                                    trigger_on_release=True)
 
     def read_all_equipment(self):
         """
@@ -223,15 +187,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         result = savefile.get_all_equipment(self.save_file_location,
                                             self.current_save_slot.id)
 
-        pass
+        # TODO: Распределить по атрибутам окна
 
     def init_ui(self):
         """
 
         """
-        self.setupUi(self)
+        self.setupUi(self)  # automaticly generated code
 
-        self.center_window()
+        self.setFixedSize(1600, 890)
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
@@ -247,6 +211,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
         for key in available_hotkey_buttons():
             self.comboBox_MacroKey.addItem(key[0])
+            self.comboBox_ControlKeyJump.addItem(key[0])
+            self.comboBox_ControlKeyRoll.addItem(key[0])
+            self.comboBox_ControlKeyCrouch.addItem(key[0])
+            self.comboBox_ControlKeyResetCamera.addItem(key[0])
+            self.comboBox_ControlKeyAttack.addItem(key[0])
+            self.comboBox_ControlKeyStrongAttack.addItem(key[0])
+            self.comboBox_ControlKeySkill.addItem(key[0])
+            self.comboBox_ControlKeySwitchItem.addItem(key[0])
+            self.comboBox_ControlKeySwitchSpell.addItem(key[0])
+            self.comboBox_ControlKeyGuard.addItem(key[0])
+            self.comboBox_ControlKeyUseItem.addItem(key[0])
+            self.comboBox_ControlKeyUse.addItem(key[0])
 
         # Macros table.
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -534,16 +510,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         current_type = self.current_macro.type
         if self.current_macro.type:
             types_indexes = {
-                'Equipment': 0,
-                'Magic': 1,
-                'Items': 2,
+                'Equipment': 1,
+                'Magic': 2,
                 'Built-in': 3,
                 'DIY': 4
             }
 
-            self.tabWidget_Pages.setCurrentIndex(types_indexes[current_type])
+            self.stackedWidget_Pages.setCurrentIndex(types_indexes[current_type])
         else:
-            pass
+            self.stackedWidget_Pages.setCurrentIndex(0)
 
     def center_window(self):
         qr = self.frameGeometry()

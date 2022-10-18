@@ -1,7 +1,6 @@
 <RCC>
   <qresource prefix="newPrefix">
-    <file>images/back2.png</file>
-    <file>images/ui10.png</file>
-    <file>images/ui14.png</file>
+    <file>images/title.png</file>
+    <file>images/background.png</file>
   </qresource>
 </RCC>
