@@ -12,25 +12,12 @@ from savefile import SaveSlot
 import keyboard
 
 
-def available_hotkey_buttons() -> tuple:
+def available_game_control_buttons() -> tuple:
     """
-    List of keyboard buttons that can be used for hotkey assign.
+    List of keyboard buttons that can be used to assign in Elden Ring.
     """
 
     return (
-        "F1",
-        "F2",
-        "F3",
-        "F4",
-        "F5",
-        "F6",
-        "F7",
-        "F8",
-        "F9",
-        "F10",
-        "F11",
-        "F12",
-        "0",
         "1",
         "2",
         "3",
@@ -40,6 +27,7 @@ def available_hotkey_buttons() -> tuple:
         "7",
         "8",
         "9",
+        "0",
         "Num0",
         "Num1",
         "Num2",
@@ -88,6 +76,84 @@ def available_hotkey_buttons() -> tuple:
         "Delete"
     )
 
+
+def available_hotkey_buttons() -> tuple:
+    """
+    List of keyboard buttons that can be used for hotkey assign.
+    """
+
+    return (
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "F8",
+        "F9",
+        "F10",
+        "F11",
+        "F12",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "Num0",
+        "Num1",
+        "Num2",
+        "Num3",
+        "Num4",
+        "Num5",
+        "Num6",
+        "Num7",
+        "Num8",
+        "Num9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "Tab",
+        "Space",
+        "Backspace",
+        "Enter",
+        "Home",
+        "PageUp",
+        "End",
+        "PageDown",
+        "Insert",
+        "Delete"
+    )
+
+
 class MainWindow(QMainWindow, Ui_MainWindow):
 
     def __init__(self, *args, **kwargs):
@@ -118,8 +184,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.init_ui()
 
-        # TODO: add introductory macros
-
         if not self.save_file_location:
             self.save_file_location = self.calculated_save_file_path()
 
@@ -127,6 +191,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.read_all_equipment()
         self.read_settings()
         self.hook_hotkeys()
+        self.add_introductory_macros()
 
         self.fill_save_slots()
         self.comboBox_SaveSlots_Refresh()
@@ -135,6 +200,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget_Pages_Refresh()
 
         self.show()
+
+    def add_introductory_macros(self) -> None:
+        """
+        Adds some macros for introducity to Melina's Fingers if there'no
+        settings file yet.
+        """
+
+
 
     def read_game_controls(self):
         """
@@ -158,18 +231,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
+
+        # Try block, because 'Keyboard' clearing methods can call
+        # an unexpected exeption when there's no assigned hotkeys.
         try:
             keyboard.remove_all_hotkeys()
             keyboard._hotkeys.clear()
         except:
             pass
 
-
-
-
         for macro in self.current_save_slot.macros:
+
             hotkey_string = macro.hotkey_string()
-            if hotkey_string not in keyboard._hotkeys:  # for several hotkeys with same keys
+
+            # Condition helps to correct a situation when several hotkeys
+            # are assign to one key.
+            if hotkey_string not in keyboard._hotkeys:
                 keyboard.add_hotkey(hotkey_string,
                                     macro.execute,
                                     suppress=True,
@@ -200,6 +277,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
         self.button_AddMacros.clicked.connect(self.AddMacros_Click)
+        self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.comboBox_SaveSlots_OnChange)
         self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
         self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
@@ -379,6 +457,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_SaveSlots_Refresh()
             self.tableWidget_Macros_Refresh()
             self.MacroArea_Refresh()
+            self.tabWidget_Pages_Refresh()
+
+    def Settings_Click(self):
+        """
+
+        :return:
+        """
+        if self.stackedWidget_Pages.currentIndex() != 5:
+            self.stackedWidget_Pages.setCurrentIndex(5)
+        else:
             self.tabWidget_Pages_Refresh()
 
     def AddMacros_Click(self):
@@ -565,16 +653,10 @@ def start_application():
     """
 
     app = QApplication(sys.argv)
-
     window = MainWindow()
-
     sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
 
     start_application()
-    # keyboard.add_hotkey('o', lambda _: sort_all_lists())
-    # # For catching keyboard presses.
-    # with Listener(on_press=on_press) as listener:
-    #     listener.join()

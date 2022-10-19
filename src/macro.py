@@ -21,6 +21,20 @@ class Macro:
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
         self.hotkey_alt: bool = False
+        self.macro_settings = {
+            'Equipment': {
+
+            },
+            'Magic': {
+
+            },
+            'Built-in': {
+                'macro_name': ''
+            },
+            'DIY': {
+                'DIY_macro': ''
+            }
+        }
 
     def __str__(self):
         return f'id: {self.id}, name: {self.name}, hotkey: {self.hotkey}'
@@ -116,7 +130,7 @@ def built_in_macros() -> list:
     """
 
     macros_list = [
-        {'name': 'Sort all lists: Asc. Order of Acquisition',
+        {'name': 'Sort all: Asc. Order of Acquisition',
          'macro': keyline_to_sort_all_lists(),
          'comment': 'commentary'},
         {'name': 'Crouch attack',
@@ -151,6 +165,12 @@ def built_in_macros() -> list:
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (local)',
          'macro': f'{keyline_to_invade_as_bloody_finger()}|pause400|{keyline_to_invade_as_recusant()}|pause400' * 50,
+         'comment': 'commentary'},
+        {'name': 'Neutral long jump',
+         'macro': 'jump',
+         'comment': 'commentary'},
+        {'name': 'Backward jump',
+         'macro': 'jump',
          'comment': 'commentary'}
     ]
 
