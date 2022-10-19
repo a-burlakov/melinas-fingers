@@ -23,6 +23,20 @@ class SaveSlot:
         self.armor_legs_list: list = []
         self.talisman_list: list = []
         self.spell_list: list = []
+        self.game_controls: dict = {
+            'roll': '',
+            'jump': '',
+            'crouch': '',
+            'reset_camera': '',
+            'switch_spell': '',
+            'switch_item': '',
+            'attack': '',
+            'strong_attack': '',
+            'guard': '',
+            'skill': '',
+            'use_item': '',
+            'event_action': ''
+        }
 
 
 def range_before_save_slots() -> int:
@@ -162,15 +176,15 @@ def control_keys_values() -> dict:
         90: 'Y',
         113: 'Z',
         84: 'Tab',
-        111: 'LShift',
-        123: 'RShift',
-        98: 'LControl',
-        226: 'RControl',
+        111: 'Shift',
+        123: 'Shift',
+        98: 'Ctrl',
+        226: 'Ctrl',
         83: 'Backspace',
         126: 'Space',
         97: 'Enter',
-        225: 'EnterNum',
-        125: 'LAlt',
+        225: 'Enter',
+        125: 'Alt',
         268: 'Home',
         188: 'PageUp',
         194: 'End',

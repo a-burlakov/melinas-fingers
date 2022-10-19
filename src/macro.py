@@ -2,11 +2,91 @@
 
 """
 import time
-from pynput.keyboard import Key, Controller, Listener
+from pynput.keyboard import Key, Controller
 import keyboard
+from savefile import SaveSlot
 from win32gui import GetWindowText, GetForegroundWindow
 
 keyboard_input = Controller()
+
+def available_hotkey_buttons() -> tuple:
+    """
+    List of keyboard buttons that can be used for hotkey assign.
+    """
+
+    return (
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "F8",
+        "F9",
+        "F10",
+        "F11",
+        "F12",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "0",
+        "Num0",
+        "Num1",
+        "Num2",
+        "Num3",
+        "Num4",
+        "Num5",
+        "Num6",
+        "Num7",
+        "Num8",
+        "Num9",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+        "Tab",
+        "Space",
+        "Backspace",
+        "Enter",
+        "Home",
+        "PageUp",
+        "End",
+        "PageDown",
+        "Insert",
+        "Delete",
+        "Ctrl",
+        "Shift",
+        "Alt"
+    )
 
 class Macro:
     """
@@ -17,6 +97,7 @@ class Macro:
         self.id: int = 0
         self.name: str = ''
         self.type: str = ''
+        self.save_slot: SaveSlot = SaveSlot()
         self.hotkey: str = ''
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
@@ -24,21 +105,7 @@ class Macro:
         self.interrupted: bool = False
         self.interrupt_hotkey: str = ''
         self.pause_time: int = 20
-        self.game_controls: dict = {
-            'roll': '',
-            'jump': '',
-            'crouch': '',
-            'reset_camera': '',
-            'switch_spell': '',
-            'switch_item': '',
-            'attack': '',
-            'strong_attack': '',
-            'guard': '',
-            'skill': '',
-            'use_item': '',
-            'event_action': ''
-        }
-        self.macro_settings = {
+        self.settings = {
             'equipment': {
 
             },
@@ -49,7 +116,7 @@ class Macro:
                 'macro_name': ''
             },
             'diy': {
-                'diy_macro': ''
+                'macro': ''
             }
         }
         self.macro_keyline: str = ''
@@ -84,14 +151,76 @@ class Macro:
         elif self.type == 'Magic':
             pass
         elif self.type == 'Built-in':
-            built_in_macro_name = self.macro_settings['built-in']['macro_name']
+            built_in_macro_name = self.settings['built-in']['macro_name']
             built_in_macro = next(x for x in built_in_macros() if x['name'] == built_in_macro_name)
             self.macro_keyline = built_in_macro['keyline']
         elif self.type == 'DIY':
-            pass
-        else:
-            # TODO: не забыть удалить
-            self.macro_keyline = 'space|' * 300
+            commands_list = self.settings['diy']['macro'].strip().split('\n')
+            keyline_list = []
+            for command in commands_list:
+
+                keyline = ''
+                command = command.strip().lower()
+
+                if not command:
+                    continue
+
+                mult = 0
+                pause_time = 0
+                press_time = 0
+
+                if '*' in command:
+                    parts = command.partition('*')
+                    mult = int(parts[2].strip())
+                    command = parts[0].strip()
+
+                if '_pause' in command:
+                    parts = command.partition('_pause')
+                    pause_time = int(parts[2].strip())
+                    command = parts[0].strip()
+
+                if '_press' in command:
+                    parts = command.partition('_press')
+                    press_time = int(parts[2].strip())
+                    command = parts[0].strip()
+
+                # Searching in plain buttons...
+                if command in game_control_keys()\
+                        or command in available_hotkey_buttons():
+                    keyline = command
+
+                # Searching in built-in macros...
+                if keyline == '':
+                    macro = next((x for x in built_in_macros() if x['name'].lower() == command), None)
+                    if macro is not None:
+                        keyline = macro['keyline']
+
+                # Searching in other macroses in this save-file
+                if keyline == '':
+                    macro = next((x for x in self.save_slot.macros if x.name.lower() == command), None)
+                    if macro is not None:
+                        macro.form_keyline()
+                        keyline = macro.macro_keyline
+
+                if keyline == '':
+                    self.interrupted = True
+                    break
+
+                if pause_time:
+                    keyline += f'|pause{pause_time}'
+
+                if press_time:
+                    keyline += f'_press{press_time}'
+
+                if mult:
+                    keyline_mult = []
+                    for _ in range(mult):
+                        keyline_mult.append(keyline)
+                    keyline = '|'.join(keyline_mult)
+
+                keyline_list.append(keyline)
+
+            self.macro_keyline = '|'.join(keyline_list)
 
     def execute(self):
         """
@@ -108,26 +237,46 @@ class Macro:
                                 self.set_macro_interrupted,
                                 suppress=True)
 
-        print(self.id, self.name, self.hotkey_string())
-
         self.form_keyline()
         self.execute_keyline()
+
 
     def execute_keyline(self) -> None:
         """
         Parses a line into a keys and simulates key presses.
         Additional pause can be made with 'pauseN', where N is one hundredth sec.
-        :param keyline: line of keys divided with '|'
-        :param sleep_time:
-        :return:
         """
 
-        sleep_time = self.pause_time / 250
+        sleep_time = self.pause_time / 1000
         keyline = self.macro_keyline
 
         key_presses = keyline.split('|')
         press_time = sleep_time
 
+        # TODO: допилить или удалить
+        # # Check if this keyline will even work (everything can be in DIY macro,
+        # # or there's can be no needed control assign in Elden Ring).
+        # for key_press in key_presses:
+        #
+        #     if key_press.startswith('pause'):
+        #         pause_time = key_press.replace('pause', '')
+        #         if pause_time.isdigit():
+        #             continue
+        #
+        #     if '_press' in keyline:
+        #         parts = key_press.partition('_press')
+        #         key_press = parts[0]
+        #
+        #     if key_press in self.save_slot.game_controls.keys() \
+        #             or key_press in available_hotkey_buttons() \
+        #             or key_press in non_letter_keys()\
+        #             or (len(key_press) == 1 and key_press.isalpha()):
+        #         continue
+        #
+        #     # Check failed.
+        #     return
+
+        # Execution.
         for key_press in key_presses:
 
             if self.interrupted:
@@ -136,7 +285,7 @@ class Macro:
             # Additional pauses.
             if key_press.startswith('pause'):
                 pause_time = int(key_press.replace('pause', ''))
-                time.sleep(pause_time / 100)
+                time.sleep(pause_time / 1000)
                 continue
 
             # Additional press time.
@@ -146,8 +295,8 @@ class Macro:
                 press_time = parts[2]
 
             # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
-            if key_press in self.game_controls.keys():
-                key_press = self.game_controls[key_press].lower()
+            if key_press in self.save_slot.game_controls.keys():
+                key_press = self.save_slot.game_controls[key_press].lower()
 
             # Key presses execution.
             if key_press in non_letter_keys():
@@ -243,10 +392,10 @@ def built_in_macros() -> list:
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (wide)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause400|{keyline_to_invade_as_recusant(True)}|pause400' * 50,
+         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000' * 50,
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (local)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause400|{keyline_to_invade_as_recusant()}|pause400' * 50,
+         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 50,
          'comment': 'commentary'},
         {'name': 'Reverse backstep',
          'keyline': 'jump',
@@ -290,10 +439,10 @@ def keyline_to_sort_all_lists() -> str:
     # 3. Talismans.
     # 4. Items.
 
-    keyline = 'esc|e|e|t|down|e|pause30|q|pause30|' \
-              'down|down|e|t|down|e|pause30|q|pause30|' \
-              'down|e|t|down|e|pause30|q|pause30|' \
-              'q|pause30|down|down|e|t|down|e|pause30|esc'
+    keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
+              'down|down|e|t|down|e|pause300|q|pause300|' \
+              'down|e|t|down|e|pause300|q|pause300|' \
+              'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline
 
