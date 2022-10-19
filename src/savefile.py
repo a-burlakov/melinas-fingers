@@ -23,19 +23,6 @@ class SaveSlot:
         self.armor_legs_list: list = []
         self.talisman_list: list = []
         self.spell_list: list = []
-        # self.item_list: list = []
-
-
-def get_savefile_path() -> str:
-    """
-    Returns the path to the relevant Elden Ring save file.
-
-    :return: Path as string
-    """
-    return os.getcwd() + r'\test\ER0000_controls_test.sl2'
-    # return os.getcwd() + r'\test\ER0000_Talismans.sl2'
-    # return os.getcwd() + r'\test\ER0000_125_windhalberds_mooninhands_claymore_chest.sl2'
-    # return os.getcwd() + r'\test\ER0000_freedom_something_in_inventory.sl2'
 
 
 def range_before_save_slots() -> int:
@@ -100,7 +87,7 @@ def control_keys_ranges() -> dict:
         'switch_spell': 0x019035cd,
         'switch_item': 0x019035e1,
         'attack': 0x0190361d,
-        'strong_attack': 0x019035cd,
+        'strong_attack': 0x01903631,
         'guard': 0x01903645,
         'skill': 0x01903659,
         'use_item': 0x0190366d,
@@ -175,15 +162,15 @@ def control_keys_values() -> dict:
         90: 'Y',
         113: 'Z',
         84: 'Tab',
-        111: 'Shift (left)',
-        123: 'Shift (right)',
-        98: 'Control (left)',
-        226: 'Control (right)',
+        111: 'LShift',
+        123: 'RShift',
+        98: 'LControl',
+        226: 'RControl',
         83: 'Backspace',
         126: 'Space',
-        97: 'Enter (main)',
-        225: 'Enter (numpad)',
-        125: 'Alt (left)',
+        97: 'Enter',
+        225: 'EnterNum',
+        125: 'LAlt',
         268: 'Home',
         188: 'PageUp',
         194: 'End',

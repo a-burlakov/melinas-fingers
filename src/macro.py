@@ -21,20 +21,38 @@ class Macro:
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
         self.hotkey_alt: bool = False
+        self.interrupted: bool = False
+        self.interrupt_hotkey: str = ''
+        self.pause_time: int = 20
+        self.game_controls: dict = {
+            'roll': '',
+            'jump': '',
+            'crouch': '',
+            'reset_camera': '',
+            'switch_spell': '',
+            'switch_item': '',
+            'attack': '',
+            'strong_attack': '',
+            'guard': '',
+            'skill': '',
+            'use_item': '',
+            'event_action': ''
+        }
         self.macro_settings = {
-            'Equipment': {
+            'equipment': {
 
             },
-            'Magic': {
+            'magic': {
 
             },
-            'Built-in': {
+            'built-in': {
                 'macro_name': ''
             },
-            'DIY': {
-                'DIY_macro': ''
+            'diy': {
+                'diy_macro': ''
             }
         }
+        self.macro_keyline: str = ''
 
     def __str__(self):
         return f'id: {self.id}, name: {self.name}, hotkey: {self.hotkey}'
@@ -55,38 +73,102 @@ class Macro:
 
         return hotkey
 
+    def form_keyline(self):
+        """
+        Forms a keyline string from macro settings to be executed to
+        'execute' fuction
+        """
+
+        if self.type == 'Equipment':
+            pass
+        elif self.type == 'Magic':
+            pass
+        elif self.type == 'Built-in':
+            built_in_macro_name = self.macro_settings['built-in']['macro_name']
+            built_in_macro = next(x for x in built_in_macros() if x['name'] == built_in_macro_name)
+            self.macro_keyline = built_in_macro['keyline']
+        elif self.type == 'DIY':
+            pass
+        else:
+            # TODO: не забыть удалить
+            self.macro_keyline = 'space|' * 300
+
     def execute(self):
         """
 
         """
 
-        current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        if 'elden' not in current_window_text.lower() \
-                and 'melina' not in current_window_text.lower():
-            return
+        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        # if 'elden' not in current_window_text.lower() \
+        #         and 'melina' not in current_window_text.lower():
+        #     return
 
-        # TODO: Если поймали кнопку, отвечающую за блок алгоритма, то нажимаем ее. Возможно, установить булево значение какое-нибудь в макрос.
-
+        if self.interrupt_hotkey:
+            keyboard.add_hotkey(self.interrupt_hotkey,
+                                self.set_macro_interrupted,
+                                suppress=True)
 
         print(self.id, self.name, self.hotkey_string())
 
-def on_press(key):
-    """
+        self.form_keyline()
+        self.execute_keyline()
+
+    def execute_keyline(self) -> None:
+        """
+        Parses a line into a keys and simulates key presses.
+        Additional pause can be made with 'pauseN', where N is one hundredth sec.
+        :param keyline: line of keys divided with '|'
+        :param sleep_time:
+        :return:
+        """
+
+        sleep_time = self.pause_time / 250
+        keyline = self.macro_keyline
+
+        key_presses = keyline.split('|')
+        press_time = sleep_time
+
+        for key_press in key_presses:
+
+            if self.interrupted:
+                break
+
+            # Additional pauses.
+            if key_press.startswith('pause'):
+                pause_time = int(key_press.replace('pause', ''))
+                time.sleep(pause_time / 100)
+                continue
+
+            # Additional press time.
+            if '_press' in key_press:
+                parts = key_press.partition('_press')
+                key_press = parts[0]
+                press_time = parts[2]
+
+            # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
+            if key_press in self.game_controls.keys():
+                key_press = self.game_controls[key_press].lower()
+
+            # Key presses execution.
+            if key_press in non_letter_keys():
+                keyboard_input.press(Key[key_press])
+                time.sleep(press_time)
+                keyboard_input.release(Key[key_press])
+            else:
+                keyboard_input.press(key_press)
+                time.sleep(press_time)
+                keyboard_input.release(key_press)
+
+            time.sleep(sleep_time)
+
+        self.interrupted = False
 
 
-    """
+    def set_macro_interrupted(self) -> None:
+        """
 
-    while keyboard.is_pressed('u'):
-        execute_key_macros('esc|pause10|e|e')
-        go_to_beginning_of_list()
-        execute_key_macros(keyline_to_find_item_number(13), 0.02)
-        execute_key_macros('e|esc|y')
-
-    while keyboard.is_pressed('i'):
-        execute_key_macros('esc|pause10|e|r|esc|esc|e|e|pause10')
-        execute_key_macros(keyline_to_find_item_number(8), 0.02)
-        execute_key_macros('e|esc|ctrl')
-
+        """
+        self.interrupted = True
 
 def non_letter_keys() -> tuple:
     """
@@ -131,46 +213,49 @@ def built_in_macros() -> list:
 
     macros_list = [
         {'name': 'Sort all: Asc. Order of Acquisition',
-         'macro': keyline_to_sort_all_lists(),
-         'comment': 'commentary'},
+         'keyline': keyline_to_sort_all_lists(),
+         'comment': 'commentary ha ha ha'},
         {'name': 'Crouch attack',
-         'macro': 'crouch|attack',
+         'keyline': 'crouch|attack',
          'comment': 'commentary'},
         {'name': 'Stance attack',
-         'macro': 'crouch|skill|attack',
+         'keyline': 'crouch|skill|attack',
          'comment': 'commentary'},
         {'name': 'Stance strong attack',
-         'macro': 'crouch|skill|strong_attack',
+         'keyline': 'crouch|skill|strong_attack',
          'comment': 'commentary'},
         {'name': 'Two hand a weapon',
-         'macro': 'use|attack',
+         'keyline': 'use|attack',
          'comment': 'commentary'},
         {'name': 'Two hand a weapon (left)',
-         'macro': 'use|guard',
+         'keyline': 'use|guard',
          'comment': 'commentary'},
         {'name': 'Next weapon (right)',
-         'macro': keyline_to_choose_next_weapon(),
+         'keyline': keyline_to_choose_next_weapon(),
          'comment': 'commentary'},
         {'name': 'Previous weapon (right)',
-         'macro': keyline_to_choose_previous_weapon(),
+         'keyline': keyline_to_choose_previous_weapon(),
          'comment': 'commentary'},
         {'name': 'Next weapon (left)',
-         'macro': keyline_to_choose_next_weapon(left_hand=True),
+         'keyline': keyline_to_choose_next_weapon(left_hand=True),
          'comment': 'commentary'},
         {'name': 'Previous weapon (left)',
-         'macro': keyline_to_choose_previous_weapon(left_hand=True),
+         'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (wide)',
-         'macro': f'{keyline_to_invade_as_bloody_finger(True)}|pause400|{keyline_to_invade_as_recusant(True)}|pause400' * 50,
+         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause400|{keyline_to_invade_as_recusant(True)}|pause400' * 50,
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (local)',
-         'macro': f'{keyline_to_invade_as_bloody_finger()}|pause400|{keyline_to_invade_as_recusant()}|pause400' * 50,
+         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause400|{keyline_to_invade_as_recusant()}|pause400' * 50,
+         'comment': 'commentary'},
+        {'name': 'Reverse backstep',
+         'keyline': 'jump',
          'comment': 'commentary'},
         {'name': 'Neutral long jump',
-         'macro': 'jump',
+         'keyline': 'jump',
          'comment': 'commentary'},
         {'name': 'Backward jump',
-         'macro': 'jump',
+         'keyline': 'jump',
          'comment': 'commentary'}
     ]
 
@@ -299,72 +384,25 @@ def keyline_to_find_item_number(item_number: int) -> str:
     return '|'.join(key_presses)
 
 
-def go_to_beginning_of_list(list_length: int = 50) -> None:
-    """
-
-    :param list_length:
-    :return:
-    """
-
-    max_amount_c = list_length // 25
-
-    keyboard_input.press(Key.left)
-    # TODO: убрать это дело вообще, но подумать, действительно ли оно не нужно
-    time4all = max(0.4, max_amount_c * 0.017)
-    time.sleep(0.01)
-    time_start = time.time()
-    execute_key_macros('c|' * (max_amount_c - 1) + 'c')
-    time_finish = time.time()
-    print(time_finish - time_start)
-    time_remain = time4all - (time_finish - time_start)
-    if time_remain > 0:
-        time.sleep(time_remain)
-    keyboard_input.release(Key.left)
-    time.sleep(0.01)
-
-
-def execute_key_macros(keyline: str, sleep_time: float = 0.03) -> None:
-    """
-    Parses a line into a keys and simulates key presses.
-    Additional pause can be made with 'pauseN', where N is one hundredth sec.
-    :param keyline: line of keys divided with '|'
-    :param sleep_time:
-    :return:
-    """
-
-    key_presses = keyline.split('|')
-    press_time = sleep_time
-
-    for key_press in key_presses:
-
-        # Additional pauses.
-        if key_press.startswith('pause'):
-            pause_time = int(key_press.replace('pause', ''))
-            time.sleep(pause_time / 100)
-            continue
-
-        # Additional press time.
-        if '_press' in key_press:
-            parts = key_press.partition('_press')
-            key_press = parts[0]
-            press_time = parts[2]
-
-        # TODO: сделать ветку на то, если key_press является командой игры, например "strong_attack".
-        # Нужен список таких команд, проверка, является ли команда командой игры,
-        # и поиск соответствия для нее команде из списка (командаигры - кнопка),
-        # список есть в savefile.get_controls()
-
-        if key_press in game_control_keys():
-            key_press = ''
-
-        # Key presses execution.
-        if key_press in non_letter_keys():
-            keyboard_input.press(Key[key_press])
-            time.sleep(press_time)
-            keyboard_input.release(Key[key_press])
-        else:
-            keyboard_input.press(key_press)
-            time.sleep(press_time)
-            keyboard_input.release(key_press)
-
-        time.sleep(sleep_time)
+# def go_to_beginning_of_list(list_length: int = 50) -> None:
+#     """
+#
+#     :param list_length:
+#     :return:
+#     """
+#
+#     max_amount_c = list_length // 25
+#
+#     keyboard_input.press(Key.left)
+#     # TODO: убрать это дело вообще, но подумать, действительно ли оно не нужно
+#     time4all = max(0.4, max_amount_c * 0.017)
+#     time.sleep(0.01)
+#     time_start = time.time()
+#     execute_key_macros('c|' * (max_amount_c - 1) + 'c')
+#     time_finish = time.time()
+#     print(time_finish - time_start)
+#     time_remain = time4all - (time_finish - time_start)
+#     if time_remain > 0:
+#         time.sleep(time_remain)
+#     keyboard_input.release(Key.left)
+#     time.sleep(0.01)

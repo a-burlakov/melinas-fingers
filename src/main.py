@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from pathlib import Path
-from macro import Macro
+from macro import Macro, built_in_macros
 from savefile import SaveSlot
 import keyboard
 
@@ -73,7 +73,12 @@ def available_game_control_buttons() -> tuple:
         "End",
         "PageDown",
         "Insert",
-        "Delete"
+        "Delete",
+        "LControl",
+        "RControl",
+        "LShift",
+        "RShift",
+        "LAlt"
     )
 
 
@@ -150,7 +155,12 @@ def available_hotkey_buttons() -> tuple:
         "End",
         "PageDown",
         "Insert",
-        "Delete"
+        "Delete",
+        "LControl",
+        "RControl",
+        "LShift",
+        "RShift",
+        "LAlt"
     )
 
 
@@ -164,9 +174,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.save_slots: list = []
         self.current_save_slot: SaveSlot = SaveSlot()
         self.current_macro: Macro = Macro()
-        self.settings: dict = {
-            '': ''
-        }
         self.game_controls: dict = {
             'roll': '',
             'jump': '',
@@ -181,6 +188,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'use_item': '',
             'event_action': ''
         }
+        self.settings: dict = {
+            '': ''
+        }
+        self.standard_pause_time: int = 0
+        self.interrupt_hotkey: str = ''
+        self.interrupt_hotkey_ctrl: bool = False
+        self.interrupt_hotkey_shift: bool = False
+        self.interrupt_hotkey_alt: bool = False
 
         self.init_ui()
 
@@ -190,23 +205,70 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.read_game_controls()
         self.read_all_equipment()
         self.read_settings()
+        self.set_standard_settings()
         self.hook_hotkeys()
         self.add_introductory_macros()
+        self.set_macros_settings()
+        self.fill_built_in_macros()
 
         self.fill_save_slots()
         self.comboBox_SaveSlots_Refresh()
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
-        self.tabWidget_Pages_Refresh()
+        self.stackedWidget_Pages_RefreshAll()
+        self.stackedWidget_Pages_SetPage()
 
         self.show()
 
+    def fill_built_in_macros(self) -> None:
+        """
+        Fills a table on 'Built-in' page.
+        """
+
+        # Clearing table.
+        while self.tableWidget_BuiltInMacros.rowCount():
+            self.tableWidget_BuiltInMacros.removeRow(0)
+
+        for i, builtin_macro in enumerate(built_in_macros()):
+            self.tableWidget_BuiltInMacros.insertRow(i)
+            self.tableWidget_BuiltInMacros.setItem(i, 0, QTableWidgetItem(
+                builtin_macro['name']))
+
     def add_introductory_macros(self) -> None:
         """
-        Adds some macros for introducity to Melina's Fingers if there'no
+        Adds some macros for introducing to Melina's Fingers if there's no
         settings file yet.
         """
 
+    def set_macros_settings(self) -> None:
+        """
+        Sets some setting to all macros in window.
+        """
+
+        interrupt_hotkey = self.interrupt_hotkey
+        if self.interrupt_hotkey_alt:
+            interrupt_hotkey = 'alt+' + interrupt_hotkey
+        if self.interrupt_hotkey_shift:
+            interrupt_hotkey = 'shift+' + interrupt_hotkey
+        if self.interrupt_hotkey_ctrl:
+            interrupt_hotkey = 'ctrl+' + interrupt_hotkey
+
+        for macro in self.current_save_slot.macros:
+            macro.pause_time = self.standard_pause_time
+            macro.interrupted = False
+            macro.interrupt_hotkey = interrupt_hotkey
+
+    def set_standard_settings(self) -> None:
+        """
+        Set some setting to their standard values if it's not set yet via
+        settings file on manually.
+        """
+
+        if self.interrupt_hotkey == '':
+            self.interrupt_hotkey = 'Tab'
+
+        if self.standard_pause_time == 0:
+            self.standard_pause_time = 20
 
 
     def read_game_controls(self):
@@ -227,18 +289,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 control_keys[key], '')
             self.game_controls[key] = control_keys[key]
 
+        for macro in self.current_save_slot.macros:
+            macro.game_controls = self.game_controls
+
     def hook_hotkeys(self):
         """
 
         """
 
         # Try block, because 'Keyboard' clearing methods can call
-        # an unexpected exeption when there's no assigned hotkeys.
+        # an unexpected exception if there's no assigned hotkeys.
         try:
             keyboard.remove_all_hotkeys()
             keyboard._hotkeys.clear()
         except:
             pass
+
+        # Hooking interrupt hotkey, that interrupts ongoing macro.
+
 
         for macro in self.current_save_slot.macros:
 
@@ -257,7 +325,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        if self.save_file_location == ''\
+        if self.save_file_location == '' \
                 or self.current_save_slot.id == 0:
             return
 
@@ -282,13 +350,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
         self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
         self.comboBox_MacroType.activated.connect(self.comboBox_MacroType_OnChange)
-        self.comboBox_MacroKey.activated.connect(self.comboBox_MacroKey_OnChange)
         self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
+        self.comboBox_MacroKey.activated.connect(self.comboBox_MacroKey_OnChange)
         self.checkBox_MacroKeyCtrl.clicked.connect(self.MacroKeyCtrl_Click)
         self.checkBox_MacroKeyShift.clicked.connect(self.MacroKeyShift_Click)
         self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
         for key in available_hotkey_buttons():
             self.comboBox_MacroKey.addItem(key)
+            self.comboBox_InterruptHotkey.addItem(key)
+
+        # Page "Built-in"
+        self.tableWidget_BuiltInMacros.itemSelectionChanged.connect(self.tableWidget_BuiltInMacros_OnChange)
+
+        # Page "Settings"
+        self.comboBox_InterruptHotkey.activated.connect(self.comboBox_InterruptKey_OnChange)
+        self.checkBox_InterruptKeyCtrl.clicked.connect(self.InterruptKeyCtrl_Click)
+        self.checkBox_InterruptKeyShift.clicked.connect(self.InterruptKeyShift_Click)
+        self.checkBox_InterruptKeyAlt.clicked.connect(self.InterruptKeyAlt_Click)
+
+        self.comboBox_ControlKeyJump.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyRoll.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyCrouch.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyResetCamera.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyAttack.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyStrongAttack.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeySkill.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeySwitchItem.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeySwitchSpell.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyGuard.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyUseItem.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyUse.activated.connect(self.ControlKeys_OnChange)
+
+        for key in available_game_control_buttons():
             self.comboBox_ControlKeyJump.addItem(key)
             self.comboBox_ControlKeyRoll.addItem(key)
             self.comboBox_ControlKeyCrouch.addItem(key)
@@ -366,7 +459,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.hook_hotkeys()
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
-        self.tabWidget_Pages_Refresh()
+        self.stackedWidget_Pages_RefreshAll()
+        self.stackedWidget_Pages_SetPage()
 
     def tableWidget_Macros_Clicked(self, index):
         """
@@ -376,6 +470,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro_id = int(self.tableWidget_Macros.item(index, 0).text())
         self.current_macro = next(
             x for x in self.current_save_slot.macros if x.id == macro_id)
+
+        self.set_macros_settings()
 
         self.MacroArea_Refresh()
 
@@ -424,8 +520,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
         self.current_macro.type = self.comboBox_MacroType.currentText()
+
+        # TODO: Не забыть стандартные значения забить при выборе типа
+        # Set standard values.
+        if self.current_macro.type == 'Equipment':
+            pass
+
+        if self.current_macro.type == 'Magic':
+            pass
+
+        if self.current_macro.type == 'DIY':
+            pass
+
+        if self.current_macro.type == 'Built-in' \
+                and self.current_macro.macro_settings['built-in']['macro_name'] == '':
+            self.current_macro.macro_settings['built-in']['macro_name'] = built_in_macros()[0]['name']
+
         self.hook_hotkeys()
-        self.tabWidget_Pages_Refresh()
+        self.stackedWidget_Pages_SetPage()
+        self.stackedWidget_Pages_RefreshAll()
+
+
 
     def OpenSaveFile_Click(self):
         """
@@ -453,11 +568,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.fill_save_slots()
             self.read_all_equipment()
             self.hook_hotkeys()
+            self.set_macros_settings()
 
             self.comboBox_SaveSlots_Refresh()
             self.tableWidget_Macros_Refresh()
             self.MacroArea_Refresh()
-            self.tabWidget_Pages_Refresh()
+            self.stackedWidget_Pages_SetPage()
+            self.stackedWidget_Pages_RefreshAll()
 
     def Settings_Click(self):
         """
@@ -467,7 +584,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.stackedWidget_Pages.currentIndex() != 5:
             self.stackedWidget_Pages.setCurrentIndex(5)
         else:
-            self.tabWidget_Pages_Refresh()
+            self.stackedWidget_Pages_SetPage()
 
     def AddMacros_Click(self):
         """
@@ -485,9 +602,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_macro = new_macro
 
         self.hook_hotkeys()
+        self.set_macros_settings()
+
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
-        self.tabWidget_Pages_Refresh()
+        self.stackedWidget_Pages_SetPage()
+        self.stackedWidget_Pages_RefreshAll()
 
     def comboBox_MacroKey_OnChange(self):
         """
@@ -530,6 +650,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.hook_hotkeys()
         self.tableWidget_Macros_Refresh()
 
+    def comboBox_InterruptKey_OnChange(self):
+        """
+
+        """
+
+        current_text = self.comboBox_InterruptHotkey.currentText()
+        self.comboBox_InterruptHotkey = current_text
+
+        self.set_macros_settings()
+
+    def InterruptKeyCtrl_Click(self):
+        """
+
+        """
+
+        checked = self.checkBox_InterruptKeyCtrl.isChecked()
+        self.interrupt_hotkey_ctrl = checked
+        self.set_macros_settings()
+
+    def InterruptKeyShift_Click(self):
+        """
+
+        """
+        checked = self.checkBox_InterruptKeyShift.isChecked()
+        self.interrupt_hotkey_shift = checked
+        self.set_macros_settings()
+
+    def InterruptKeyAlt_Click(self):
+        """
+
+        """
+
+        checked = self.checkBox_InterruptKeyAlt.isChecked()
+        self.interrupt_hotkey_alt = checked
+        self.set_macros_settings()
+
     def DeleteMacros_Click(self):
         """
 
@@ -538,10 +694,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.current_save_slot.macros.remove(self.current_macro)
         self.current_macro = Macro()
+        self.hook_hotkeys()
+        self.set_macros_settings()
 
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
-        self.tabWidget_Pages_Refresh()
+        self.stackedWidget_Pages_SetPage()
 
     def get_new_macro_id(self):
         """
@@ -590,10 +748,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.checkBox_MacroKeyAlt.setChecked(False)
             self.checkBox_MacroKeyCtrl.setChecked(False)
 
-    def tabWidget_Pages_Refresh(self):
+    def stackedWidget_Pages_SetPage(self) -> None:
         """
 
-        :return:
         """
         current_type = self.current_macro.type
         if self.current_macro.type:
@@ -607,6 +764,117 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.stackedWidget_Pages.setCurrentIndex(types_indexes[current_type])
         else:
             self.stackedWidget_Pages.setCurrentIndex(0)
+
+    def stackedWidget_Pages_RefreshAll(self) -> None:
+        """
+
+        """
+        self.stackedWidget_Pages_Refresh_Equipment()
+        self.stackedWidget_Pages_Refresh_Magic()
+        self.stackedWidget_Pages_Refresh_Builtin()
+        self.stackedWidget_Pages_Refresh_DIY()
+        self.stackedWidget_Pages_Refresh_Settings()
+        self.stackedWidget_Pages_Refresh_Multiplayer()
+
+    def stackedWidget_Pages_Refresh_Equipment(self) -> None:
+        """
+
+        """
+
+        pass
+
+    def stackedWidget_Pages_Refresh_Magic(self) -> None:
+        """
+
+        """
+
+        pass
+
+    def stackedWidget_Pages_Refresh_Builtin(self) -> None:
+        """
+
+        """
+
+        # Comment label.
+        current_builtin_macro_name = \
+            self.current_macro.macro_settings['built-in']['macro_name']
+        if current_builtin_macro_name:
+            builtin_macro = next(x for x in built_in_macros() if x['name'] == current_builtin_macro_name)
+            self.label_BuiltInMacroComment.setText(builtin_macro['comment'])
+        else:
+            self.label_BuiltInMacroComment.setText('')
+
+
+    def stackedWidget_Pages_Refresh_DIY(self) -> None:
+        """
+
+        """
+
+        pass
+
+    def stackedWidget_Pages_Refresh_Settings(self) -> None:
+        """
+
+        """
+
+        # Interrupt hotkey.
+        self.comboBox_InterruptHotkey.setCurrentText(self.interrupt_hotkey)
+        self.checkBox_InterruptKeyCtrl.setChecked(self.interrupt_hotkey_ctrl)
+        self.checkBox_InterruptKeyShift.setChecked(self.interrupt_hotkey_shift)
+        self.checkBox_InterruptKeyAlt.setChecked(self.interrupt_hotkey_alt)
+
+        # Controls in Elden Ring.
+        self.comboBox_ControlKeyRoll.setCurrentText(self.game_controls['roll'])
+        self.comboBox_ControlKeyJump.setCurrentText(self.game_controls['jump'])
+        self.comboBox_ControlKeyCrouch.setCurrentText(self.game_controls['crouch'])
+        self.comboBox_ControlKeyResetCamera.setCurrentText(self.game_controls['reset_camera'])
+        self.comboBox_ControlKeyAttack.setCurrentText(self.game_controls['attack'])
+        self.comboBox_ControlKeyStrongAttack.setCurrentText(self.game_controls['strong_attack'])
+        self.comboBox_ControlKeySkill.setCurrentText(self.game_controls['skill'])
+        self.comboBox_ControlKeySwitchItem.setCurrentText(self.game_controls['switch_item'])
+        self.comboBox_ControlKeySwitchSpell.setCurrentText(self.game_controls['switch_spell'])
+        self.comboBox_ControlKeyGuard.setCurrentText(self.game_controls['guard'])
+        self.comboBox_ControlKeyUseItem.setCurrentText(self.game_controls['use_item'])
+        self.comboBox_ControlKeyUse.setCurrentText(self.game_controls['event_action'])
+
+        # Standard pause time.
+        self.spinBox_StandardPauseTime.setValue(self.standard_pause_time)
+
+
+    def stackedWidget_Pages_Refresh_Multiplayer(self) -> None:
+        """
+
+        """
+
+        pass
+
+    def tableWidget_BuiltInMacros_OnChange(self) -> None:
+        """
+
+        """
+
+        items = self.tableWidget_BuiltInMacros.selectedItems()
+        if len(items):
+            self.current_macro.macro_settings['built-in']['macro_name'] = items[0].text()
+            self.stackedWidget_Pages_Refresh_Builtin()
+
+    def ControlKeys_OnChange(self):
+        """
+
+        """
+
+        self.game_controls['roll'] = self.comboBox_ControlKeyRoll.currentText().lower()
+        self.game_controls['jump'] = self.comboBox_ControlKeyJump.currentText().lower()
+        self.game_controls['crouch'] = self.comboBox_ControlKeyCrouch.currentText().lower()
+        self.game_controls['reset_camera'] = self.comboBox_ControlKeyResetCamera.currentText().lower()
+        self.game_controls['attack'] = self.comboBox_ControlKeyAttack.currentText().lower()
+        self.game_controls['strong_attack'] = self.comboBox_ControlKeyStrongAttack.currentText().lower()
+        self.game_controls['skill'] = self.comboBox_ControlKeySkill.currentText().lower()
+        self.game_controls['switch_item'] = self.comboBox_ControlKeySwitchItem.currentText().lower()
+        self.game_controls['switch_spell'] = self.comboBox_ControlKeySwitchSpell.currentText().lower()
+        self.game_controls['guard'] = self.comboBox_ControlKeyGuard.currentText().lower()
+        self.game_controls['use_item'] = self.comboBox_ControlKeyUseItem.currentText().lower()
+        self.game_controls['event_action'] = self.comboBox_ControlKeyUse.currentText().lower()
 
     def center_window(self):
         qr = self.frameGeometry()
