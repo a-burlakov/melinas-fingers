@@ -164,7 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # an unexpected exception if there's no assigned hotkeys.
         try:
             keyboard.remove_all_hotkeys()
-            # keyboard._hotkeys.clear()
+            keyboard._hotkeys.clear()
         except:
             pass
 
@@ -178,7 +178,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Condition helps to correct a situation when several hotkeys
             # are assign to one key.
             if hotkey_string not in keyboard._hotkeys:
-                for move_key in ['', 'w+', 'a+', 's+', 'd+', 'w+a+', 'w+d+', 'd+s+', 'a+s+']:
+                for move_key in ['', 'w+', 'a+', 's+', 'd+', 'w+a+', 'w+d+', 'd+s+', 'a+s+',
+                                 'space+w+', 'space+a+', 'space+s+', 'space+d+', 'space+w+a+', 'space+w+d+', 'space+d+s+', 'space+a+s+']:
                     keyboard.add_hotkey(move_key + hotkey_string,
                                         macro.execute,
                                         suppress=True,
@@ -544,7 +545,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         self.current_saveslot.macros.remove(self.current_macro)
-        self.current_macro = Macro(self.current_saveslot)
+        self.current_macro = Macro()
         self.hook_hotkeys()
         self.set_macros_settings_from_window()
 
@@ -652,7 +653,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         items = self.tableWidget_AvaiableMagic.selectedItems()
         if len(items):
-            self.current_macro.settings['magic']['spell_number'] = items[0].row() - 1
+            self.current_macro.settings['magic']['spell_number'] = items[0].row() + 1
 
     def MagicInstantUseRightHandCheck_OnChange(self) -> None:
         """

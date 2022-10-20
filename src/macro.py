@@ -172,7 +172,7 @@ class Macro:
             if not settings['spell_number']:
                 return
 
-            self.macro_keyline = f'switch_spell_press600{"|switch_spell" * (settings["spell_number"] - 1)}'
+            self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (settings["spell_number"] - 1)}'
 
             if settings['instant_cast_right']:
                 self.macro_keyline += '|attack'
@@ -283,13 +283,16 @@ class Macro:
         #         # and 'melina' not in current_window_text.lower():
         #     return
 
+        def what():
+            raise 'what'
+
         self.interrupted = False
 
-        # TODO: не забыть вернуть
-        if self.interrupt_hotkey:
-            keyboard.add_hotkey(self.interrupt_hotkey,
-                                self.set_macro_interrupted,
-                                suppress=True)
+        # # TODO: подумать, что делать с интерраптом
+        # if self.interrupt_hotkey:
+        #     keyboard.add_hotkey(self.interrupt_hotkey,
+        #                         what,
+        #                         suppress=True)
 
         try:
             self.form_keyline()
@@ -307,7 +310,7 @@ class Macro:
 
         sleep_time = self.pause_time / 1000
         keyline = self.macro_keyline
-
+        print(keyline)
         key_presses = keyline.split('|')
         press_time = sleep_time
 
@@ -379,7 +382,7 @@ class Macro:
         """
 
         """
-        self.interrupted = True
+        raise 'NONONO'
 
 def non_letter_keys() -> tuple:
     """
@@ -436,11 +439,11 @@ def built_in_macros() -> list:
          'keyline': 'crouch|pause200|skill|strong_attack',
          'comment': 'commentary'},
         {'name': 'Reverse backstep',
-         'keyline': 's|pause100|roll_press100',
+         'keyline': 'roll|pause5|s',
          'comment': 'commentary'},
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
-         'comment': 'commentary'},
+         'comment': 'commentarytst'},
         {'name': 'Previous weapon (right)',
          'keyline': keyline_to_choose_previous_weapon(),
          'comment': 'commentary'},
@@ -450,24 +453,22 @@ def built_in_macros() -> list:
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'commentary'},
-        {'name': 'Endless invasion attempts (wide)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 50,
+        {'name': 'Six invasion attempts (wide)',
+         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
          'comment': 'commentary'},
-        {'name': 'Endless invasion attempts (local)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 50,
+        {'name': 'Six invasion attempts (local)',
+         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3,
          'comment': 'commentary'},
         {'name': 'Filthy teabagging',
-         'keyline': '|'.join(['crouch|pause20']*10),
-         'comment': 'commentary'}
-
-
+         'keyline': '|'.join(['crouch|pause200']*17),
+         'comment': 'Makes you feel good about yourself for maybe 8 seconds.'}
     ]
 
     # Use item macros.
     for i in range(1, 11):
         macros_list.append({
             'name': f'Use item #{str(i)}',
-            'keyline': f'switch_item_press600{"|switch_item" * (i - 1)}|use_item',
+            'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}|use_item',
             'comment': 'commentary'
         })
 
@@ -475,7 +476,7 @@ def built_in_macros() -> list:
     for i in range(1, 13):
         macros_list.append({
             'name': f'Switch to spell #{str(i)}',
-            'keyline': f'switch_spell_press600{"|switch_spell" * (i - 1)}',
+            'keyline': f'switch_spell_press600{"|switch_spell|pause10" * (i - 1)}',
             'comment': 'commentary'
         })
 
@@ -485,7 +486,7 @@ def built_in_macros() -> list:
         rights = (i - 1) % 2
         macros_list.append({
             'name': f'Gesture #{str(i)}',
-            'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e',
+            'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e|esc',
             'comment': 'commentary'
         })
 
