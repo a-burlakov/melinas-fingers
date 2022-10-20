@@ -94,10 +94,10 @@ class Macro:
     """
 
     def __init__(self, saveslot: SaveSlot = SaveSlot()):
+        self.saveslot: SaveSlot = saveslot
         self.set_id()
         self.name = '< name >'
         self.type: str = ''
-        self.saveslot: SaveSlot = saveslot
         self.savefile = self.saveslot.savefile
         self.hotkey: str = ''
         self.hotkey_ctrl: bool = False
@@ -129,6 +129,8 @@ class Macro:
         Sets an id to macro. Format is like '7023', where '7' is saveslot number
         and 23 - plain macro order number.
         """
+
+        self.id = 0
 
         if not self.saveslot.name:
             return
@@ -170,13 +172,13 @@ class Macro:
             if not settings['spell_number']:
                 return
 
-            self.keyline = f'switch_spell_press600{"|switch_spell" * (settings["spell_number"] - 1)}'
+            self.macro_keyline = f'switch_spell_press600{"|switch_spell" * (settings["spell_number"] - 1)}'
 
             if settings['instant_cast_right']:
-                self.keyline += '|attack'
+                self.macro_keyline += '|attack'
 
             if settings['instant_cast_left']:
-                self.keyline += '|guard'
+                self.macro_keyline += '|guard'
 
         def form_keyline_builtin(self):
             built_in_macro_name = self.settings['built-in']['macro_name']
@@ -261,13 +263,13 @@ class Macro:
             self.macro_keyline = '|'.join(keyline_list)
 
         if self.type == 'Equipment':
-            self.form_keyline_equipment()
+            form_keyline_equipment(self)
         elif self.type == 'Magic':
-            self.form_keyline_magic()
+            form_keyline_magic(self)
         elif self.type == 'Built-in':
-            self.form_keyline_builtin()
+            form_keyline_builtin(self)
         elif self.type == 'DIY':
-            self.form_keyline_diy()
+            form_keyline_diy(self)
 
 
 
@@ -474,6 +476,16 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Switch to spell #{str(i)}',
             'keyline': f'switch_spell_press600{"|switch_spell" * (i - 1)}',
+            'comment': 'commentary'
+        })
+
+    # 6 gestures.
+    for i in range(1, 7):
+        downs = (i - 1) // 2
+        rights = (i - 1) % 2
+        macros_list.append({
+            'name': f'Gesture #{str(i)}',
+            'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e',
             'comment': 'commentary'
         })
 

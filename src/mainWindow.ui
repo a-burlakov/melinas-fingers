@@ -318,7 +318,7 @@ Hotkey</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment"/>
@@ -360,7 +360,7 @@ Hotkey</string>
        <enum>QAbstractScrollArea::AdjustIgnored</enum>
       </property>
       <property name="autoScroll">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="tabKeyNavigation">
        <bool>false</bool>
@@ -445,8 +445,8 @@ Hotkey</string>
      <widget class="QCheckBox" name="checkBox_MagicInstantUseLeftHand">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>450</y>
+        <x>520</x>
+        <y>140</y>
         <width>121</width>
         <height>20</height>
        </rect>
@@ -464,33 +464,11 @@ Hotkey</string>
        <string>Left Hand</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox_MagicInstantUse">
-      <property name="geometry">
-       <rect>
-        <x>550</x>
-        <y>360</y>
-        <width>171</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="text">
-       <string>Instant Use</string>
-      </property>
-     </widget>
      <widget class="QCheckBox" name="checkBox_MagicInstantUseRightHand">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>398</y>
+        <x>520</x>
+        <y>100</y>
         <width>141</width>
         <height>20</height>
        </rect>
@@ -506,6 +484,28 @@ Hotkey</string>
       </property>
       <property name="text">
        <string>Right Hand</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>60</y>
+        <width>101</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>Instant use:</string>
       </property>
      </widget>
     </widget>
@@ -547,7 +547,7 @@ Hotkey</string>
        <enum>QAbstractScrollArea::AdjustIgnored</enum>
       </property>
       <property name="autoScroll">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="tabKeyNavigation">
        <bool>false</bool>
@@ -1544,7 +1544,7 @@ Hotkey</string>
      <enum>QAbstractScrollArea::AdjustIgnored</enum>
     </property>
     <property name="autoScroll">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="tabKeyNavigation">
      <bool>false</bool>

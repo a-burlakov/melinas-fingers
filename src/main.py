@@ -164,7 +164,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # an unexpected exception if there's no assigned hotkeys.
         try:
             keyboard.remove_all_hotkeys()
-            keyboard._hotkeys.clear()
+            # keyboard._hotkeys.clear()
         except:
             pass
 
@@ -178,10 +178,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Condition helps to correct a situation when several hotkeys
             # are assign to one key.
             if hotkey_string not in keyboard._hotkeys:
-                keyboard.add_hotkey(hotkey_string,
-                                    macro.execute,
-                                    suppress=True,
-                                    trigger_on_release=True)
+                for move_key in ['', 'w+', 'a+', 's+', 'd+', 'w+a+', 'w+d+', 'd+s+', 'a+s+']:
+                    keyboard.add_hotkey(move_key + hotkey_string,
+                                        macro.execute,
+                                        suppress=True,
+                                        trigger_on_release=True)
+
 
     def init_ui(self):
         """
@@ -196,7 +198,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_AddMacros.clicked.connect(self.AddMacro_Click)
         self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
-        self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
+
         self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
         self.comboBox_MacroType.activated.connect(self.MacroType_OnChange)
         self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
@@ -208,15 +210,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_MacroKey.addItem(key)
             self.comboBox_InterruptHotkey.addItem(key)
 
+        # Macros table.
+        self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
+        self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
+
         # Page "Equipment"
 
         # Page "Magic"
         self.tableWidget_AvaiableMagic.cellClicked.connect(self.AvaiableMagic_OnChange)
+        self.tableWidget_AvaiableMagic.setEditTriggers(QTableWidget.NoEditTriggers)
         self.checkBox_MagicInstantUseLeftHand.clicked.connect(self.MagicInstantUseLeftHandCheck_OnChange)
         self.checkBox_MagicInstantUseRightHand.clicked.connect(self.MagicInstantUseRightHandCheck_OnChange)
 
         # Page "Built-in"
         self.tableWidget_BuiltInMacros.cellClicked.connect(self.BuiltInMacros_OnChange)
+        self.tableWidget_BuiltInMacros.setEditTriggers(QTableWidget.NoEditTriggers)
 
         # Page "DIY"
         self.textEdit_DIY.textChanged.connect(self.textEdit_DIY_OnChange)
@@ -253,10 +262,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_ControlKeyGuard.addItem(key)
             self.comboBox_ControlKeyUseItem.addItem(key)
             self.comboBox_ControlKeyUse.addItem(key)
-
-        # Macros table.
-        self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
-        self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
 
     def save_settings(self):
         """
