@@ -184,9 +184,15 @@ class Macro:
                     press_time = int(parts[2].strip())
                     command = parts[0].strip()
 
+                if 'pause' in command:
+                    digits = command.replace('pause', '')
+                    if digits.isdigit():
+                        keyline = command
+
                 # Searching in plain buttons...
                 if command in game_control_keys()\
-                        or command in available_hotkey_buttons():
+                        or command in available_hotkey_buttons()\
+                        or len(command) == 1 and command.isalpha():
                     keyline = command
 
                 # Searching in built-in macros...
@@ -227,18 +233,25 @@ class Macro:
 
         """
 
-        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower() \
-        #         and 'melina' not in current_window_text.lower():
-        #     return
+        current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        if 'elden' not in current_window_text.lower(): # \
+                # and 'melina' not in current_window_text.lower():
+            return
 
+        self.interrupted = False
+
+        # TODO: не забыть вернуть
         if self.interrupt_hotkey:
             keyboard.add_hotkey(self.interrupt_hotkey,
                                 self.set_macro_interrupted,
                                 suppress=True)
 
-        self.form_keyline()
-        self.execute_keyline()
+        try:
+            self.form_keyline()
+            self.execute_keyline()
+        except:
+            pass
+
 
 
     def execute_keyline(self) -> None:
@@ -289,10 +302,11 @@ class Macro:
                 continue
 
             # Additional press time.
+            press_time = sleep_time
             if '_press' in key_press:
                 parts = key_press.partition('_press')
                 key_press = parts[0]
-                press_time = parts[2]
+                press_time = int(parts[2]) / 1000
 
             # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
             if key_press in self.save_slot.game_controls.keys():
@@ -368,16 +382,10 @@ def built_in_macros() -> list:
          'keyline': 'crouch|attack',
          'comment': 'commentary'},
         {'name': 'Stance attack',
-         'keyline': 'crouch|skill|attack',
+         'keyline': 'crouch|pause200|skill|attack',
          'comment': 'commentary'},
         {'name': 'Stance strong attack',
-         'keyline': 'crouch|skill|strong_attack',
-         'comment': 'commentary'},
-        {'name': 'Two hand a weapon',
-         'keyline': 'use|attack',
-         'comment': 'commentary'},
-        {'name': 'Two hand a weapon (left)',
-         'keyline': 'use|guard',
+         'keyline': 'crouch|pause200|skill|strong_attack',
          'comment': 'commentary'},
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
@@ -392,13 +400,13 @@ def built_in_macros() -> list:
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (wide)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000' * 50,
+         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 50,
          'comment': 'commentary'},
         {'name': 'Endless invasion attempts (local)',
          'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 50,
          'comment': 'commentary'},
         {'name': 'Reverse backstep',
-         'keyline': 'jump',
+         'keyline': 's|pause100|roll_press100',
          'comment': 'commentary'},
         {'name': 'Neutral long jump',
          'keyline': 'jump',
@@ -412,7 +420,7 @@ def built_in_macros() -> list:
     for i in range(1, 11):
         macros_list.append({
             'name': f'Use item #{str(i)}',
-            'macro': f'switch_item_press200{"|switch_item" * (i - 1)}use_item|',
+            'keyline': f'switch_item_press600{"|switch_item" * (i - 1)}|use_item',
             'comment': 'commentary'
         })
 
@@ -420,7 +428,7 @@ def built_in_macros() -> list:
     for i in range(1, 13):
         macros_list.append({
             'name': f'Switch to spell #{str(i)}',
-            'macro': f'switch_spell_press200{"|switch_spell" * (i - 1)}',
+            'keyline': f'switch_spell_press600{"|switch_spell" * (i - 1)}',
             'comment': 'commentary'
         })
 
@@ -441,8 +449,8 @@ def keyline_to_sort_all_lists() -> str:
 
     keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
               'down|down|e|t|down|e|pause300|q|pause300|' \
-              'down|e|t|down|e|pause300|q|pause300|' \
-              'q|pause300|down|down|e|t|down|e|pause300|esc'
+              'down|e|t|down|e|pause300|q|pause300|'
+              # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline
 
@@ -455,7 +463,7 @@ def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
     keyline = 'esc|up|up|e|up|up|e'
 
     if wide_invade:
-        keyline += "|right"
+        keyline += "|pause50|right"
 
     keyline += '|e|esc'
 
@@ -471,7 +479,7 @@ def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
     keyline = 'esc|up|up|e|up|up|right|e'
 
     if wide_invade:
-        keyline += "|right"
+        keyline += "|pause50|right"
 
     keyline += '|e|esc'
 
@@ -480,13 +488,13 @@ def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
 
 def keyline_to_choose_next_weapon(weapons_pass: int = 0, left_hand = False) -> str:
     """
-    Returns a macros keyline that chooses next weapon.
+    Returns a macro keyline that chooses next weapon.
     :param weapons_pass: how many weapons will be passed before choosing.
     """
 
     right_amount = weapons_pass + 1
 
-    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"right|" * right_amount}|e|esc'
+    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"right|" * right_amount}pause20|e|esc'
     return keyline
 
 
@@ -498,7 +506,7 @@ def keyline_to_choose_previous_weapon(weapons_pass: int = 0, left_hand = False) 
 
     left_amount = weapons_pass + 1
 
-    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"left|" * left_amount}|e|esc'
+    keyline = f'esc|e|{"down|" if left_hand else ""}e|{"left|" * left_amount}pause20|e|esc'
 
     return keyline
 

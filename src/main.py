@@ -99,6 +99,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.save_file_location:
             self.save_file_location = self.calculated_save_file_path()
 
+        self.fill_save_slots()
         self.read_game_controls_from_save_file()
         self.read_all_equipment()
         self.read_settings()
@@ -108,7 +109,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.set_macros_settings()
         self.fill_builtin_macros()
 
-        self.fill_save_slots()
+
         self.comboBox_SaveSlots_Refresh()
         self.tableWidget_Macros_Refresh()
         self.MacroArea_Refresh()
@@ -199,9 +200,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             keyboard._hotkeys.clear()
         except:
             pass
-
-        # Hooking interrupt hotkey, that interrupts ongoing macro.
-
 
         for macro in self.current_save_slot.macros:
 
