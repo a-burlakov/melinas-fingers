@@ -349,6 +349,15 @@ class SaveSlot:
         in saveslot's respective attributes.
         :equipment_type:
         """
+
+        self.weapons = []
+        self.armor_head = []
+        self.armor_torso = []
+        self.armor_hands = []
+        self.armor_legs = []
+        self.talismans = []
+        self.spells = []
+
         savefile_path = self.savefile.location
 
         if not savefile_path:
@@ -456,11 +465,11 @@ class SaveSlot:
                         equipment_type += '_legs'
 
                 instance_dict = {}
-                instance_dict.setdefault('equipment_type', equipment_type)
-                instance_dict.setdefault('equipment_name', equipment_name)
-                instance_dict.setdefault('equipment_id', equipment_id)
+                instance_dict.setdefault('type', equipment_type)
+                instance_dict.setdefault('name', equipment_name)
+                instance_dict.setdefault('id', equipment_id)
                 instance_dict.setdefault('instance_id', instance_id)
-                instance_dict.setdefault('inventory_order_id', inventory_order_id)
+                instance_dict.setdefault('order_id', inventory_order_id)
                 instance_dict.setdefault('position', position_in_file)
                 inventory_list.append(instance_dict)
 
@@ -497,11 +506,11 @@ class SaveSlot:
             inventory_order_id = inventory_order_id[2:4] + inventory_order_id[:2]
 
             instance_dict = {}
-            instance_dict.setdefault('equipment_type', 'talismans')
-            instance_dict.setdefault('equipment_name', talisman_name)
-            instance_dict.setdefault('equipment_id', talisman_id)
+            instance_dict.setdefault('type', 'talismans')
+            instance_dict.setdefault('name', talisman_name)
+            instance_dict.setdefault('id', talisman_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('inventory_order_id', inventory_order_id)
+            instance_dict.setdefault('order_id', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
@@ -528,17 +537,17 @@ class SaveSlot:
             inventory_order_id = position_in_file[2:]
 
             instance_dict = {}
-            instance_dict.setdefault('equipment_type', 'spells')
-            instance_dict.setdefault('equipment_name', spell_name)
-            instance_dict.setdefault('equipment_id', spell_id)
+            instance_dict.setdefault('type', 'spells')
+            instance_dict.setdefault('name', spell_name)
+            instance_dict.setdefault('id', spell_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('inventory_order_id', inventory_order_id)
+            instance_dict.setdefault('order_id', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
         sorted_equipment = sorted(inventory_list,
-                                  key=lambda x: (x['equipment_type'],
-                                                 int(x['inventory_order_id'], 16)))
+                                  key=lambda x: (x['type'],
+                                                 int(x['order_id'], 16)))
 
         fields_accordance = {
             'weapons': self.weapons,
@@ -551,7 +560,7 @@ class SaveSlot:
         }
 
         for equipment in sorted_equipment:
-            type = equipment['equipment_type']
+            type = equipment['type']
             fields_accordance[type].append(equipment)
 
     def instances_search_range(self) -> tuple:

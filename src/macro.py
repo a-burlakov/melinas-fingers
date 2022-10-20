@@ -93,11 +93,12 @@ class Macro:
 
     """
 
-    def __init__(self, saveslot: SaveSlot):
-        self.id: int = 0
-        self.name: str = ''
+    def __init__(self, saveslot: SaveSlot = SaveSlot()):
+        self.set_id()
+        self.name = '< name >'
         self.type: str = ''
-        self.saveslot: SaveSlot = SaveSlot()
+        self.saveslot: SaveSlot = saveslot
+        self.savefile = self.saveslot.savefile
         self.hotkey: str = ''
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
@@ -105,12 +106,15 @@ class Macro:
         self.interrupted: bool = False
         self.interrupt_hotkey: str = ''
         self.pause_time: int = 20
+        self.macro_keyline: str = ''
         self.settings = {
             'equipment': {
 
             },
             'magic': {
-
+                'spell_number': 0,
+                'instant_cast_right': False,
+                'instant_cast_left': False
             },
             'built-in': {
                 'macro_name': ''
@@ -119,15 +123,6 @@ class Macro:
                 'macro': ''
             }
         }
-        self.macro_keyline: str = ''
-
-        self.saveslot = saveslot
-        self.savefile = self.saveslot.savefile
-        self.name = '< name >'
-        self.set_id()
-
-    def __str__(self):
-        return f'id: {self.id}, name: {self.name}, hotkey: {self.hotkey}'
 
     def set_id(self):
         """
@@ -135,13 +130,15 @@ class Macro:
         and 23 - plain macro order number.
         """
 
+        if not self.saveslot.name:
+            return
+
         saveslot_macros = self.saveslot.macros
         if saveslot_macros:
             max_id = max(saveslot_macros, key=lambda macro: macro.id).id
             self.id = max_id + 1
         else:
             self.id = self.saveslot.number * 1000 + 1
-
 
     def hotkey_string(self):
 
@@ -162,18 +159,32 @@ class Macro:
     def form_keyline(self):
         """
         Forms a keyline string from macro settings to be executed to
-        'execute' fuction
+        'execute' function.
         """
 
-        if self.type == 'Equipment':
+        def form_keyline_equipment(self):
             pass
-        elif self.type == 'Magic':
-            pass
-        elif self.type == 'Built-in':
+
+        def form_keyline_magic(self):
+            settings = self.settings['magic']
+            if not settings['spell_number']:
+                return
+
+            self.keyline = f'switch_spell_press600{"|switch_spell" * (settings["spell_number"] - 1)}'
+
+            if settings['instant_cast_right']:
+                self.keyline += '|attack'
+
+            if settings['instant_cast_left']:
+                self.keyline += '|guard'
+
+        def form_keyline_builtin(self):
             built_in_macro_name = self.settings['built-in']['macro_name']
-            built_in_macro = next(x for x in built_in_macros() if x['name'] == built_in_macro_name)
+            built_in_macro = next(x for x in built_in_macros() if
+                                  x['name'] == built_in_macro_name)
             self.macro_keyline = built_in_macro['keyline']
-        elif self.type == 'DIY':
+
+        def form_keyline_diy(self):
             commands_list = self.settings['diy']['macro'].strip().split('\n')
             keyline_list = []
             for command in commands_list:
@@ -209,20 +220,22 @@ class Macro:
                         keyline = command
 
                 # Searching in plain buttons...
-                if command in game_control_keys()\
-                        or command in available_hotkey_buttons()\
+                if command in game_control_keys() \
+                        or command in available_hotkey_buttons() \
                         or len(command) == 1 and command.isalpha():
                     keyline = command
 
                 # Searching in built-in macros...
                 if keyline == '':
-                    macro = next((x for x in built_in_macros() if x['name'].lower() == command), None)
+                    macro = next((x for x in built_in_macros() if
+                                  x['name'].lower() == command), None)
                     if macro is not None:
                         keyline = macro['keyline']
 
                 # Searching in other macroses in this save-file
                 if keyline == '':
-                    macro = next((x for x in self.saveslot.macros if x.name.lower() == command), None)
+                    macro = next((x for x in self.saveslot.macros if
+                                  x.name.lower() == command), None)
                     if macro is not None:
                         macro.form_keyline()
                         keyline = macro.macro_keyline
@@ -246,6 +259,17 @@ class Macro:
                 keyline_list.append(keyline)
 
             self.macro_keyline = '|'.join(keyline_list)
+
+        if self.type == 'Equipment':
+            self.form_keyline_equipment()
+        elif self.type == 'Magic':
+            self.form_keyline_magic()
+        elif self.type == 'Built-in':
+            self.form_keyline_builtin()
+        elif self.type == 'DIY':
+            self.form_keyline_diy()
+
+
 
     def execute(self):
         """

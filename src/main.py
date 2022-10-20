@@ -82,7 +82,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.savefile: SaveFile = SaveFile('')
         self.current_saveslot: SaveSlot = SaveSlot()
-        self.current_macro: Macro = Macro(self.current_saveslot)
+        self.current_macro: Macro = Macro()
         self.settings: dict = {'': ''}
         self.standard_pause_time: int = 0
         self.interrupt_hotkey: str = ''
@@ -105,12 +105,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.current_saveslot.get_equipment()
                 else:
                     self.current_saveslot = SaveSlot()
-                self.current_macro = Macro(self.current_saveslot)
+                self.current_macro = Macro()
                 self.set_macros_settings_from_window()
 
         self.add_introductory_macros()
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
+        self.AvailableSpells_RefillTable()
         self.refresh_all()
 
         self.show()
@@ -207,8 +208,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_MacroKey.addItem(key)
             self.comboBox_InterruptHotkey.addItem(key)
 
+        # Page "Equipment"
+
+        # Page "Magic"
+        self.tableWidget_AvaiableMagic.cellClicked.connect(self.AvaiableMagic_OnChange)
+        self.checkBox_MagicInstantUseLeftHand.clicked.connect(self.MagicInstantUseLeftHandCheck_OnChange)
+        self.checkBox_MagicInstantUseRightHand.clicked.connect(self.MagicInstantUseRightHandCheck_OnChange)
+
         # Page "Built-in"
-        self.tableWidget_BuiltInMacros.cellClicked.connect(self.tableWidget_BuiltInMacros_OnChange)
+        self.tableWidget_BuiltInMacros.cellClicked.connect(self.BuiltInMacros_OnChange)
 
         # Page "DIY"
         self.textEdit_DIY.textChanged.connect(self.textEdit_DIY_OnChange)
@@ -303,8 +311,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         slot_number = int(current_text.split('.')[0])
         self.current_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), SaveSlot())
         self.current_saveslot.get_equipment()
-        self.current_macro = Macro(self.current_saveslot)
+        self.current_macro = Macro()
 
+        self.AvailableSpells_RefillTable()
         self.refresh_all()
 
     def tableWidget_Macros_Clicked(self, index):
@@ -316,8 +325,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_macro = next((x for x in self.current_saveslot.macros if x.id == macro_id), Macro(self.current_saveslot))
 
         self.MacroArea_Refresh()
-        self.stackedWidget_Pages_SetPage()
-        self.stackedWidget_Pages_RefreshAll()
+        self.Pages_SetPage()
+        self.Pages_RefreshAll()
 
     def MacrosTable_Refresh(self):
         """
@@ -369,16 +378,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.current_macro.type == 'Equipment':
             pass
 
-        if self.current_macro.type == 'Magic':
-            pass
+        if self.current_macro.type == 'Magic' \
+                and self.current_macro.settings['magic']['spell_number'] == 0:
+            if self.current_saveslot.spells:
+                self.current_macro.settings['magic']['spell_number'] = 1
 
         if self.current_macro.type == 'Built-in' \
                 and self.current_macro.settings['built-in']['macro_name'] == '':
             self.current_macro.settings['built-in']['macro_name'] = built_in_macros()[0]['name']
 
         self.hook_hotkeys()
-        self.stackedWidget_Pages_SetPage()
-        self.stackedWidget_Pages_RefreshAll()
+        self.Pages_SetPage()
+        self.Pages_RefreshAll()
 
 
 
@@ -414,6 +425,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.hook_hotkeys()
             self.set_macros_settings_from_window()
 
+            self.AvailableSpells_RefillTable()
             self.refresh_all()
 
     def Settings_Click(self):
@@ -424,7 +436,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.stackedWidget_Pages.currentIndex() != 5:
             self.stackedWidget_Pages.setCurrentIndex(5)
         else:
-            self.stackedWidget_Pages_SetPage()
+            self.Pages_SetPage()
 
     def AddMacro_Click(self):
         """
@@ -533,7 +545,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.MacrosTable_Refresh()
         self.MacroArea_Refresh()
-        self.stackedWidget_Pages_SetPage()
+        self.Pages_SetPage()
 
 
     def refresh_all(self) -> None:
@@ -544,8 +556,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.MacrosTable_Refresh()
         self.SaveSlotsComboBox_Refresh()
         self.MacroArea_Refresh()
-        self.stackedWidget_Pages_RefreshAll()
-        self.stackedWidget_Pages_SetPage()
+        self.Pages_RefreshAll()
+        self.Pages_SetPage()
         self.hook_hotkeys()
 
     def MacroArea_Refresh(self):
@@ -580,7 +592,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.checkBox_MacroKeyAlt.setChecked(False)
             self.checkBox_MacroKeyCtrl.setChecked(False)
 
-    def stackedWidget_Pages_SetPage(self) -> None:
+    def Pages_SetPage(self) -> None:
         """
 
         """
@@ -597,34 +609,88 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.stackedWidget_Pages.setCurrentIndex(0)
 
-    def stackedWidget_Pages_RefreshAll(self) -> None:
+    def Pages_RefreshAll(self) -> None:
         """
 
         """
-        self.stackedWidget_Pages_Refresh_Equipment()
-        self.stackedWidget_Pages_Refresh_Magic()
-        self.stackedWidget_Pages_Refresh_Builtin()
-        self.stackedWidget_Pages_Refresh_DIY()
-        self.stackedWidget_Pages_Refresh_Settings()
-        self.stackedWidget_Pages_Refresh_Multiplayer()
+        self.Pages_Refresh_Equipment()
+        self.Pages_Refresh_Magic()
+        self.Pages_Refresh_Builtin()
+        self.Pages_Refresh_DIY()
+        self.Pages_Refresh_Settings()
+        self.Pages_Refresh_Multiplayer()
 
-    def stackedWidget_Pages_Refresh_Equipment(self) -> None:
+    def Pages_Refresh_Equipment(self) -> None:
         """
-
-        """
-
-        pass
-
-    def stackedWidget_Pages_Refresh_Magic(self) -> None:
-        """
-
+        Refreshes elements on "Equipment" page.
         """
 
         pass
 
-    def stackedWidget_Pages_Refresh_Builtin(self) -> None:
+    def Pages_Refresh_Magic(self) -> None:
+        """
+        Refreshes elements on "Magic" page.
+        """
+        magic_settings = self.current_macro.settings['magic']
+
+        self.checkBox_MagicInstantUseLeftHand.setChecked(magic_settings['instant_cast_left'])
+        self.checkBox_MagicInstantUseRightHand.setChecked(magic_settings['instant_cast_right'])
+
+        self.tableWidget_AvaiableMagic.clearSelection()
+        if magic_settings['spell_number']:
+            self.tableWidget_AvaiableMagic.selectRow(magic_settings['spell_number']-1)
+
+    def AvaiableMagic_OnChange(self) -> None:
+        """
+        Changes setting in macro if another spell is chosen.
         """
 
+        items = self.tableWidget_AvaiableMagic.selectedItems()
+        if len(items):
+            self.current_macro.settings['magic']['spell_number'] = items[0].row() - 1
+
+    def MagicInstantUseRightHandCheck_OnChange(self) -> None:
+        """
+        Changes setting in macro if check "Right hand" on page "Magic" is changed.
+        """
+        self.current_macro.settings['magic']['instant_cast_right'] = \
+            self.checkBox_MagicInstantUseRightHand.isChecked()
+
+        if self.checkBox_MagicInstantUseRightHand.isChecked():
+            self.checkBox_MagicInstantUseLeftHand.setChecked(False)
+            self.current_macro.settings['magic']['instant_cast_left'] = False
+
+        self.Pages_Refresh_Magic()
+
+    def MagicInstantUseLeftHandCheck_OnChange(self) -> None:
+        """
+        Changes setting in macro if check "Left hand" on page "Magic" is changed.
+        """
+        self.current_macro.settings['magic']['instant_cast_left'] = \
+            self.checkBox_MagicInstantUseLeftHand.isChecked()
+
+        if self.checkBox_MagicInstantUseLeftHand.isChecked():
+            self.checkBox_MagicInstantUseRightHand.setChecked(False)
+            self.current_macro.settings['magic']['instant_cast_right'] = False
+
+        self.Pages_Refresh_Magic()
+
+    def AvailableSpells_RefillTable(self) -> None:
+        """
+        Refills spells on "Magic" page.
+        """
+
+        while self.tableWidget_AvaiableMagic.rowCount():
+            self.tableWidget_AvaiableMagic.removeRow(0)
+
+        for i, spell in enumerate(self.current_saveslot.spells):
+            self.tableWidget_AvaiableMagic.insertRow(i)
+            self.tableWidget_AvaiableMagic.setItem(i, 0, QTableWidgetItem(
+                spell['name']))
+
+    def Pages_Refresh_Builtin(self) -> None:
+        """
+        Refreshes elements on "Built-in" page.
         """
 
         current_builtin_macro_name = self.current_macro.settings['built-in']['macro_name']
@@ -646,14 +712,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     break
 
 
-    def stackedWidget_Pages_Refresh_DIY(self) -> None:
+    def Pages_Refresh_DIY(self) -> None:
         """
-
+        Refreshes elements on "DIY" page.
         """
 
         self.textEdit_DIY.setText(self.current_macro.settings['diy']['macro'])
 
-    def stackedWidget_Pages_Refresh_Settings(self) -> None:
+    def Pages_Refresh_Settings(self) -> None:
         """
         Refreshes elements on "Settings" page.
         """
@@ -681,14 +747,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Standard pause time.
         self.spinBox_StandardPauseTime.setValue(self.standard_pause_time)
 
-    def stackedWidget_Pages_Refresh_Multiplayer(self) -> None:
+    def Pages_Refresh_Multiplayer(self) -> None:
         """
-
+        Refreshes elements on "Multiplayer" page.
         """
 
         pass
 
-    def tableWidget_BuiltInMacros_OnChange(self) -> None:
+    def BuiltInMacros_OnChange(self) -> None:
         """
 
         """
@@ -696,7 +762,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         items = self.tableWidget_BuiltInMacros.selectedItems()
         if len(items):
             self.current_macro.settings['built-in']['macro_name'] = items[0].text()
-            self.stackedWidget_Pages_Refresh_Builtin()
+            self.Pages_Refresh_Builtin()
 
     def ControlKeys_OnChange(self):
         """
