@@ -93,11 +93,11 @@ class Macro:
 
     """
 
-    def __init__(self):
+    def __init__(self, saveslot: SaveSlot):
         self.id: int = 0
         self.name: str = ''
         self.type: str = ''
-        self.save_slot: SaveSlot = SaveSlot()
+        self.saveslot: SaveSlot = SaveSlot()
         self.hotkey: str = ''
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
@@ -121,8 +121,27 @@ class Macro:
         }
         self.macro_keyline: str = ''
 
+        self.saveslot = saveslot
+        self.savefile = self.saveslot.savefile
+        self.name = '< name >'
+        self.set_id()
+
     def __str__(self):
         return f'id: {self.id}, name: {self.name}, hotkey: {self.hotkey}'
+
+    def set_id(self):
+        """
+        Sets an id to macro. Format is like '7023', where '7' is saveslot number
+        and 23 - plain macro order number.
+        """
+
+        saveslot_macros = self.saveslot.macros
+        if saveslot_macros:
+            max_id = max(saveslot_macros, key=lambda macro: macro.id).id
+            self.id = max_id + 1
+        else:
+            self.id = self.saveslot.number * 1000 + 1
+
 
     def hotkey_string(self):
 
@@ -203,7 +222,7 @@ class Macro:
 
                 # Searching in other macroses in this save-file
                 if keyline == '':
-                    macro = next((x for x in self.save_slot.macros if x.name.lower() == command), None)
+                    macro = next((x for x in self.saveslot.macros if x.name.lower() == command), None)
                     if macro is not None:
                         macro.form_keyline()
                         keyline = macro.macro_keyline
@@ -233,10 +252,10 @@ class Macro:
 
         """
 
-        current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        if 'elden' not in current_window_text.lower(): # \
-                # and 'melina' not in current_window_text.lower():
-            return
+        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        # if 'elden' not in current_window_text.lower(): # \
+        #         # and 'melina' not in current_window_text.lower():
+        #     return
 
         self.interrupted = False
 
@@ -280,7 +299,7 @@ class Macro:
         #         parts = key_press.partition('_press')
         #         key_press = parts[0]
         #
-        #     if key_press in self.save_slot.game_controls.keys() \
+        #     if key_press in self.saveslot.game_controls.keys() \
         #             or key_press in available_hotkey_buttons() \
         #             or key_press in non_letter_keys()\
         #             or (len(key_press) == 1 and key_press.isalpha()):
@@ -294,6 +313,9 @@ class Macro:
 
             if self.interrupted:
                 break
+
+            if key_press.strip() == '':
+                continue
 
             # Additional pauses.
             if key_press.startswith('pause'):
@@ -309,8 +331,8 @@ class Macro:
                 press_time = int(parts[2]) / 1000
 
             # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
-            if key_press in self.save_slot.game_controls.keys():
-                key_press = self.save_slot.game_controls[key_press].lower()
+            if key_press in self.savefile.game_controls.keys():
+                key_press = self.savefile.game_controls[key_press].lower()
 
             # Key presses execution.
             if key_press in non_letter_keys():
@@ -387,6 +409,9 @@ def built_in_macros() -> list:
         {'name': 'Stance strong attack',
          'keyline': 'crouch|pause200|skill|strong_attack',
          'comment': 'commentary'},
+        {'name': 'Reverse backstep',
+         'keyline': 's|pause100|roll_press100',
+         'comment': 'commentary'},
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
          'comment': 'commentary'},
@@ -405,15 +430,11 @@ def built_in_macros() -> list:
         {'name': 'Endless invasion attempts (local)',
          'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 50,
          'comment': 'commentary'},
-        {'name': 'Reverse backstep',
-         'keyline': 's|pause100|roll_press100',
-         'comment': 'commentary'},
-        {'name': 'Neutral long jump',
-         'keyline': 'jump',
-         'comment': 'commentary'},
-        {'name': 'Backward jump',
-         'keyline': 'jump',
+        {'name': 'Filthy teabagging',
+         'keyline': '|'.join(['crouch|pause20']*10),
          'comment': 'commentary'}
+
+
     ]
 
     # Use item macros.

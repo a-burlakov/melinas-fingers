@@ -1,11 +1,10 @@
-import os
 import sys
-import savefile
+import os
+from pathlib import Path
 from mainWindow import Ui_MainWindow
 from PyQt5.QtWidgets import *
-from pathlib import Path
 from macro import Macro, built_in_macros, available_hotkey_buttons
-from savefile import SaveSlot
+from savefile import SaveFile, SaveSlot
 import keyboard
 
 def available_game_control_buttons() -> tuple:
@@ -81,13 +80,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         super(MainWindow, self).__init__(*args, **kwargs)
 
-        self.save_file_location: str = ''
-        self.save_slots: list = []
-        self.current_save_slot: SaveSlot = SaveSlot()
-        self.current_macro: Macro = Macro()
-        self.settings: dict = {
-            '': ''
-        }
+        self.savefile: SaveFile = SaveFile('')
+        self.current_saveslot: SaveSlot = SaveSlot()
+        self.current_macro: Macro = Macro(self.current_saveslot)
+        self.settings: dict = {'': ''}
         self.standard_pause_time: int = 0
         self.interrupt_hotkey: str = ''
         self.interrupt_hotkey_ctrl: bool = False
@@ -96,25 +92,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.init_ui()
 
-        if not self.save_file_location:
-            self.save_file_location = self.calculated_save_file_path()
-
-        self.fill_save_slots()
-        self.read_game_controls_from_save_file()
-        self.read_all_equipment()
         self.read_settings()
-        self.set_standard_settings()
-        self.hook_hotkeys()
+
+        # TODO: слишком сложно тут, надо все это выровнять в одну функцию, которую вызывать и из открытия сейва вручную
+        if not self.savefile.location:
+            self.savefile.calculate_savefile_location()
+            if self.savefile.location:
+                self.savefile.fill_saveslots()
+                self.savefile.read_game_controls()
+                if self.savefile.saveslots:
+                    self.current_saveslot = self.savefile.saveslots[0]
+                    self.current_saveslot.get_equipment()
+                else:
+                    self.current_saveslot = SaveSlot()
+                self.current_macro = Macro(self.current_saveslot)
+                self.set_macros_settings_from_window()
+
         self.add_introductory_macros()
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
         self.fill_builtin_macros()
-
-
-        self.comboBox_SaveSlots_Refresh()
-        self.tableWidget_Macros_Refresh()
-        self.MacroArea_Refresh()
-        self.stackedWidget_Pages_RefreshAll()
-        self.stackedWidget_Pages_SetPage()
+        self.refresh_all()
 
         self.show()
 
@@ -138,9 +135,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings file yet.
         """
 
-    def set_macros_settings(self) -> None:
+    def set_macros_settings_from_window(self) -> None:
         """
-        Sets some setting to all macros in window.
+        Sets macros settings with values from the window to all macros.
         """
 
         interrupt_hotkey = self.interrupt_hotkey
@@ -151,42 +148,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.interrupt_hotkey_ctrl:
             interrupt_hotkey = 'ctrl+' + interrupt_hotkey
 
-        for macro in self.current_save_slot.macros:
+        for macro in self.current_saveslot.macros:
             macro.pause_time = self.standard_pause_time
             macro.interrupted = False
             macro.interrupt_hotkey = interrupt_hotkey
-            macro.save_slot = self.current_save_slot
-
-    def set_standard_settings(self) -> None:
-        """
-        Set some setting to their standard values if it's not set yet via
-        settings file on manually.
-        """
-
-        if self.interrupt_hotkey == '':
-            self.interrupt_hotkey = 'Tab'
-
-        if self.standard_pause_time == 0:
-            self.standard_pause_time = 20
-
-
-    def read_game_controls_from_save_file(self):
-        """
-
-        """
-
-        if self.save_file_location == '':
-            return
-
-        slot_data = savefile.get_slot_data(self.save_file_location)
-
-        control_keys = savefile.control_keys_ranges()
-        for key, value in control_keys.items():
-            hex_string = slot_data[value:value + 1]
-            control_keys[key] = int(hex_string.hex(), 16)
-            control_keys[key] = savefile.control_keys_values().get(
-                control_keys[key], '')
-            self.current_save_slot.game_controls[key] = control_keys[key]
+            macro.saveslot = self.current_saveslot
 
     def hook_hotkeys(self):
         """
@@ -201,9 +167,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
-        for macro in self.current_save_slot.macros:
+        for macro in self.current_saveslot.macros:
 
             hotkey_string = macro.hotkey_string()
+
+            if not hotkey_string:
+                continue
 
             # Condition helps to correct a situation when several hotkeys
             # are assign to one key.
@@ -212,20 +181,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                     macro.execute,
                                     suppress=True,
                                     trigger_on_release=True)
-
-    def read_all_equipment(self):
-        """
-
-        """
-
-        if self.save_file_location == '' \
-                or self.current_save_slot.id == 0:
-            return
-
-        result = savefile.get_all_equipment(self.save_file_location,
-                                            self.current_save_slot.id)
-
-        # TODO: Распределить по атрибутам окна
 
     def init_ui(self):
         """
@@ -237,14 +192,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
-        self.button_AddMacros.clicked.connect(self.AddMacros_Click)
+        self.button_AddMacros.clicked.connect(self.AddMacro_Click)
         self.button_Settings.clicked.connect(self.Settings_Click)
-        self.comboBox_SaveSlots.activated.connect(self.comboBox_SaveSlots_OnChange)
+        self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
         self.tableWidget_Macros.cellClicked.connect(self.tableWidget_Macros_Clicked)
         self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
-        self.comboBox_MacroType.activated.connect(self.comboBox_MacroType_OnChange)
+        self.comboBox_MacroType.activated.connect(self.MacroType_OnChange)
         self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
-        self.comboBox_MacroKey.activated.connect(self.comboBox_MacroKey_OnChange)
+        self.comboBox_MacroKey.activated.connect(self.MacroKey_OnChange)
         self.checkBox_MacroKeyCtrl.clicked.connect(self.MacroKeyCtrl_Click)
         self.checkBox_MacroKeyShift.clicked.connect(self.MacroKeyShift_Click)
         self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
@@ -307,56 +262,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        self.hook_hotkeys()
+        # Reading file.
 
-    def fill_save_slots(self):
+        self.set_standard_settings()
+
+    def set_standard_settings(self) -> None:
+        """
+        Set some settings to their standard values if it's not set yet via
+        settings file on manually.
         """
 
+        if self.interrupt_hotkey == '':
+            self.interrupt_hotkey = 'Backspace'
+
+        if self.standard_pause_time == 0:
+            self.standard_pause_time = 20
+
+    def SaveSlotsComboBox_Refresh(self):
+        """
+        Refresh the combobox for saveslot choosing.
         """
 
-        self.save_slots.clear()
-        if self.save_file_location:
-            names = savefile.get_slot_names(self.save_file_location)
-            for i, name in enumerate(names, 1):
-                if name:
-                    save_slot = SaveSlot()
-                    save_slot.id = i
-                    save_slot.name = name
-                    self.save_slots.append(save_slot)
-            self.current_save_slot = self.save_slots[0]
-
-    def comboBox_SaveSlots_Refresh(self):
-        """
-
-        """
-
-        # Init save-slots.
+        saveslots = self.savefile.saveslots
         self.comboBox_SaveSlots.clear()
-        if self.save_slots:
-            for save_slot in self.save_slots:
+        if saveslots:
+            for saveslot in saveslots:
                 self.comboBox_SaveSlots.addItem(
-                    f'{save_slot.id}. {save_slot.name}')
+                    f'{saveslot.number}. {saveslot.name}')
+            self.comboBox_SaveSlots.setEnabled(True)
+            self.comboBox_SaveSlots.setCurrentIndex(self.current_saveslot.number - 1)
         else:
             self.comboBox_SaveSlots.addItem('<Choose save file!>')
+            self.comboBox_SaveSlots.setEnabled(False)
 
-        self.comboBox_SaveSlots.setEnabled(len(self.save_slots) > 0)
-
-    def comboBox_SaveSlots_OnChange(self):
+    def SaveSlots_OnChange(self):
         """
-
+        Makes actions after choosing a saveslot in combobox.
         """
         current_text = self.comboBox_SaveSlots.currentText()
-        slot_id = int(current_text.split('.')[0])
-        self.current_save_slot = next((x for x in self.save_slots if x.id == slot_id), SaveSlot())
-        self.current_macro = Macro()
+        slot_number = int(current_text.split('.')[0])
+        self.current_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), SaveSlot())
+        self.current_saveslot.get_equipment()
+        self.current_macro = Macro(self.current_saveslot)
 
-        self.read_all_equipment()
-        self.hook_hotkeys()
-
-        self.tableWidget_Macros_Refresh()
-        self.MacroArea_Refresh()
-        self.stackedWidget_Pages_RefreshAll()
-        self.stackedWidget_Pages_SetPage()
+        self.refresh_all()
 
     def tableWidget_Macros_Clicked(self, index):
         """
@@ -364,28 +313,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
         macro_id = int(self.tableWidget_Macros.item(index, 0).text())
-        self.current_macro = next((x for x in self.current_save_slot.macros if x.id == macro_id), Macro())
-
-        self.set_macros_settings()
+        self.current_macro = next((x for x in self.current_saveslot.macros if x.id == macro_id), Macro(self.current_saveslot))
 
         self.MacroArea_Refresh()
         self.stackedWidget_Pages_SetPage()
         self.stackedWidget_Pages_RefreshAll()
 
-    def tableWidget_Macros_Refresh(self):
+    def MacrosTable_Refresh(self):
+        """
+        Refreshes the macros table on a left side of window.
         """
 
-        :return:
-        """
-
-        self.button_AddMacros.setEnabled(len(self.save_slots) > 0)
-        self.button_DeleteMacros.setEnabled(len(self.save_slots) > 0)
+        self.button_AddMacros.setEnabled(self.current_saveslot.number > 0)
+        self.button_DeleteMacros.setEnabled(self.current_saveslot.number > 0)
 
         # Clearing table.
         while self.tableWidget_Macros.rowCount():
             self.tableWidget_Macros.removeRow(0)
 
-        for i, macro in enumerate(self.current_save_slot.macros):
+        macros = self.current_saveslot.macros
+        for i, macro in enumerate(macros):
 
             hotkey_list = []
             hotkey = ''
@@ -400,8 +347,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 hotkey = '+'.join(hotkey_list)
 
             self.tableWidget_Macros.insertRow(i)
-            self.tableWidget_Macros.setItem(i, 0,
-                                            QTableWidgetItem(str(macro.id)))
+            self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(str(macro.id)))
             self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
             self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(hotkey))
 
@@ -410,9 +356,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
         self.current_macro.name = self.lineEdit_MacroName.text()
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
 
-    def comboBox_MacroType_OnChange(self):
+    def MacroType_OnChange(self):
         """
 
         """
@@ -438,15 +384,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def OpenSaveFile_Click(self):
         """
-
+        Shows a window for choosing Elden Ring savefile manually.
         """
 
         start_folder = str(Path.home())
 
-        if self.save_file_location:
-            start_folder = '\\'.join(self.save_file_location.split('\\')[:-1])
-        elif os.path.exists(
-                str(Path.home()) + '\\AppData\\Roaming\\EldenRing'):
+        if self.savefile.location:
+            start_folder = '\\'.join(self.savefile.location.split('\\')[:-1])
+        elif os.path.exists(str(Path.home()) + '\\AppData\\Roaming\\EldenRing'):
             start_folder = str(Path.home()) + '\\AppData\\Roaming\\EldenRing'
 
         options = QFileDialog.Options()
@@ -457,19 +402,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                                   options=options)
 
         if location:
-            self.save_file_location = location
-            self.current_macro = Macro()
-            self.fill_save_slots()
-            self.read_game_controls_from_save_file()
-            self.read_all_equipment()
+            self.savefile = SaveFile(location)
+            self.savefile.fill_saveslots()
+            self.savefile.read_game_controls()
+            if self.savefile.saveslots:
+                self.current_saveslot = self.savefile.saveslots[0]
+                self.current_saveslot.get_equipment()
+            else:
+                self.current_saveslot = SaveSlot()
+            self.current_macro = Macro(self.current_saveslot)
             self.hook_hotkeys()
-            self.set_macros_settings()
+            self.set_macros_settings_from_window()
 
-            self.comboBox_SaveSlots_Refresh()
-            self.tableWidget_Macros_Refresh()
-            self.MacroArea_Refresh()
-            self.stackedWidget_Pages_SetPage()
-            self.stackedWidget_Pages_RefreshAll()
+            self.refresh_all()
 
     def Settings_Click(self):
         """
@@ -481,30 +426,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.stackedWidget_Pages_SetPage()
 
-    def AddMacros_Click(self):
+    def AddMacro_Click(self):
         """
 
         :return:
         """
 
-        new_macro = Macro()
-        new_macro.name = '< hotkey name >'
-        new_macro.id = self.get_new_macro_id()
+        new_macro = Macro(self.current_saveslot)
+        new_macro.name = new_macro.name
+        new_macro.id = new_macro.id
         new_macro.type = 'Equipment'
-        new_macro.hotkey = 'F1'
 
-        self.current_save_slot.macros.append(new_macro)
+        self.current_saveslot.macros.append(new_macro)
         self.current_macro = new_macro
 
-        self.hook_hotkeys()
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
+        self.refresh_all()
 
-        self.tableWidget_Macros_Refresh()
-        self.MacroArea_Refresh()
-        self.stackedWidget_Pages_SetPage()
-        self.stackedWidget_Pages_RefreshAll()
-
-    def comboBox_MacroKey_OnChange(self):
+    def MacroKey_OnChange(self):
         """
 
         """
@@ -513,7 +452,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_macro.hotkey = current_text
 
         self.hook_hotkeys()
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
 
     def MacroKeyCtrl_Click(self):
         """
@@ -524,7 +463,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_MacroKeyCtrl.isChecked()
         self.current_macro.hotkey_ctrl = checked
         self.hook_hotkeys()
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
 
     def MacroKeyShift_Click(self):
         """
@@ -533,7 +472,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_MacroKeyShift.isChecked()
         self.current_macro.hotkey_shift = checked
         self.hook_hotkeys()
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
 
     def MacroKeyAlt_Click(self):
         """
@@ -543,7 +482,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_MacroKeyAlt.isChecked()
         self.current_macro.hotkey_alt = checked
         self.hook_hotkeys()
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
 
     def comboBox_InterruptKey_OnChange(self):
         """
@@ -553,7 +492,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         current_text = self.comboBox_InterruptHotkey.currentText()
         self.interrupt_hotkey = current_text
 
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
     def InterruptKeyCtrl_Click(self):
         """
@@ -562,7 +501,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         checked = self.checkBox_InterruptKeyCtrl.isChecked()
         self.interrupt_hotkey_ctrl = checked
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
     def InterruptKeyShift_Click(self):
         """
@@ -570,7 +509,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         checked = self.checkBox_InterruptKeyShift.isChecked()
         self.interrupt_hotkey_shift = checked
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
     def InterruptKeyAlt_Click(self):
         """
@@ -579,7 +518,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         checked = self.checkBox_InterruptKeyAlt.isChecked()
         self.interrupt_hotkey_alt = checked
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
     def DeleteMacros_Click(self):
         """
@@ -587,29 +526,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
 
-        self.current_save_slot.macros.remove(self.current_macro)
-        self.current_macro = Macro()
+        self.current_saveslot.macros.remove(self.current_macro)
+        self.current_macro = Macro(self.current_saveslot)
         self.hook_hotkeys()
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
-        self.tableWidget_Macros_Refresh()
+        self.MacrosTable_Refresh()
         self.MacroArea_Refresh()
         self.stackedWidget_Pages_SetPage()
 
-    def get_new_macro_id(self):
+
+    def refresh_all(self) -> None:
+        """
+        Refreshes all possible elements in window.
         """
 
-        :return:
-        """
-
-        if len(self.current_save_slot.macros):
-            max_id = max(self.current_save_slot.macros,
-                         key=lambda macro: macro.id).id
-            new_id = max_id + 1
-        else:
-            new_id = new_id = self.current_save_slot.id * 1000 + 1
-
-        return new_id
+        self.MacrosTable_Refresh()
+        self.SaveSlotsComboBox_Refresh()
+        self.MacroArea_Refresh()
+        self.stackedWidget_Pages_RefreshAll()
+        self.stackedWidget_Pages_SetPage()
+        self.hook_hotkeys()
 
     def MacroArea_Refresh(self):
         """
@@ -718,7 +655,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def stackedWidget_Pages_Refresh_Settings(self) -> None:
         """
-
+        Refreshes elements on "Settings" page.
         """
 
         # Interrupt hotkey.
@@ -728,22 +665,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_InterruptKeyAlt.setChecked(self.interrupt_hotkey_alt)
 
         # Controls in Elden Ring.
-        self.comboBox_ControlKeyRoll.setCurrentText(self.current_save_slot.game_controls['roll'])
-        self.comboBox_ControlKeyJump.setCurrentText(self.current_save_slot.game_controls['jump'])
-        self.comboBox_ControlKeyCrouch.setCurrentText(self.current_save_slot.game_controls['crouch'])
-        self.comboBox_ControlKeyResetCamera.setCurrentText(self.current_save_slot.game_controls['reset_camera'])
-        self.comboBox_ControlKeyAttack.setCurrentText(self.current_save_slot.game_controls['attack'])
-        self.comboBox_ControlKeyStrongAttack.setCurrentText(self.current_save_slot.game_controls['strong_attack'])
-        self.comboBox_ControlKeySkill.setCurrentText(self.current_save_slot.game_controls['skill'])
-        self.comboBox_ControlKeySwitchItem.setCurrentText(self.current_save_slot.game_controls['switch_item'])
-        self.comboBox_ControlKeySwitchSpell.setCurrentText(self.current_save_slot.game_controls['switch_spell'])
-        self.comboBox_ControlKeyGuard.setCurrentText(self.current_save_slot.game_controls['guard'])
-        self.comboBox_ControlKeyUseItem.setCurrentText(self.current_save_slot.game_controls['use_item'])
-        self.comboBox_ControlKeyUse.setCurrentText(self.current_save_slot.game_controls['event_action'])
+        self.comboBox_ControlKeyRoll.setCurrentText(self.savefile.game_controls['roll'])
+        self.comboBox_ControlKeyJump.setCurrentText(self.savefile.game_controls['jump'])
+        self.comboBox_ControlKeyCrouch.setCurrentText(self.savefile.game_controls['crouch'])
+        self.comboBox_ControlKeyResetCamera.setCurrentText(self.savefile.game_controls['reset_camera'])
+        self.comboBox_ControlKeyAttack.setCurrentText(self.savefile.game_controls['attack'])
+        self.comboBox_ControlKeyStrongAttack.setCurrentText(self.savefile.game_controls['strong_attack'])
+        self.comboBox_ControlKeySkill.setCurrentText(self.savefile.game_controls['skill'])
+        self.comboBox_ControlKeySwitchItem.setCurrentText(self.savefile.game_controls['switch_item'])
+        self.comboBox_ControlKeySwitchSpell.setCurrentText(self.savefile.game_controls['switch_spell'])
+        self.comboBox_ControlKeyGuard.setCurrentText(self.savefile.game_controls['guard'])
+        self.comboBox_ControlKeyUseItem.setCurrentText(self.savefile.game_controls['use_item'])
+        self.comboBox_ControlKeyUse.setCurrentText(self.savefile.game_controls['event_action'])
 
         # Standard pause time.
         self.spinBox_StandardPauseTime.setValue(self.standard_pause_time)
-
 
     def stackedWidget_Pages_Refresh_Multiplayer(self) -> None:
         """
@@ -764,23 +700,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def ControlKeys_OnChange(self):
         """
-
+        Changes things after controls changed in "Settings" page.
         """
 
-        self.current_save_slot.game_controls['roll'] = self.comboBox_ControlKeyRoll.currentText().lower()
-        self.current_save_slot.game_controls['jump'] = self.comboBox_ControlKeyJump.currentText().lower()
-        self.current_save_slot.game_controls['crouch'] = self.comboBox_ControlKeyCrouch.currentText().lower()
-        self.current_save_slot.game_controls['reset_camera'] = self.comboBox_ControlKeyResetCamera.currentText().lower()
-        self.current_save_slot.game_controls['attack'] = self.comboBox_ControlKeyAttack.currentText().lower()
-        self.current_save_slot.game_controls['strong_attack'] = self.comboBox_ControlKeyStrongAttack.currentText().lower()
-        self.current_save_slot.game_controls['skill'] = self.comboBox_ControlKeySkill.currentText().lower()
-        self.current_save_slot.game_controls['switch_item'] = self.comboBox_ControlKeySwitchItem.currentText().lower()
-        self.current_save_slot.game_controls['switch_spell'] = self.comboBox_ControlKeySwitchSpell.currentText().lower()
-        self.current_save_slot.game_controls['guard'] = self.comboBox_ControlKeyGuard.currentText().lower()
-        self.current_save_slot.game_controls['use_item'] = self.comboBox_ControlKeyUseItem.currentText().lower()
-        self.current_save_slot.game_controls['event_action'] = self.comboBox_ControlKeyUse.currentText().lower()
+        self.savefile.game_controls['roll'] = self.comboBox_ControlKeyRoll.currentText().lower()
+        self.savefile.game_controls['jump'] = self.comboBox_ControlKeyJump.currentText().lower()
+        self.savefile.game_controls['crouch'] = self.comboBox_ControlKeyCrouch.currentText().lower()
+        self.savefile.game_controls['reset_camera'] = self.comboBox_ControlKeyResetCamera.currentText().lower()
+        self.savefile.game_controls['attack'] = self.comboBox_ControlKeyAttack.currentText().lower()
+        self.savefile.game_controls['strong_attack'] = self.comboBox_ControlKeyStrongAttack.currentText().lower()
+        self.savefile.game_controls['skill'] = self.comboBox_ControlKeySkill.currentText().lower()
+        self.savefile.game_controls['switch_item'] = self.comboBox_ControlKeySwitchItem.currentText().lower()
+        self.savefile.game_controls['switch_spell'] = self.comboBox_ControlKeySwitchSpell.currentText().lower()
+        self.savefile.game_controls['guard'] = self.comboBox_ControlKeyGuard.currentText().lower()
+        self.savefile.game_controls['use_item'] = self.comboBox_ControlKeyUseItem.currentText().lower()
+        self.savefile.game_controls['event_action'] = self.comboBox_ControlKeyUse.currentText().lower()
 
-        self.set_macros_settings()
+        self.set_macros_settings_from_window()
 
     def textEdit_DIY_OnChange(self):
         """
@@ -795,49 +731,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-    @staticmethod
-    def calculated_save_file_path() -> str:
-        r"""
-        Tries to find a save-file location and returns a path to it.
-        Standard save file location:
-        C:\Users(username)\AppData\Roaming\EldenRing\(SteamID)\ER0000.sl2
-        :return: blank string if file wasn't found
-        """
-
-        elden_ring_path = str(Path.home()) + '\\AppData\\Roaming\\EldenRing'
-
-        if not os.path.exists(elden_ring_path):
-            return ''
-
-        # Looking for a folder with a name like "7xxxxxxxxxxxxxxxx"
-        steam_id_folder = ''
-        file_names = os.listdir(elden_ring_path)
-        for file_name in file_names:
-            if len(file_name) == 17 and file_name.startswith('7'):
-                steam_id_folder = file_name
-                break
-
-        if not steam_id_folder:
-            return ''
-
-        save_file_path = f'{elden_ring_path}\\{steam_id_folder}\\ER0000.sl2'
-
-        if not os.path.exists(save_file_path):
-            return ''
-
-        return save_file_path
-
 
 def start_application():
-    """
-
-    """
-
     app = QApplication(sys.argv)
     window = MainWindow()
     sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
-
     start_application()
