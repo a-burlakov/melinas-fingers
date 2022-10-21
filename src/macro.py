@@ -7,7 +7,7 @@ import keyboard
 from savefile import SaveSlot
 from win32gui import GetWindowText, GetForegroundWindow
 
-keyboard_input = Controller()
+pynput_in = Controller()
 
 def available_hotkey_buttons() -> tuple:
     """
@@ -85,7 +85,8 @@ def available_hotkey_buttons() -> tuple:
         "Delete",
         "Ctrl",
         "Shift",
-        "Alt"
+        "Alt",
+        "~"
     )
 
 class Macro:
@@ -96,7 +97,7 @@ class Macro:
     def __init__(self, saveslot: SaveSlot = SaveSlot()):
         self.saveslot: SaveSlot = saveslot
         self.set_id()
-        self.name = '< name >'
+        self.name = self.standard_name()
         self.type: str = ''
         self.savefile = self.saveslot.savefile
         self.hotkey: str = ''
@@ -104,7 +105,7 @@ class Macro:
         self.hotkey_shift: bool = False
         self.hotkey_alt: bool = False
         self.interrupted: bool = False
-        self.interrupt_hotkey: str = ''
+        self.recovery_hotkey: str = ''
         self.pause_time: int = 20
         self.macro_keyline: str = ''
         self.settings = {
@@ -113,6 +114,7 @@ class Macro:
             },
             'magic': {
                 'spell_number': 0,
+                'current_number': 0,
                 'instant_cast_right': False,
                 'instant_cast_left': False
             },
@@ -123,6 +125,9 @@ class Macro:
                 'macro': ''
             }
         }
+
+    def standard_name(self):
+        return '< name >'
 
     def set_id(self):
         """
@@ -158,6 +163,42 @@ class Macro:
 
         return hotkey
 
+    def execute(self):
+        """
+
+        """
+
+        # TODO: не забыть вернуть
+        current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        # if 'elden' not in current_window_text.lower(): # \
+        #         # and 'melina' not in current_window_text.lower():
+        #     return
+
+        # # TODO: подумать, что делать с интерраптом
+        # if self.recovery_hotkey:
+        #     keyboard.add_hotkey(self.recovery_hotkey,
+        #                         what,
+        #                         suppress=True)
+
+        self.interrupted = False
+        time_start = time.time()
+        print('='*40)
+        print('Macro:   ', f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
+        print('Start:   ', time.ctime(time_start))
+
+        # Nobody knows what can happen inside keylines mechanism
+        # (especially with DIYs), so we need exceptions catch.
+        try:
+            self.form_keyline()
+            self.execute_keyline()
+        except Exception as e:
+            print('Exception!')
+            print(e)
+
+        time_end = time.time()
+        print('End:     ', time.ctime(time_end))
+        print('Duration:', round(time_end - time_start, 5))
+
     def form_keyline(self):
         """
         Forms a keyline string from macro settings to be executed to
@@ -172,13 +213,40 @@ class Macro:
             if not settings['spell_number']:
                 return
 
-            self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (settings["spell_number"] - 1)}'
+            cur_spell = self.saveslot.current_spell
+            goal_spell = settings['spell_number']
+            total_spells = len(self.saveslot.spells)
+            print('Total spells -', total_spells)
+            print('Current spell -', cur_spell)
+            print('Goal spell -', goal_spell)
+            # If current spell is spell we need, then we just need to
+            # check "instant cast" afterwards.
+            spells_equal = False
+            if cur_spell == goal_spell:
+                self.macro_keyline = ' '
+                spells_equal = True
+
+            if not spells_equal:
+                # If we know what spell we're having right now then we save
+                # time if not pressing 'switch_spell' for half sec and
+                # calculate amount of keypresses to just switch to spell from macro.
+                if cur_spell:
+                    needed_switches = goal_spell - cur_spell
+                    if cur_spell > goal_spell:
+                        needed_switches = total_spells - cur_spell + goal_spell
+                    self.macro_keyline = '|switch_spell|pause10' * needed_switches
+                else:
+                    self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (goal_spell - 1)}'
 
             if settings['instant_cast_right']:
                 self.macro_keyline += '|attack'
 
             if settings['instant_cast_left']:
                 self.macro_keyline += '|guard'
+
+            # Set current number for next macro uses.
+            self.saveslot.current_spell = settings['spell_number']
+            print('Current spell now -', self.saveslot.current_spell)
 
         def form_keyline_builtin(self):
             built_in_macro_name = self.settings['built-in']['macro_name']
@@ -224,7 +292,9 @@ class Macro:
                 # Searching in plain buttons...
                 if command in game_control_keys() \
                         or command in available_hotkey_buttons() \
-                        or len(command) == 1 and command.isalpha():
+                        or command in non_letter_keys() \
+                        or len(command) == 1 and command.isalpha()\
+                        or command in []:
                     keyline = command
 
                 # Searching in built-in macros...
@@ -271,71 +341,17 @@ class Macro:
         elif self.type == 'DIY':
             form_keyline_diy(self)
 
-
-
-    def execute(self):
-        """
-
-        """
-
-        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower(): # \
-        #         # and 'melina' not in current_window_text.lower():
-        #     return
-
-        def what():
-            raise 'what'
-
-        self.interrupted = False
-
-        # # TODO: подумать, что делать с интерраптом
-        # if self.interrupt_hotkey:
-        #     keyboard.add_hotkey(self.interrupt_hotkey,
-        #                         what,
-        #                         suppress=True)
-
-        try:
-            self.form_keyline()
-            self.execute_keyline()
-        except:
-            pass
-
-
-
     def execute_keyline(self) -> None:
         """
         Parses a line into a keys and simulates key presses.
-        Additional pause can be made with 'pauseN', where N is one hundredth sec.
+        Additional pause can be made with 'pauseN', where N is one thousandth sec.
+        Additional press time can be made with 'pressN'.
         """
 
         sleep_time = self.pause_time / 1000
         keyline = self.macro_keyline
-        print(keyline)
+        print('Keyline: ', keyline)
         key_presses = keyline.split('|')
-        press_time = sleep_time
-
-        # TODO: допилить или удалить
-        # # Check if this keyline will even work (everything can be in DIY macro,
-        # # or there's can be no needed control assign in Elden Ring).
-        # for key_press in key_presses:
-        #
-        #     if key_press.startswith('pause'):
-        #         pause_time = key_press.replace('pause', '')
-        #         if pause_time.isdigit():
-        #             continue
-        #
-        #     if '_press' in keyline:
-        #         parts = key_press.partition('_press')
-        #         key_press = parts[0]
-        #
-        #     if key_press in self.saveslot.game_controls.keys() \
-        #             or key_press in available_hotkey_buttons() \
-        #             or key_press in non_letter_keys()\
-        #             or (len(key_press) == 1 and key_press.isalpha()):
-        #         continue
-        #
-        #     # Check failed.
-        #     return
 
         # Execution.
         for key_press in key_presses:
@@ -363,26 +379,26 @@ class Macro:
             if key_press in self.savefile.game_controls.keys():
                 key_press = self.savefile.game_controls[key_press].lower()
 
+            # TODO: need to understand, why 'keyboard' can't press arrows
+            # but 'pynput' can. Using two separate methods for input
+            # makes me feel silly.
+
             # Key presses execution.
-            if key_press in non_letter_keys():
-                keyboard_input.press(Key[key_press])
+            keys_for_pynput = ['up', 'left', 'right', 'down']
+            if key_press in keys_for_pynput:
+                if key_press in non_letter_keys():
+                    key_press = Key[key_press]
+                pynput_in.press(key_press)
                 time.sleep(press_time)
-                keyboard_input.release(Key[key_press])
+                pynput_in.release(key_press)
             else:
-                keyboard_input.press(key_press)
+                keyboard.press(key_press)
                 time.sleep(press_time)
-                keyboard_input.release(key_press)
+                keyboard.release(key_press)
 
             time.sleep(sleep_time)
 
         self.interrupted = False
-
-
-    def set_macro_interrupted(self) -> None:
-        """
-
-        """
-        raise 'NONONO'
 
 def non_letter_keys() -> tuple:
     """
@@ -406,6 +422,10 @@ def game_control_keys() -> tuple:
     """
 
     return (
+        'move_forward',
+        'move_back',
+        'move_left',
+        'move_right',
         'roll',
         'jump',
         'crouch',
@@ -426,7 +446,7 @@ def built_in_macros() -> list:
     """
 
     macros_list = [
-        {'name': 'Sort all: Asc. Order of Acquisition',
+        {'name': 'Sort all: Asc. Acquisition',
          'keyline': keyline_to_sort_all_lists(),
          'comment': 'commentary ha ha ha'},
         {'name': 'Crouch attack',

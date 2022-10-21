@@ -123,6 +123,10 @@ class SaveFile:
         """
 
         return {
+            'move_forward': 0x01903541,
+            'move_back': 0x01903541,
+            'move_left': 0x01903541,
+            'move_right': 0x01903541,
             'roll': 0x01903541,
             'jump': 0x01903555,
             'crouch': 0x0190352d,
@@ -334,6 +338,7 @@ class SaveSlot:
         self.armor_legs: list = []
         self.talismans: list = []
         self.spells: list = []
+        self.current_spell: int = 0
 
     @staticmethod
     def inventory_and_chest_separator() -> bytes:
