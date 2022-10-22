@@ -174,12 +174,6 @@ class Macro:
         #         # and 'melina' not in current_window_text.lower():
         #     return
 
-        # # TODO: подумать, что делать с интерраптом
-        # if self.recovery_hotkey:
-        #     keyboard.add_hotkey(self.recovery_hotkey,
-        #                         what,
-        #                         suppress=True)
-
         self.interrupted = False
         time_start = time.time()
         print('='*40)
@@ -213,12 +207,15 @@ class Macro:
             if not settings['spell_number']:
                 return
 
+            search_mode = self.saveslot.search_mode_magic
             cur_spell = self.saveslot.current_spell
             goal_spell = settings['spell_number']
             total_spells = len(self.saveslot.spells)
+            print('Search mode -', search_mode)
             print('Total spells -', total_spells)
             print('Current spell -', cur_spell)
             print('Goal spell -', goal_spell)
+
             # If current spell is spell we need, then we just need to
             # check "instant cast" afterwards.
             spells_equal = False
@@ -230,17 +227,20 @@ class Macro:
                 # If we know what spell we're having right now then we save
                 # time if not pressing 'switch_spell' for half sec and
                 # calculate amount of keypresses to just switch to spell from macro.
-                if cur_spell:
+                # But this nice thing is for semi-manual mode only.
+                if search_mode == 'Semi-manual' and cur_spell:
                     needed_switches = goal_spell - cur_spell
                     if cur_spell > goal_spell:
                         needed_switches = total_spells - cur_spell + goal_spell
                     self.macro_keyline = '|switch_spell|pause10' * needed_switches
                 else:
+                    # In auto mode we find first spell by pressing a button for
+                    # little bit and not bother.
                     self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (goal_spell - 1)}'
 
+            # Add instant actions.
             if settings['instant_cast_right']:
                 self.macro_keyline += '|attack'
-
             if settings['instant_cast_left']:
                 self.macro_keyline += '|guard'
 
@@ -422,8 +422,8 @@ def game_control_keys() -> tuple:
     """
 
     return (
-        'move_forward',
-        'move_back',
+        'move_up',          
+        'move_down',
         'move_left',
         'move_right',
         'roll',

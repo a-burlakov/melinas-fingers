@@ -161,26 +161,52 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
+        def hook_for_elden_ring(hotkey: str, func) -> None:
+            """
+            Hooks a hotkey in a way that fits to our process. 
+            """
+
+            # Need to rename some keys to make 'keyboard' eat it.
+            hotkey = hotkey.replace('~', 'ё')
+            if hotkey.lower().startswith('num') and len(hotkey) == 4:
+                hotkey = hotkey[:3].lower() + ' ' + hotkey[-1]
+
+            # As in Elden ring we can use hotkey during movement, we need to 
+            # hook a hotkey to any movement combination we can have, including
+            # all 8 directions and sprint button.
+            # That's awful, but I don't know a method to do it differently.
+            up = self.savefile.game_controls['move_up']
+            down = self.savefile.game_controls['move_down']
+            left = self.savefile.game_controls['move_left']
+            right = self.savefile.game_controls['move_right']
+            sprint = self.savefile.game_controls['roll']
+            move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+',
+                               f'{up}+{left}+', f'{up}+{right}+',
+                               f'{right}+{down}+', f'{left}+{down}+',
+                               f'{sprint}+{up}+', f'{sprint}+{down}+',
+                               f'{sprint}+{right}+', f'{sprint}+{left}+',
+                               f'{sprint}+{up}+{left}+', f'{sprint}+{up}+{right}+',
+                               f'{sprint}+{right}+{down}+', f'{sprint}+{left}+{down}+']
+
+            # TODO: все равно капризничает вот эта тильда, и с grave и с tilda
+            # for move_key in move_key_combos:
+            #     keyboard.add_hotkey(move_key + hotkey,
+            #                         func,
+            #                         suppress=True,
+            #                         trigger_on_release=True)
+
+
         # Try block, because 'Keyboard' clearing methods can call
         # an unexpected exception if there's no assigned hotkeys.
         try:
             keyboard.remove_all_hotkeys()
-            # keyboard._hotkeys.clear()
+            keyboard._hotkeys.clear()
         except:
             pass
 
-        # TODO: оптимизировать эту жесть
+
         if self.recovery_hotkey:
-            for move_key in ['', 'w+', 'a+', 's+', 'd+', 'w+a+', 'w+d+',
-                             'd+s+', 'a+s+',
-                             'space+w+', 'space+a+', 'space+s+', 'space+d+',
-                             'space+w+a+', 'space+w+d+', 'space+d+s+',
-                             'space+a+s+']:
-                recovery_hotkey = self.recovery_hotkey.replace('~', '`')
-                keyboard.add_hotkey(move_key + recovery_hotkey,
-                                self.refresh_currents,
-                                suppress=True,
-                                trigger_on_release=True)
+            hook_for_elden_ring(self.recovery_hotkey, self.refresh_currents)
 
         for macro in self.current_saveslot.macros:
 
@@ -191,22 +217,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # Condition helps to correct a situation when several hotkeys
             # are assign to one key.
             if hotkey_string not in keyboard._hotkeys:
-                for move_key in ['', 'w+', 'a+', 's+', 'd+', 'w+a+', 'w+d+', 'd+s+', 'a+s+',
-                                 'space+w+', 'space+a+', 'space+s+', 'space+d+', 'space+w+a+', 'space+w+d+', 'space+d+s+', 'space+a+s+']:
-                    keyboard.add_hotkey(move_key + hotkey_string,
-                                        macro.execute,
-                                        suppress=True,
-                                        trigger_on_release=True)
-
+                hook_for_elden_ring(hotkey_string, macro.execute)
                 print(f'{macro.name} hooked to "{hotkey_string}"')
 
     def refresh_currents(self):
         """
         Refreshes current spells, weapons and equipment to 0.
         """
+
+        # All cells in inventory.
+        self.current_saveslot.current_weapon_right_1 = 0
+        self.current_saveslot.current_weapon_right_2 = 0
+        self.current_saveslot.current_weapon_right_3 = 0
+        self.current_saveslot.current_weapon_left_1 = 0
+        self.current_saveslot.current_weapon_left_2 = 0
+        self.current_saveslot.current_weapon_left_3 = 0
+        self.current_saveslot.current_armor_head = 0
+        self.current_saveslot.current_armor_torso = 0
+        self.current_saveslot.current_armor_hands = 0
+        self.current_saveslot.current_armor_legs = 0
+        self.current_saveslot.current_talisman_1 = 0
+        self.current_saveslot.current_talisman_2 = 0
+        self.current_saveslot.current_talisman_3 = 0
+        self.current_saveslot.current_talisman_4 = 0
+
+        # Magic.
+        self.current_saveslot.current_spell = 0
+
         print('=' * 40)
         print('Currents were refreshed.')
-        self.current_saveslot.current_spell = 0
 
     def init_ui(self):
         """
@@ -222,7 +261,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
 
-        self.lineEdit_MacroName.editingFinished.connect(self.lineEdit_MacroName_OnChange)
+        self.lineEdit_MacroName.editingFinished.connect(self.MacroName_OnChange)
         self.comboBox_MacroType.activated.connect(self.MacroType_OnChange)
         self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
         self.comboBox_MacroKey.activated.connect(self.MacroKey_OnChange)
@@ -258,10 +297,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.textEdit_DIY.textChanged.connect(self.textEdit_DIY_OnChange)
 
         # Page "Settings"
-        self.comboBox_RecoveryHotkey.activated.connect(self.comboBox_RecoveryKey_OnChange)
+        self.comboBox_RecoveryHotkey.activated.connect(self.RecoveryKey_OnChange)
         self.checkBox_RecoveryKeyCtrl.clicked.connect(self.RecoveryKeyCtrl_Click)
         self.checkBox_RecoveryKeyShift.clicked.connect(self.RecoveryKeyShift_Click)
         self.checkBox_RecoveryKeyAlt.clicked.connect(self.RecoveryKeyAlt_Click)
+
+        self.comboBox_EquipmentSearchMode.activated.connect(self.SearchMode_OnChange)
+        self.comboBox_MagicSearchMode.activated.connect(self.SearchMode_OnChange)
 
         self.comboBox_ControlKeyMove_Forward.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyMove_Back.activated.connect(self.ControlKeys_OnChange)
@@ -375,7 +417,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def MacrosTable_Refresh(self):
         """
-        Refreshes the macros table on a left side of window.
+        Refreshes the macros table on a left side of the window.
         """
 
         self.button_AddMacros.setEnabled(self.current_saveslot.number > 0)
@@ -389,7 +431,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for i, macro in enumerate(macros):
 
             hotkey_list = []
-            hotkey = ''
+            hotkey = '...'
             if macro.hotkey:
                 if macro.hotkey_ctrl:
                     hotkey_list.append('Ctrl')
@@ -405,7 +447,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
             self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(hotkey))
 
-    def lineEdit_MacroName_OnChange(self):
+    def MacroName_OnChange(self):
         """
 
         """
@@ -542,11 +584,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.hook_hotkeys()
         self.MacrosTable_Refresh()
 
-    def comboBox_RecoveryKey_OnChange(self):
+    def RecoveryKey_OnChange(self):
         """
 
         """
-
+        # TODO: отрефакторить в одну функцию: после изменения
         current_text = self.comboBox_RecoveryHotkey.currentText()
         self.recovery_hotkey = current_text
 
@@ -577,6 +619,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_RecoveryKeyAlt.isChecked()
         self.recovery_hotkey_alt = checked
         self.set_macros_settings_from_window()
+
+    def SearchMode_OnChange(self):
+        """
+        Changes search mode settings after changing them in "Settings" page.
+        """
+
+        self.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText()
+        self.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText()
 
     def DeleteMacros_Click(self):
         """
@@ -788,9 +838,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_RecoveryKeyShift.setChecked(self.recovery_hotkey_shift)
         self.checkBox_RecoveryKeyAlt.setChecked(self.recovery_hotkey_alt)
 
+        # Search modes.
+        self.comboBox_EquipmentSearchMode.setCurrentText(self.current_saveslot.search_mode_equipment)
+        self.comboBox_MagicSearchMode.setCurrentText(self.current_saveslot.search_mode_magic)
+
         # Controls in Elden Ring.
-        self.comboBox_ControlKeyMove_Forward.setCurrentText(self.savefile.game_controls['move_forward'])
-        self.comboBox_ControlKeyMove_Back.setCurrentText(self.savefile.game_controls['move_back'])
+        self.comboBox_ControlKeyMove_Forward.setCurrentText(self.savefile.game_controls['move_up'])
+        self.comboBox_ControlKeyMove_Back.setCurrentText(self.savefile.game_controls['move_down'])
         self.comboBox_ControlKeyMove_Left.setCurrentText(self.savefile.game_controls['move_left'])
         self.comboBox_ControlKeyMove_Right.setCurrentText(self.savefile.game_controls['move_right'])
         self.comboBox_ControlKeyRoll.setCurrentText(self.savefile.game_controls['roll'])
@@ -837,8 +891,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Changes things after controls changed in "Settings" page.
         """
 
-        self.savefile.game_controls['move_forward'] = self.comboBox_ControlKeyMove_Forward.currentText().lower()
-        self.savefile.game_controls['move_back'] = self.comboBox_ControlKeyMove_Back.currentText().lower()
+        self.savefile.game_controls['move_up'] = self.comboBox_ControlKeyMove_Forward.currentText().lower()
+        self.savefile.game_controls['move_down'] = self.comboBox_ControlKeyMove_Back.currentText().lower()
         self.savefile.game_controls['move_left'] = self.comboBox_ControlKeyMove_Left.currentText().lower()
         self.savefile.game_controls['move_right'] = self.comboBox_ControlKeyMove_Right.currentText().lower()
         self.savefile.game_controls['roll'] = self.comboBox_ControlKeyRoll.currentText().lower()

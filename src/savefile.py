@@ -85,6 +85,7 @@ class SaveFile:
         between_slots = 16
         saveslot_width = 2621456
 
+        # TODO: Переделать на железные
         intervals = [(SaveFile.range_before_saveslots(), 0x0280310)]  # First save file.
         for _ in range(9):
             last_interval = intervals[-1]
@@ -121,10 +122,10 @@ class SaveFile:
         Returns HEX-ranges of places in save-file that keeps controls for some
         actions that could be used in macros.
         """
-
+        # TODO: поправить мувы
         return {
-            'move_forward': 0x01903541,
-            'move_back': 0x01903541,
+            'move_up': 0x01903541,
+            'move_down': 0x01903541,
             'move_left': 0x01903541,
             'move_right': 0x01903541,
             'roll': 0x01903541,
@@ -339,6 +340,8 @@ class SaveSlot:
         self.talismans: list = []
         self.spells: list = []
         self.current_spell: int = 0
+        self.search_mode_equipment: str = 'Auto'
+        self.search_mode_magic: str = 'Auto'
 
     @staticmethod
     def inventory_and_chest_separator() -> bytes:
@@ -346,7 +349,7 @@ class SaveSlot:
         Returns a HEX-string that separates inventory and chest block for
         weapon searching.
         """
-        return bytes.fromhex('ffffffff00000000') * 6
+        return bytes.fromhex('ffffffff00000000') * 4
 
     def get_equipment(self, equipment_type: str = '') -> None:
         """
@@ -368,7 +371,6 @@ class SaveSlot:
         if not savefile_path:
             return
 
-        number = self.number
         slot_data = self.get_slot_data()
         # slot_name = self.name
 
@@ -379,6 +381,7 @@ class SaveSlot:
         for weapon in datasheets.weapons():
             weapon_id = weapon[1]
             weapon_name = weapon[2]
+
             if bytes.fromhex(weapon_id) in slot_data_for_equipment_search:
                 all_equipment_having.append([weapon_name, weapon_id, 'weapons'])
 
