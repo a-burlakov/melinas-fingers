@@ -9,6 +9,7 @@ from macro import Macro, built_in_macros, available_hotkey_buttons
 from savefile import SaveFile, SaveSlot
 import keyboard
 
+# Copypasted code to get rid of screen scale problems.
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
@@ -270,7 +271,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         self.setupUi(self)  # automaticly generated code
 
-        self.setFixedSize(1120, 700)
+        self.setFixedSize(1150, 700)
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
@@ -554,8 +555,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         :return:
         """
-        if self.stackedWidget_Pages.currentIndex() != 5:
-            self.stackedWidget_Pages.setCurrentIndex(5)
+        if self.stackedWidget_Pages.currentIndex() != 6:
+            self.stackedWidget_Pages.setCurrentIndex(6)
         else:
             self.Pages_SetPage()
 
@@ -1047,8 +1048,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 return
 
             built_in_macro_name = items[0].text()
-            if self.current_macro.name == self.current_macro.standard_name() \
-                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells):
+            if self.current_macro.name != built_in_macro_name \
+                and (self.current_macro.name == self.current_macro.standard_name()
+                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells)):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()

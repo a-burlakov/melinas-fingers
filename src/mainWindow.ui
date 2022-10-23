@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
-    <height>800</height>
+    <width>1150</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -27,19 +27,145 @@
    <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QLabel
+{
+  	color: rgb(200, 200, 200);
+}
+
+QLineEdit
+{
+	background-color: rgb(31, 32, 27);
+	color: rgb(200, 200, 200);
+	border: 1px solid;
+	border-color: rgb(150, 150, 150);
+	border-radius: 2px;
+	selection-background-color:rgb(65, 61, 51);
+	selection-color:rgb(220, 220, 220);
+}
+
+select {
+   border:0px;
+   outline:0px;
+}
+
+QComboBox
+{
+	background-color: rgb(31, 32, 27);
+	color: rgb(200, 200, 200);
+	border: 1px solid;
+	border-color: rgb(150, 150, 150);
+	border-radius: 2px;
+
+}
+
+QComboBox QAbstractItemView
+{
+    border: 1px;
+    color: rgb(200, 200, 200);
+    background-color: rgb(31, 32, 27);
+    selection-background-color:rgb(65, 61, 51);
+	selection-color:rgb(220, 220, 220);
+}
+
+QComboBox:item:selected
+{
+    border: 1px solid
+}
+
+QComboBox:disabled {
+	border-color: rgb(70, 70, 70);
+	color: rgb(100, 100, 100);
+   	background-color:rgb(20, 20, 20);
+}
+
+QComboBox::down-arrow {
+   	
+	image: url(:/newPrefix/images/down_arrow_combobox.png);
+}
+
+QComboBox::drop-down {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+QLineEdit:disabled
+{
+	border-color: rgb(70, 70, 70);
+	color: rgb(100, 100, 100);
+   	background-color:rgb(20, 20, 20);
+}
+
+QTableView
+{
+	color: rgb(200, 200, 200);
+	background-color: transparent;
+	selection-background-color: rgb(65, 61, 51);
+	selection-color: rgb(220, 220, 220)
+}
+
+QTableView::item
+{
+    
+}
+
+QCheckBox {color: rgb(200,200,200)}
+
+QCheckBox:indicator:unchecked
+{
+	background-color: transparent;
+	border: 1px solid;
+	border-color: rgb(150, 150, 150);
+}
+
+QCheckBox:indicator:checked
+{
+
+}
+
+QPushButton
+{
+  	color: rgb(200, 200, 200);
+	border: 1px solid;
+	border-color: rgb(150, 150, 150);
+	border-radius: 2px;
+	background-color: rgb(31, 32, 27);
+	font: 10pt &quot;Garamond&quot;
+}
+
+
+QPushButton:disabled
+{
+	border-color: rgb(70, 70, 70);
+	color: rgb(100, 100, 100);
+   	background-color:rgb(20, 20, 20);
+}
+
+QPushButton:hover
+{
+   	background-color:rgb(60, 60, 50);
+}
+
+
+
+</string>
+   </property>
    <widget class="QComboBox" name="comboBox_SaveSlots">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>170</y>
-      <width>171</width>
-      <height>41</height>
+      <x>200</x>
+      <y>150</y>
+      <width>141</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <item>
@@ -99,13 +225,13 @@
       <x>60</x>
       <y>220</y>
       <width>61</width>
-      <height>41</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -115,37 +241,51 @@
    <widget class="QPushButton" name="button_DeleteMacros">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>140</y>
-      <width>93</width>
-      <height>51</height>
+      <x>880</x>
+      <y>120</y>
+      <width>151</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
-     <string>Delete
-Hotkey</string>
+     <string>Delete Hotkey</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_MacroType">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>210</y>
-      <width>271</width>
-      <height>41</height>
+      <x>440</x>
+      <y>150</y>
+      <width>201</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>12</width>
+      <height>12</height>
+     </size>
+    </property>
+    <property name="frame">
+     <bool>true</bool>
     </property>
     <item>
      <property name="text">
@@ -176,20 +316,20 @@ Hotkey</string>
    <widget class="QCheckBox" name="checkBox_MacroKeyShift">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>210</y>
-      <width>121</width>
+      <x>800</x>
+      <y>138</y>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>+ Shift</string>
@@ -198,20 +338,20 @@ Hotkey</string>
    <widget class="QCheckBox" name="checkBox_MacroKeyAlt">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>240</y>
-      <width>121</width>
+      <x>800</x>
+      <y>160</y>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>+ Alt</string>
@@ -221,19 +361,19 @@ Hotkey</string>
     <property name="geometry">
      <rect>
       <x>800</x>
-      <y>190</y>
-      <width>121</width>
+      <y>115</y>
+      <width>51</width>
       <height>20</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>+ Ctrl</string>
@@ -243,9 +383,9 @@ Hotkey</string>
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>170</y>
-      <width>111</width>
-      <height>31</height>
+      <y>150</y>
+      <width>91</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -257,11 +397,11 @@ Hotkey</string>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Save slot:</string>
@@ -273,42 +413,42 @@ Hotkey</string>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>210</y>
-      <width>141</width>
-      <height>31</height>
+      <x>390</x>
+      <y>150</y>
+      <width>41</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>Hotkey type:</string>
+     <string>Type:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>140</y>
-      <width>51</width>
-      <height>30</height>
+      <x>660</x>
+      <y>120</y>
+      <width>31</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>Key:</string>
@@ -317,27 +457,29 @@ Hotkey</string>
    <widget class="QStackedWidget" name="stackedWidget_Pages">
     <property name="geometry">
      <rect>
-      <x>380</x>
-      <y>280</y>
-      <width>681</width>
-      <height>471</height>
+      <x>370</x>
+      <y>190</y>
+      <width>741</width>
+      <height>491</height>
      </rect>
     </property>
-    <property name="styleSheet">
-     <string notr="true"/>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
      <widget class="QGraphicsView" name="picture_equip_weaponright_1">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>111</width>
-        <height>121</height>
+        <x>20</x>
+        <y>30</y>
+        <width>90</width>
+        <height>105</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -359,10 +501,10 @@ Hotkey</string>
      <widget class="QGraphicsView" name="picture_equip_weaponright_2">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>150</y>
-        <width>111</width>
-        <height>121</height>
+        <x>20</x>
+        <y>145</y>
+        <width>91</width>
+        <height>105</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -384,10 +526,10 @@ Hotkey</string>
      <widget class="QGraphicsView" name="picture_equip_weaponright_3">
       <property name="geometry">
        <rect>
-        <x>0</x>
-        <y>300</y>
-        <width>111</width>
-        <height>121</height>
+        <x>20</x>
+        <y>260</y>
+        <width>91</width>
+        <height>105</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -406,6 +548,62 @@ Hotkey</string>
        <enum>QFrame::Plain</enum>
       </property>
      </widget>
+     <widget class="QGraphicsView" name="picture_equip_weaponright_4">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>375</y>
+        <width>91</width>
+        <height>105</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: url(:/newPrefix/images/equip_weapon.png);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Equipment</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Magic">
      <widget class="QTableWidget" name="tableWidget_AvaiableMagic">
@@ -414,10 +612,10 @@ Hotkey</string>
       </property>
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>20</y>
+        <x>20</x>
+        <y>30</y>
         <width>261</width>
-        <height>531</height>
+        <height>451</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -429,14 +627,17 @@ Hotkey</string>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -530,67 +731,98 @@ Hotkey</string>
      <widget class="QCheckBox" name="checkBox_MagicInstantUseLeftHand">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>110</y>
-        <width>121</width>
+        <x>290</x>
+        <y>60</y>
+        <width>91</width>
         <height>20</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>Left Hand</string>
+       <string>Left hand</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_MagicInstantUseRightHand">
       <property name="geometry">
        <rect>
-        <x>350</x>
-        <y>70</y>
-        <width>141</width>
+        <x>390</x>
+        <y>60</y>
+        <width>101</width>
         <height>20</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>Right Hand</string>
+       <string>Right hand</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>350</x>
+        <x>330</x>
         <y>30</y>
-        <width>101</width>
+        <width>121</width>
         <height>30</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>Instant use:</string>
+       <string>Instant magic cast:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Magic</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
       </property>
      </widget>
     </widget>
@@ -602,9 +834,9 @@ Hotkey</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
+        <y>30</y>
         <width>251</width>
-        <height>531</height>
+        <height>451</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -616,14 +848,20 @@ Hotkey</string>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -633,6 +871,9 @@ Hotkey</string>
       </property>
       <property name="autoScroll">
        <bool>true</bool>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
       <property name="tabKeyNavigation">
        <bool>false</bool>
@@ -717,20 +958,20 @@ Hotkey</string>
      <widget class="QLabel" name="label_BuiltInMacroComment">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>10</y>
-        <width>381</width>
-        <height>521</height>
+        <x>300</x>
+        <y>30</y>
+        <width>401</width>
+        <height>461</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comment for built-in macro&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -739,16 +980,53 @@ Hotkey</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Built-in</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_DIY">
      <widget class="QTextEdit" name="textEdit_DIY">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>10</y>
+        <y>30</y>
         <width>281</width>
-        <height>531</height>
+        <height>451</height>
        </rect>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="html">
        <string notr="true">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -762,19 +1040,19 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>10</y>
-        <width>221</width>
+        <y>30</y>
+        <width>391</width>
         <height>521</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Comment for DIY&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -783,31 +1061,92 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>DIY</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
     </widget>
-    <widget class="QWidget" name="stackedWidget_Settings">
+    <widget class="QWidget" name="stackedWidget_Pages_Multiplayer">
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Multiplayer</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackedWidget_Pages_Settings">
      <widget class="QLabel" name="label_1">
       <property name="geometry">
        <rect>
         <x>60</x>
         <y>420</y>
         <width>171</width>
-        <height>21</height>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Standard pause time:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QSpinBox" name="spinBox_StandardPauseTime">
@@ -818,6 +1157,11 @@ p, li { white-space: pre-wrap; }
         <width>42</width>
         <height>22</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
@@ -832,11 +1176,8 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ms. (1/1000 sec)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -845,44 +1186,19 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_17">
-      <property name="geometry">
-       <rect>
-        <x>490</x>
-        <y>0</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Elden Ring controls:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-     </widget>
      <widget class="QComboBox" name="comboBox_ControlKeyRoll">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>30</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>210</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -894,16 +1210,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyJump">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>70</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>240</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -915,16 +1231,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyCrouch">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>110</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>270</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -936,16 +1252,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyResetCamera">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>150</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>300</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -957,16 +1273,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeySwitchSpell">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>190</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>90</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -978,16 +1294,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeySwitchItem">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>230</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>120</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -999,16 +1315,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyAttack">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>270</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>150</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1020,16 +1336,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyStrongAttack">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>310</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>180</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1041,16 +1357,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyGuard">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>350</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>210</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1062,16 +1378,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeySkill">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>390</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>240</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1083,16 +1399,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyUseItem">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>430</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>270</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1104,16 +1420,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyUse">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>470</y>
-        <width>191</width>
-        <height>41</height>
+        <x>650</x>
+        <y>300</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1125,316 +1441,286 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_20">
       <property name="geometry">
        <rect>
-        <x>400</x>
-        <y>30</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>180</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Roll:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_21">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>50</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>240</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Jump:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_22">
       <property name="geometry">
        <rect>
         <x>380</x>
-        <y>90</y>
-        <width>171</width>
-        <height>21</height>
+        <y>270</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Crouch:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_23">
       <property name="geometry">
        <rect>
-        <x>390</x>
-        <y>130</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>300</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reset camera:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_24">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>170</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>90</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Switch spell:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_25">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>210</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>120</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Switch item:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_26">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>250</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>150</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Attack:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_27">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>290</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>180</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Strong attack:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_28">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>330</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>210</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Guard:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_29">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>370</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>240</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Skill:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_30">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>410</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>270</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use item:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_31">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>450</y>
-        <width>171</width>
-        <height>21</height>
+        <x>570</x>
+        <y>300</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Event action:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBox_RecoveryHotkey">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>20</y>
-        <width>191</width>
-        <height>41</height>
+        <x>100</x>
+        <y>170</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1446,33 +1732,33 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_19">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>40</y>
-        <width>171</width>
-        <height>21</height>
+        <x>20</x>
+        <y>170</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Recovery hotkey:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Hotkey:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_RecoveryKeyAlt">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>120</y>
+        <x>210</x>
+        <y>210</y>
         <width>121</width>
         <height>20</height>
        </rect>
@@ -1480,11 +1766,11 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>+ Alt</string>
@@ -1493,8 +1779,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_RecoveryKeyCtrl">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>66</y>
+        <x>210</x>
+        <y>166</y>
         <width>121</width>
         <height>20</height>
        </rect>
@@ -1502,11 +1788,11 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>+ Ctrl</string>
@@ -1515,8 +1801,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_RecoveryKeyShift">
       <property name="geometry">
        <rect>
-        <x>150</x>
-        <y>93</y>
+        <x>210</x>
+        <y>188</y>
         <width>121</width>
         <height>20</height>
        </rect>
@@ -1524,11 +1810,11 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>+ Shift</string>
@@ -1537,16 +1823,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyMove_Up">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>240</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>90</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1558,16 +1844,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyMove_Down">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>340</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>150</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1579,16 +1865,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyMove_Left">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>290</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>120</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1600,16 +1886,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_ControlKeyMove_Right">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>380</y>
-        <width>191</width>
-        <height>41</height>
+        <x>460</x>
+        <y>180</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1621,116 +1907,104 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_32">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>250</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>90</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move up:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_33">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>320</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>150</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move down:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_34">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>300</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>120</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
       </property>
       <property name="text">
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move left:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_35">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>390</y>
-        <width>171</width>
-        <height>21</height>
+        <x>380</x>
+        <y>210</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
-      </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;MoveRight&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Move right:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBox_MagicSearchMode">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>190</y>
-        <width>191</width>
-        <height>41</height>
+        <x>100</x>
+        <y>60</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1747,16 +2021,16 @@ p, li { white-space: pre-wrap; }
      <widget class="QComboBox" name="comboBox_EquipmentSearchMode">
       <property name="geometry">
        <rect>
-        <x>170</x>
-        <y>140</y>
-        <width>191</width>
-        <height>41</height>
+        <x>100</x>
+        <y>30</y>
+        <width>91</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <item>
@@ -1773,87 +2047,252 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_36">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>220</y>
-        <width>171</width>
-        <height>21</height>
+        <x>20</x>
+        <y>60</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
-      <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
-      </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Magic search mode:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Magic:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="label_37">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>170</y>
-        <width>171</width>
-        <height>21</height>
+        <x>20</x>
+        <y>30</y>
+        <width>81</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>14</pointsize>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Equipment:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 255, 255);</string>
+       <string notr="true">color: rgb(180, 166, 138);</string>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Equipment search mode:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>Search mode</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_38">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>140</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Recovery key</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_39">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>0</y>
+        <width>151</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Elden Ring controls</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_40">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>30</y>
+        <width>361</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Melina's Fingers calculates game controls from save file, but if there're still empty boxes somehow, please fill it manually. Otherwise the hotkeys associated with empty controls will not work.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="stackedWidget_Pages_About">
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>111</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>About</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
       </property>
      </widget>
     </widget>
    </widget>
    <widget class="QPushButton" name="button_OpenSaveFile">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>170</y>
-      <width>81</width>
-      <height>41</height>
+      <x>60</x>
+      <y>120</y>
+      <width>281</width>
+      <height>25</height>
      </rect>
+    </property>
+    <property name="sizeIncrement">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+      <strikeout>false</strikeout>
+      <stylestrategy>PreferAntialias</stylestrategy>
+      <kerning>true</kerning>
      </font>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="text">
-     <string>Open</string>
+     <string>Open save file</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button_SaveSettings">
     <property name="geometry">
      <rect>
-      <x>900</x>
-      <y>30</y>
+      <x>960</x>
+      <y>40</y>
       <width>71</width>
-      <height>41</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -1867,9 +2306,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>280</y>
-      <width>261</width>
-      <height>471</height>
+      <y>250</y>
+      <width>281</width>
+      <height>431</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1881,14 +2320,17 @@ p, li { white-space: pre-wrap; }
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="focusPolicy">
-     <enum>Qt::ClickFocus</enum>
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true"/>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="horizontalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -1899,8 +2341,8 @@ p, li { white-space: pre-wrap; }
     <property name="autoScroll">
      <bool>true</bool>
     </property>
-    <property name="autoScrollMargin">
-     <number>10</number>
+    <property name="editTriggers">
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="tabKeyNavigation">
      <bool>false</bool>
@@ -1932,14 +2374,17 @@ p, li { white-space: pre-wrap; }
     <attribute name="horizontalHeaderVisible">
      <bool>false</bool>
     </attribute>
+    <attribute name="horizontalHeaderCascadingSectionResizes">
+     <bool>false</bool>
+    </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>250</number>
+     <number>110</number>
     </attribute>
     <attribute name="horizontalHeaderHighlightSections">
      <bool>false</bool>
     </attribute>
     <attribute name="horizontalHeaderMinimumSectionSize">
-     <number>150</number>
+     <number>110</number>
     </attribute>
     <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
      <bool>false</bool>
@@ -1992,6 +2437,15 @@ p, li { white-space: pre-wrap; }
      <property name="textAlignment">
       <set>AlignLeading|AlignVCenter</set>
      </property>
+     <property name="foreground">
+      <brush brushstyle="NoBrush">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </property>
     </column>
     <item row="0" column="0">
      <property name="text">
@@ -2027,54 +2481,54 @@ p, li { white-space: pre-wrap; }
    <widget class="QLineEdit" name="lineEdit_MacroName">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>160</y>
-      <width>271</width>
-      <height>41</height>
+      <x>440</x>
+      <y>120</y>
+      <width>201</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
    </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>170</y>
-      <width>151</width>
-      <height>31</height>
+      <x>390</x>
+      <y>120</y>
+      <width>41</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);</string>
+     <string notr="true"/>
     </property>
     <property name="text">
-     <string>Hotkey name:</string>
+     <string>Name:</string>
     </property>
    </widget>
    <widget class="QComboBox" name="comboBox_MacroKey">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>140</y>
-      <width>191</width>
-      <height>41</height>
+      <x>700</x>
+      <y>120</y>
+      <width>91</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <item>
@@ -2086,10 +2540,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGraphicsView" name="graphicsView_2">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>-10</y>
-      <width>1600</width>
-      <height>900</height>
+      <x>-100</x>
+      <y>-110</y>
+      <width>1251</width>
+      <height>851</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -2100,7 +2554,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="layoutDirection">
@@ -2110,7 +2564,10 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/newPrefix/images/background.png);</string>
+     <string notr="true">border-image: url(:/newPrefix/images/background.png);
+background-image: url(:/newPrefix/images/background.png);
+
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
@@ -2119,16 +2576,19 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_LoadSettings">
     <property name="geometry">
      <rect>
-      <x>1030</x>
+      <x>1040</x>
       <y>40</y>
       <width>71</width>
-      <height>41</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -2138,16 +2598,19 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_Settings">
     <property name="geometry">
      <rect>
-      <x>810</x>
+      <x>880</x>
       <y>40</y>
       <width>71</width>
-      <height>41</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
      </font>
     </property>
     <property name="text">
@@ -2157,16 +2620,16 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_UpMacros">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>230</x>
       <y>220</y>
-      <width>61</width>
-      <height>41</height>
+      <width>50</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
@@ -2176,20 +2639,116 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_DownMacros">
     <property name="geometry">
      <rect>
-      <x>210</x>
+      <x>290</x>
       <y>220</y>
-      <width>61</width>
-      <height>41</height>
+      <width>50</width>
+      <height>25</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Garamond</family>
-      <pointsize>14</pointsize>
+      <pointsize>10</pointsize>
      </font>
     </property>
     <property name="text">
      <string>Down</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>190</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(180, 166, 138);</string>
+    </property>
+    <property name="text">
+     <string>Hotkeys</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>90</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>11</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(180, 166, 138);</string>
+    </property>
+    <property name="text">
+     <string>Save file</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>90</y>
+      <width>111</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(180, 166, 138);</string>
+    </property>
+    <property name="text">
+     <string>Hotkey settings</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::PlainText</enum>
     </property>
    </widget>
    <zorder>graphicsView_2</zorder>
@@ -2214,6 +2773,9 @@ p, li { white-space: pre-wrap; }
    <zorder>button_Settings</zorder>
    <zorder>button_UpMacros</zorder>
    <zorder>button_DownMacros</zorder>
+   <zorder>label_6</zorder>
+   <zorder>label_7</zorder>
+   <zorder>label_8</zorder>
   </widget>
  </widget>
  <resources>
