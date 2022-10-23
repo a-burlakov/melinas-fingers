@@ -458,6 +458,7 @@ def built_in_macros() -> list:
         {'name': 'Stance strong attack',
          'keyline': 'crouch|pause200|skill|strong_attack',
          'comment': 'commentary'},
+        # kill_press300 attack_pause1250 crouch_press20 crouch ! Нужно отдельный запилить на это built-in макрос, с комментарием.
         {'name': 'Reverse backstep',
          'keyline': 'roll|pause5|s',
          'comment': 'commentary'},
@@ -473,15 +474,13 @@ def built_in_macros() -> list:
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'commentary'},
+        # TODO: Посмотреть, можно ли уменьшить 4000
         {'name': 'Six invasion attempts (wide)',
          'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
          'comment': 'commentary'},
         {'name': 'Six invasion attempts (local)',
          'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3,
          'comment': 'commentary'},
-        {'name': 'Filthy teabagging',
-         'keyline': '|'.join(['crouch|pause200']*17),
-         'comment': 'Makes you feel good about yourself for maybe 8 seconds.'}
     ]
 
     # Use item macros.

@@ -124,10 +124,10 @@ class SaveFile:
         """
         # TODO: поправить мувы
         return {
-            'move_up': 0x01903541,
-            'move_down': 0x01903541,
-            'move_left': 0x01903541,
-            'move_right': 0x01903541,
+            'move_up': 0x019034dd,
+            'move_down': 0x019034f1,
+            'move_left': 0x01903505,
+            'move_right': 0x01903519,
             'roll': 0x01903541,
             'jump': 0x01903555,
             'crouch': 0x0190352d,
@@ -243,7 +243,8 @@ class SaveFile:
         steam_id_folder = ''
         file_names = os.listdir(elden_ring_files_path)
         for file_name in file_names:
-            if len(file_name) == 17 and file_name.startswith('7'):
+            if len(file_name) > 10 and file_name.startswith('7') \
+                    and file_name.isdigit():
                 steam_id_folder = file_name
                 break
 

@@ -2,10 +2,18 @@ import sys
 import os
 from pathlib import Path
 from mainWindow import Ui_MainWindow
+import PyQt5
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_hotkey_buttons
 from savefile import SaveFile, SaveSlot
 import keyboard
+
+if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
+    PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+
+if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
+    PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 def available_game_control_buttons() -> tuple:
     """
@@ -136,6 +144,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings file yet.
         """
 
+        # Кружиться:
+        # w_press60
+        # a_press60
+        # s_press60
+        # d_press60
+        # w_press60
+        # pause20
+
+        # teagabbing and alt+f4
+
     def set_macros_settings_from_window(self) -> None:
         """
         Sets macros settings with values from the window to all macros.
@@ -257,7 +275,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
-        self.button_AddMacros.clicked.connect(self.AddMacro_Click)
         self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
 
@@ -280,6 +297,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         header = self.tableWidget_Macros.horizontalHeader()
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        self.button_AddMacros.clicked.connect(self.AddMacro_Click)
+        self.button_UpMacros.clicked.connect(self.UpMacro_Click)
+        self.button_DownMacros.clicked.connect(self.DownMacro_Click)
 
         # Page "Equipment"
 
@@ -305,8 +325,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_EquipmentSearchMode.activated.connect(self.SearchMode_OnChange)
         self.comboBox_MagicSearchMode.activated.connect(self.SearchMode_OnChange)
 
-        self.comboBox_ControlKeyMove_Forward.activated.connect(self.ControlKeys_OnChange)
-        self.comboBox_ControlKeyMove_Back.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyMove_Up.activated.connect(self.ControlKeys_OnChange)
+        self.comboBox_ControlKeyMove_Down.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyMove_Left.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyMove_Right.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyJump.activated.connect(self.ControlKeys_OnChange)
@@ -323,8 +343,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_ControlKeyUse.activated.connect(self.ControlKeys_OnChange)
 
         for key in available_game_control_buttons():
-            self.comboBox_ControlKeyMove_Forward.addItem(key)
-            self.comboBox_ControlKeyMove_Back.addItem(key)
+            self.comboBox_ControlKeyMove_Up.addItem(key)
+            self.comboBox_ControlKeyMove_Down.addItem(key)
             self.comboBox_ControlKeyMove_Left.addItem(key)
             self.comboBox_ControlKeyMove_Right.addItem(key)
             self.comboBox_ControlKeyJump.addItem(key)
@@ -423,12 +443,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_AddMacros.setEnabled(self.current_saveslot.number > 0)
         self.button_DeleteMacros.setEnabled(self.current_saveslot.number > 0)
 
+        # Remembering current id for case of changing table.
+        current_macro_id = self.current_macro.id
+
         # Clearing table.
         while self.tableWidget_Macros.rowCount():
             self.tableWidget_Macros.removeRow(0)
 
         macros = self.current_saveslot.macros
-        for i, macro in enumerate(macros):
+        for i, macro in enumerate(sorted(macros, key=lambda x: x.id)):
 
             hotkey_list = []
             hotkey = '...'
@@ -446,6 +469,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_Macros.setItem(i, 0, QTableWidgetItem(str(macro.id)))
             self.tableWidget_Macros.setItem(i, 1, QTableWidgetItem(macro.name))
             self.tableWidget_Macros.setItem(i, 2, QTableWidgetItem(hotkey))
+
+        # Selecting current macro.
+        self.tableWidget_Macros.clearSelection()
+        model = self.tableWidget_Macros.model()
+        if current_macro_id:
+            for row in range(model.rowCount()):
+                index = model.index(row, 0)
+                macro_id = int(model.data(index))
+                if macro_id == current_macro_id:
+                    self.tableWidget_Macros.selectRow(row)
+                    break
 
     def MacroName_OnChange(self):
         """
@@ -529,7 +563,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def AddMacro_Click(self):
         """
 
-        :return:
         """
 
         new_macro = Macro(self.current_saveslot)
@@ -542,6 +575,76 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.set_macros_settings_from_window()
         self.refresh_all()
+
+    def UpMacro_Click(self):
+        """
+        Put a current macro to upper position by changing ID with neighbour
+        macro. Then refreshes table.
+        """
+
+        if not self.current_macro.id:
+            return
+
+        # Looking for previous macro.
+        previous_id = 0
+        model = self.tableWidget_Macros.model()
+        for row in range(model.rowCount()):
+            index = model.index(row, 0)
+            macro_id = int(model.data(index))
+            if macro_id == self.current_macro.id:
+                break
+            else:
+                previous_id = macro_id
+        else:
+            return
+
+        previous_macro = next((x for x in self.current_saveslot.macros
+                               if x.id == previous_id), None)
+
+        if previous_macro is None:
+            return
+
+        # Changing id's
+        self.current_macro.id, previous_macro.id = \
+            previous_macro.id, self.current_macro.id
+
+        self.MacrosTable_Refresh()
+
+    def DownMacro_Click(self):
+        """
+        Put a current macro to a down position by changing ID with neighbour
+        macro. Then refreshes table.
+        """
+
+        if not self.current_macro.id:
+            return
+
+        # Looking for previous macro.
+        next_id = 0
+        current_found = False
+        model = self.tableWidget_Macros.model()
+        for row in range(model.rowCount()):
+            index = model.index(row, 0)
+            macro_id = int(model.data(index))
+            if current_found:
+                next_id = macro_id
+                break
+            if macro_id == self.current_macro.id:
+                current_found = True
+        else:
+            return
+
+        next_macro = next((x for x in self.current_saveslot.macros
+                               if x.id == next_id), None)
+
+        if next_macro is None:
+            return
+
+        # Changing id's
+        self.current_macro.id, next_macro.id = \
+            next_macro.id, self.current_macro.id
+
+        self.MacrosTable_Refresh()
 
     def MacroKey_OnChange(self):
         """
@@ -843,8 +946,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_MagicSearchMode.setCurrentText(self.current_saveslot.search_mode_magic)
 
         # Controls in Elden Ring.
-        self.comboBox_ControlKeyMove_Forward.setCurrentText(self.savefile.game_controls['move_up'])
-        self.comboBox_ControlKeyMove_Back.setCurrentText(self.savefile.game_controls['move_down'])
+        self.comboBox_ControlKeyMove_Up.setCurrentText(self.savefile.game_controls['move_up'])
+        self.comboBox_ControlKeyMove_Down.setCurrentText(self.savefile.game_controls['move_down'])
         self.comboBox_ControlKeyMove_Left.setCurrentText(self.savefile.game_controls['move_left'])
         self.comboBox_ControlKeyMove_Right.setCurrentText(self.savefile.game_controls['move_right'])
         self.comboBox_ControlKeyRoll.setCurrentText(self.savefile.game_controls['roll'])
@@ -891,8 +994,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Changes things after controls changed in "Settings" page.
         """
 
-        self.savefile.game_controls['move_up'] = self.comboBox_ControlKeyMove_Forward.currentText().lower()
-        self.savefile.game_controls['move_down'] = self.comboBox_ControlKeyMove_Back.currentText().lower()
+        self.savefile.game_controls['move_up'] = self.comboBox_ControlKeyMove_Up.currentText().lower()
+        self.savefile.game_controls['move_down'] = self.comboBox_ControlKeyMove_Down.currentText().lower()
         self.savefile.game_controls['move_left'] = self.comboBox_ControlKeyMove_Left.currentText().lower()
         self.savefile.game_controls['move_right'] = self.comboBox_ControlKeyMove_Right.currentText().lower()
         self.savefile.game_controls['roll'] = self.comboBox_ControlKeyRoll.currentText().lower()
