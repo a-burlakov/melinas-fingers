@@ -1,7 +1,14 @@
 <RCC>
   <qresource prefix="newPrefix">
-    <file>images/equip_weapon.png</file>
+    <file>images/equip_head.png</file>
+    <file>images/equip_hand.png</file>
+    <file>images/equip_legs.png</file>
+    <file>images/equip_talisman.png</file>
+    <file>images/equip_torso.png</file>
+    <file>images/equip_weaponleft.png</file>
     <file>images/background.png</file>
+    <file>images/equip_weapon.png</file>
+    <file>images/equip_weapon_active.png</file>
     <file>images/down_arrow_combobox.png</file>
   </qresource>
 </RCC>

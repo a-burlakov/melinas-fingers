@@ -110,7 +110,22 @@ class Macro:
         self.macro_keyline: str = ''
         self.settings = {
             'equipment': {
-
+                'manual_mode': False,
+                'instant_action': '',
+                'weapon_right_1': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'weapon_right_2': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'weapon_right_3': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'weapon_left_1': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'weapon_left_2': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'weapon_left_3': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'armor_head': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'armor_torso': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'armor_hands': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'armor_legs': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'talisman_1': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'talisman_2': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'talisman_3': {'action': 'do_nothing', 'name': '', 'order': 0},
+                'talisman_4': {'action': 'do_nothing', 'name': '', 'order': 0}
             },
             'magic': {
                 'spell_number': 0,
@@ -448,39 +463,99 @@ def built_in_macros() -> list:
     macros_list = [
         {'name': 'Sort all: Asc. Acquisition',
          'keyline': keyline_to_sort_all_lists(),
-         'comment': 'commentary ha ha ha'},
+         'comment': 'Sorts all lists that are used by Melina\'s Fingers to\n'
+                    '"Order of Acquisition", ascended.\n'
+                    '\n'
+                    'It\'s very important hotkey due to the fact that equipment hotkeys\n'
+                    'just won\'t work if lists are ordered differently.\n'
+                    '\n'
+                    'Press it once in the beginning of gaming session\n'
+                    'and everything will be fine.\n'
+                    '\n'
+                    'By the way, "Order of Acquisition", Asc. is chosen due to two reasons:\n'
+                    '   1) that\'s easiest order to be calculated via save file;\n'
+                    '   2) it allows to pick up new weapons in PvE as new weapons go to\n'
+                    '      the end of the list.'},
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
-         'comment': 'commentary'},
+         'comment': 'Favourite UGS players\' button before 1.07.'},
         {'name': 'Stance attack',
          'keyline': 'crouch|pause200|skill|attack',
-         'comment': 'commentary'},
+         'comment': 'Goes to stance, then immediately perform an attack.'},
         {'name': 'Stance strong attack',
          'keyline': 'crouch|pause200|skill|strong_attack',
-         'comment': 'commentary'},
-        # kill_press300 attack_pause1250 crouch_press20 crouch ! Нужно отдельный запилить на это built-in макрос, с комментарием.
+         'comment': 'Goes to stance, then immediately perform a strong attack.'},
+        {'name': 'Fast katana stance attacks',
+         'keyline': 'skill_press300|attack_pause1250|crouch_press20|crouch',
+         'comment': 'Performs a skill attack and crouch to cancel a recovery\n'
+                    'animation. It makes consecutive stance attacks much faster\n'
+                    'and dangerous.\n'
+                    '\n'
+                    'How to use:\n'
+                    '   - press a hotkey;\n'
+                    '   - after stance attack is performed, press hotkey two times;\n'
+                    '   - next stance attack will start as fast as possible.\n'
+                    '\n'
+                    'They hated you because you\'re Moonveil user, but now\n'
+                    'you actually deserve it.'},
+        {'name': 'Fast katana stance attacks (strong)',
+         'keyline': 'skill_press300|strong_attack_pause1250|crouch_press20|crouch',
+         'comment': 'Performs a strong skill attack and crouch to cancel a recovery\n'
+                    'animation. It makes consecutive stance attacks much faster\n'
+                    'and dangerous.\n'
+                    '\n'
+                    'How to use:\n'
+                    '   - press a hotkey;\n'
+                    '   - after stance attack is performed, press hotkey two times;\n'
+                    '   - next stance attack will start as fast as possible.\n'
+                    '\n'
+                    'They hated you because you\'re Moonveil user, but now\n'
+                    'you actually deserve it.'},
         {'name': 'Reverse backstep',
-         'keyline': 'roll|pause5|s',
-         'comment': 'commentary'},
+         'keyline': 'roll|pause5|move_down',
+         'comment': 'Performs reverse backstep. Good for mixups and acting cool in PvP.\n'
+                    '\n'
+                    'Be like your favourite YouTube player without\n'
+                    'practicing this finger breaking shit since DS3 beta.'},
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
-         'comment': 'commentarytst'},
+         'comment': 'Chooses next weapon in list for right hand.\n'
+                    '\n'
+                    'Acts like mouse wheel in old school shooters.'},
         {'name': 'Previous weapon (right)',
          'keyline': keyline_to_choose_previous_weapon(),
-         'comment': 'commentary'},
+         'comment': 'Chooses previous weapon in list for right hand.\n'
+                    '\n'
+                    'Acts like mouse wheel in old school shooters.'},
         {'name': 'Next weapon (left)',
          'keyline': keyline_to_choose_next_weapon(left_hand=True),
-         'comment': 'commentary'},
+         'comment': 'Chooses next weapon in list for left hand.\n'
+                    '\n'
+                    'Acts like mouse wheel in old school shooters.'},
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
-         'comment': 'commentary'},
+         'comment': 'Chooses previous weapon in list for left hand.\n'
+                    '\n'
+                    'Acts like mouse wheel in old school shooters.'},
         # TODO: Посмотреть, можно ли уменьшить 4000
         {'name': 'Six invasion attempts (wide)',
          'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
-         'comment': 'commentary'},
+         'comment': 'Performs an attempt to invade as bloody finger,\n'
+                    'then attempt to invade as recusant, and so three times.\n'
+                    '\n'
+                    'Usually that\'s enough to invade even\n with mediocre connection '
+                    'and get a snack from kitchen.\n'
+                    '\n'
+                    'Cannot be interrupted. Invades over all map.'},
         {'name': 'Six invasion attempts (local)',
          'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3,
-         'comment': 'commentary'},
+         'comment': 'Performs an attempt to invade as bloody finger,\n'
+                    'then attempt to invade as recusant, and so three times.\n'
+                    '\n'
+                    'Usually that\'s enough to invade even\n with mediocre connection '
+                    'and get a snack from kitchen.\n'
+                    '\n'
+                    'Cannot be interrupted. Invades locally.'},
     ]
 
     # Use item macros.
@@ -488,7 +563,7 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Use item #{str(i)}',
             'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}|use_item',
-            'comment': 'commentary'
+            'comment': f'Selects item #{i} from quick item list.'
         })
 
     # Switch to spell macros.
@@ -496,7 +571,7 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Switch to spell #{str(i)}',
             'keyline': f'switch_spell_press600{"|switch_spell|pause10" * (i - 1)}',
-            'comment': 'commentary'
+            'comment': f'Selects spell #{i} from spell list.'
         })
 
     # 6 gestures.
@@ -506,7 +581,7 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Gesture #{str(i)}',
             'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e|esc',
-            'comment': 'commentary'
+            'comment': f'Performs gesture #{i}.'
         })
 
     return macros_list

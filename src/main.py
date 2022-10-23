@@ -302,6 +302,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_DownMacros.clicked.connect(self.DownMacro_Click)
 
         # Page "Equipment"
+        self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
+        self.button_EquipmentAdd.clicked.connect(self.Equipment_ManualMode_Add)
+        self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
+        self.button_EquipmentUp.clicked.connect(self.Equipment_ManualMode_Up)
+        self.button_EquipmentDown.clicked.connect(self.Equipment_ManualMode_Down)
+        self.tableWidget_Equipment.item.connect(self.Equipment_ManualMode_Table_OnChange)
 
         # Page "Magic"
         self.tableWidget_AvaiableMagic.itemSelectionChanged.connect(self.AvaiableMagic_OnChange)
@@ -824,7 +830,169 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes elements on "Equipment" page.
         """
 
-        pass
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Pages_Equipment_Table_Refresh(self, type='weapons') -> None:
+        """
+        Refill a table on "Equipment" page with equipment in saveslot settings.
+        """
+
+        table_Equipment = self.tableWidget_Equipment
+        settings = self.current_macro.settings['equipment']
+        manual_mode = settings['manual_mode']
+
+        # Permission to edit.
+        if not manual_mode:
+            table_Equipment.setEditTriggers(QTableWidget.NoEditTriggers)
+        else:
+            table_Equipment.setEditTriggers(QTableWidget.DoubleClicked|
+                                            QTableWidget.EditKeyPressed|
+                                            QTableWidget.AnyKeyPressed)
+
+        # Clearing table.
+        while table_Equipment.rowCount():
+            table_Equipment.removeRow(0)
+
+        collections_from_type = {
+            'weapons': self.current_saveslot.weapons,
+            'armor_head': self.current_saveslot.armor_head,
+            'armor_torso': self.current_saveslot.armor_torso,
+            'armor_hands': self.current_saveslot.armor_hands,
+            'armor_legs': self.current_saveslot.armor_legs,
+            'talismans': self.current_saveslot.talismans
+        }
+
+        # In manual mode we take separate collection.
+        collection = collections_from_type[type]
+        if type == 'weapons' and manual_mode:
+            collection = self.current_saveslot.weapons_manual
+
+        # Filling table (5 items in a row).
+        for i, equip in enumerate(collection):
+            if i == 0 or (i >= 5 and i % 5 == 0):
+                table_Equipment.insertRow(i // 5)
+            table_Equipment.setItem(i // 5, i % 5,
+                                    QTableWidgetItem(equip['name']))
+
+    def Pages_Equipment_Buttons_Refresh(self) -> None:
+        """
+        Refreshes buttons on "Equipment" page.
+        """
+
+        settings = self.current_macro.settings['equipment']
+        manual_mode = settings['manual_mode']
+
+        self.button_EquipmentAdd.setHidden(not manual_mode)
+        self.button_EquipmentDelete.setHidden(not manual_mode)
+        self.button_EquipmentUp.setHidden(not manual_mode)
+        self.button_EquipmentDown.setHidden(not manual_mode)
+
+        # TODO: сделать так, чтобы только на оружиях отображались бы кнопки ручного режима.
+
+    def Equipment_ManualMode_OnChange(self) -> None:
+        """
+        Changes things after manual mode is changed on "Equipment" page.
+        """
+
+        settings = self.current_macro.settings['equipment']
+        settings['manual_mode'] = self.checkBox_Equipment_ManualMode.isChecked()
+
+        self.Pages_Refresh_Equipment()
+
+    def Equipment_ManualMode_Add(self) -> None:
+        """
+        Add new item to the end of the list.
+        """
+        # TODO: как-то запретить редактировать ячейки после последней, если они в одном ряду
+        self.current_saveslot.weapons_manual.append({
+            'name': '< name >',
+            'order': len(self.current_saveslot.weapons_manual) + 1
+        })
+
+        self.Pages_Equipment_Table_Refresh()
+
+    def Equipment_ManualMode_Delete(self) -> None:
+        """
+        Deletes a selected item in the list.
+        """
+
+        manual_list = self.current_saveslot.weapons_manual
+
+        items = self.tableWidget_Equipment.selectedItems()
+        if not len(items):
+            return
+
+        item = items[0]
+        item_index = (item.row() * 5) + item.column()
+        manual_list.pop(item_index)
+
+        self.Pages_Equipment_Table_Refresh()
+
+    def Equipment_ManualMode_Up(self) -> None:
+        """
+        Put a selected item to place upper.
+        """
+
+        manual_list = self.current_saveslot.weapons_manual
+
+        items = self.tableWidget_Equipment.selectedItems()
+        if not len(items):
+            return
+
+        item = items[0]
+        item_index = (item.row() * 5) + item.column()
+
+        if item_index + 1 < len(manual_list):
+            manual_list[item_index], manual_list[item_index + 1] = \
+                manual_list[item_index + 1], manual_list[item_index]
+
+        self.Pages_Equipment_Table_Refresh()
+
+    def Equipment_ManualMode_Down(self) -> None:
+        """
+        Put a selected item to place downer (is there's such a word?).
+        """
+
+        manual_list = self.current_saveslot.weapons_manual
+
+        items = self.tableWidget_Equipment.selectedItems()
+        if not len(items):
+            return
+
+        item = items[0]
+        item_index = (item.row() * 5) + item.column()
+
+        if item_index > 0:
+            manual_list[item_index], manual_list[item_index - 1] = \
+                manual_list[item_index - 1], manual_list[item_index]
+
+        self.Pages_Equipment_Table_Refresh()
+
+    def Equipment_ManualMode_Table_OnChange(self) -> None:
+        """
+        Change things after cell in table on "Equipment" page was changed.
+        """
+
+        manual_list = self.current_saveslot.weapons_manual
+        manual_list.clear()
+
+        model = self.tableWidget_Equipment.model()
+        order = 0
+        for row in range(model.rowCount()):
+            for i in range(5):
+                order += 1
+                index = model.index(row, i)
+                name = str(model.data(index))
+                manual_list.append({
+                    'name', name,
+                    'order', order
+                })
+
+        # Clear all empty items from the end of the collection.
+        if len(manual_list):
+            while manual_list[-1]['name'] not in ['', 'None']:
+                manual_list.pop()
 
     def Pages_Refresh_Magic(self) -> None:
         """
@@ -851,8 +1019,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_macro.settings['magic']['spell_number'] = items[0].row() + 1
 
         self.set_macro_name_from_settings()
-
-
 
     def MagicInstantUseRightHandCheck_OnChange(self) -> None:
         """
@@ -1033,8 +1199,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 return
 
             spell_name = items[0].text()
-            if self.current_macro.name == self.current_macro.standard_name() \
-                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells):
+            if self.current_macro.name != spell_name and\
+                    (self.current_macro.name == self.current_macro.standard_name()
+                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells)):
                 self.current_macro.name = spell_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()

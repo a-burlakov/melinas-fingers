@@ -334,6 +334,7 @@ class SaveSlot:
         self.savefile = SaveFile('')
         self.macros: list = []
         self.weapons: list = []
+        self.weapons_manual: list = []
         self.armor_head: list = []
         self.armor_torso: list = []
         self.armor_hands: list = []
