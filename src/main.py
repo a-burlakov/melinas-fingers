@@ -11,7 +11,6 @@ import keyboard
 
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
     PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-
 if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
     PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
@@ -271,7 +270,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         self.setupUi(self)  # automaticly generated code
 
-        self.setFixedSize(1600, 890)
+        self.setFixedSize(1120, 700)
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.button_SaveSettings.clicked.connect(self.save_settings)
