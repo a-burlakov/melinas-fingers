@@ -2,7 +2,6 @@ import sys
 import os
 from pathlib import Path
 from mainWindow import Ui_MainWindow
-import PyQt5
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_hotkey_buttons
@@ -11,9 +10,9 @@ import keyboard
 
 # Copypasted code to get rid of screen scale problems.
 if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
-    PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
 if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
-    PyQt5.QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
+    QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 def available_game_control_buttons() -> tuple:
     """
@@ -81,6 +80,17 @@ def available_game_control_buttons() -> tuple:
         "Shift",
         "Alt"
     )
+
+
+def inventory_row_column_from_order(order: int) -> tuple:
+    """
+    Gets row and column indexes for order in table with 5 columns.
+    """
+
+    row = (order - 1) // 5
+    column = (order - 1) % 5
+
+    return row, column
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -181,7 +191,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         def hook_for_elden_ring(hotkey: str, func) -> None:
             """
-            Hooks a hotkey in a way that fits to our process. 
+            Hooks a hotkey in a way that fits to our process.
             """
 
             # Need to rename some keys to make 'keyboard' eat it.
@@ -189,7 +199,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if hotkey.lower().startswith('num') and len(hotkey) == 4:
                 hotkey = hotkey[:3].lower() + ' ' + hotkey[-1]
 
-            # As in Elden ring we can use hotkey during movement, we need to 
+            # As in Elden ring we can use hotkey during movement, we need to
             # hook a hotkey to any movement combination we can have, including
             # all 8 directions and sprint button.
             # That's awful, but I don't know a method to do it differently.
@@ -307,7 +317,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
         self.button_EquipmentUp.clicked.connect(self.Equipment_ManualMode_Up)
         self.button_EquipmentDown.clicked.connect(self.Equipment_ManualMode_Down)
-        self.tableWidget_Equipment.item.connect(self.Equipment_ManualMode_Table_OnChange)
+        self.tableWidget_Equipment.currentCellChanged.connect(self.Equipment_ManualMode_Table_OnChange)
 
         # Page "Magic"
         self.tableWidget_AvaiableMagic.itemSelectionChanged.connect(self.AvaiableMagic_OnChange)
@@ -850,10 +860,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QTableWidget.EditKeyPressed|
                                             QTableWidget.AnyKeyPressed)
 
-        # Clearing table.
-        while table_Equipment.rowCount():
-            table_Equipment.removeRow(0)
-
         collections_from_type = {
             'weapons': self.current_saveslot.weapons,
             'armor_head': self.current_saveslot.armor_head,
@@ -866,7 +872,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # In manual mode we take separate collection.
         collection = collections_from_type[type]
         if type == 'weapons' and manual_mode:
-            collection = self.current_saveslot.weapons_manual
+            collection = self.current_saveslot.weapons_manual.copy()
+            collection.sort(key=lambda x: x['order'])
+
+        # Clearing table.
+        while table_Equipment.rowCount():
+            table_Equipment.removeRow(0)
 
         # Filling table (5 items in a row).
         for i, equip in enumerate(collection):
@@ -883,10 +894,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = self.current_macro.settings['equipment']
         manual_mode = settings['manual_mode']
 
+        self.checkBox_Equipment_ManualMode.setChecked(manual_mode)
+
         self.button_EquipmentAdd.setHidden(not manual_mode)
         self.button_EquipmentDelete.setHidden(not manual_mode)
         self.button_EquipmentUp.setHidden(not manual_mode)
         self.button_EquipmentDown.setHidden(not manual_mode)
+
 
         # TODO: сделать так, чтобы только на оружиях отображались бы кнопки ручного режима.
 
@@ -906,11 +920,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         # TODO: как-то запретить редактировать ячейки после последней, если они в одном ряду
         self.current_saveslot.weapons_manual.append({
-            'name': '< name >',
+            'name': '< weapon >',
             'order': len(self.current_saveslot.weapons_manual) + 1
         })
 
         self.Pages_Equipment_Table_Refresh()
+
+        # Selecting last cell.
+        row, column = inventory_row_column_from_order(len(self.current_saveslot.weapons_manual))
+        index = self.tableWidget_Equipment.model().index(row, column)
+        self.tableWidget_Equipment.selectionModel().select(
+            index, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
+        )
 
     def Equipment_ManualMode_Delete(self) -> None:
         """
@@ -929,6 +950,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Equipment_Table_Refresh()
 
+        # Selecting last cell.
+        row, column = inventory_row_column_from_order(len(manual_list))
+        index = self.tableWidget_Equipment.model().index(row, column)
+        self.tableWidget_Equipment.selectionModel().select(
+            index,
+            QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
+        )
+
     def Equipment_ManualMode_Up(self) -> None:
         """
         Put a selected item to place upper.
@@ -944,39 +973,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         item_index = (item.row() * 5) + item.column()
 
         if item_index + 1 < len(manual_list):
-            manual_list[item_index], manual_list[item_index + 1] = \
-                manual_list[item_index + 1], manual_list[item_index]
+            manual_list[item_index]['order'], manual_list[item_index + 1]['order'] = \
+                manual_list[item_index + 1]['order'], manual_list[item_index]['order']
+            item_index += 1
 
         self.Pages_Equipment_Table_Refresh()
+
+        # Selecting cell.
+        row, column = inventory_row_column_from_order(item_index + 1)
+        index = self.tableWidget_Equipment.model().index(row, column)
+        self.tableWidget_Equipment.selectionModel().select(
+            index,
+            QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
+        )
+
 
     def Equipment_ManualMode_Down(self) -> None:
-        """
-        Put a selected item to place downer (is there's such a word?).
-        """
+            """
+            Put a selected item to place downer (is there's such a word?).
+            """
 
-        manual_list = self.current_saveslot.weapons_manual
+            manual_list = self.current_saveslot.weapons_manual
 
-        items = self.tableWidget_Equipment.selectedItems()
-        if not len(items):
-            return
+            items = self.tableWidget_Equipment.selectedItems()
+            if not len(items):
+                return
 
-        item = items[0]
-        item_index = (item.row() * 5) + item.column()
+            item = items[0]
+            item_index = (item.row() * 5) + item.column()
 
-        if item_index > 0:
-            manual_list[item_index], manual_list[item_index - 1] = \
-                manual_list[item_index - 1], manual_list[item_index]
+            if item_index > 0:
+                manual_list[item_index]['order'], manual_list[item_index - 1]['order'] = \
+                    manual_list[item_index - 1]['order'], manual_list[item_index]['order']
+                item_index -= 1
 
-        self.Pages_Equipment_Table_Refresh()
+            self.Pages_Equipment_Table_Refresh()
+
+            # Selecting cell.
+            row, column = inventory_row_column_from_order(item_index + 1)
+            index = self.tableWidget_Equipment.model().index(row, column)
+            self.tableWidget_Equipment.selectionModel().select(
+                index,
+                QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
+            )
 
     def Equipment_ManualMode_Table_OnChange(self) -> None:
         """
         Change things after cell in table on "Equipment" page was changed.
         """
 
+        # TODO: проблемы с up и down
         manual_list = self.current_saveslot.weapons_manual
         manual_list.clear()
 
+        # Getting a collection from table.
         model = self.tableWidget_Equipment.model()
         order = 0
         for row in range(model.rowCount()):
@@ -984,14 +1034,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 order += 1
                 index = model.index(row, i)
                 name = str(model.data(index))
+                if name == 'None':
+                    name = ''
                 manual_list.append({
-                    'name', name,
-                    'order', order
+                    'name': name,
+                    'order': order
                 })
 
         # Clear all empty items from the end of the collection.
         if len(manual_list):
-            while manual_list[-1]['name'] not in ['', 'None']:
+            while manual_list[-1]['name'] in ['', 'None']:
                 manual_list.pop()
 
     def Pages_Refresh_Magic(self) -> None:

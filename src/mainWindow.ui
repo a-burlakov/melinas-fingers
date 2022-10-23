@@ -1427,7 +1427,7 @@ border-image: url(:/newPrefix/images/equip_weaponleft.png);</string>
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>If your weapons are calculated incorrecly, you can fill your current weapons in manual mode.</string>
+       <string>Alas, so far there's chans that weapons are calculated incorrectly. Current weapons can be filled in manual mode.</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

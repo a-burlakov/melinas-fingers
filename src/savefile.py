@@ -479,7 +479,7 @@ class SaveSlot:
                 instance_dict.setdefault('name', equipment_name)
                 instance_dict.setdefault('id', equipment_id)
                 instance_dict.setdefault('instance_id', instance_id)
-                instance_dict.setdefault('order_id', inventory_order_id)
+                instance_dict.setdefault('order', inventory_order_id)
                 instance_dict.setdefault('position', position_in_file)
                 inventory_list.append(instance_dict)
 
@@ -520,7 +520,7 @@ class SaveSlot:
             instance_dict.setdefault('name', talisman_name)
             instance_dict.setdefault('id', talisman_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('order_id', inventory_order_id)
+            instance_dict.setdefault('order', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
@@ -551,13 +551,13 @@ class SaveSlot:
             instance_dict.setdefault('name', spell_name)
             instance_dict.setdefault('id', spell_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('order_id', inventory_order_id)
+            instance_dict.setdefault('order', inventory_order_id)
             instance_dict.setdefault('position', position_in_file)
             inventory_list.append(instance_dict)
 
         sorted_equipment = sorted(inventory_list,
                                   key=lambda x: (x['type'],
-                                                 int(x['order_id'], 16)))
+                                                 int(x['order'], 16)))
 
         fields_accordance = {
             'weapons': self.weapons,
