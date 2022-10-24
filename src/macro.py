@@ -128,13 +128,13 @@ class Macro:
                 'talisman_4': {'action': 'do_nothing', 'name': '', 'order': 0}
             },
             'magic': {
-                'spell_number': 0,
+                'spell_number': 1,
                 'current_number': 0,
                 'instant_cast_right': False,
                 'instant_cast_left': False
             },
             'built-in': {
-                'macro_name': ''
+                'macro_name': built_in_macros()[0]['name']
             },
             'diy': {
                 'macro': ''

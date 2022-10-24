@@ -1,18 +1,16 @@
+import inspect
 import sys
 import os
 from pathlib import Path
+
+import PyQt5.QtGui
+
 from mainWindow import Ui_MainWindow
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_hotkey_buttons
 from savefile import SaveFile, SaveSlot
 import keyboard
-
-# Copypasted code to get rid of screen scale problems.
-if hasattr(QtCore.Qt, 'AA_EnableHighDpiScaling'):
-    QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-if hasattr(QtCore.Qt, 'AA_UseHighDpiPixmaps'):
-    QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
 
 def available_game_control_buttons() -> tuple:
     """
@@ -107,6 +105,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.recovery_hotkey_ctrl: bool = False
         self.recovery_hotkey_shift: bool = False
         self.recovery_hotkey_alt: bool = False
+        self.equipment_current_cell: str = ''
+        self.font_size_adjustment: int = 0
 
         self.init_ui()
 
@@ -315,9 +315,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
         self.button_EquipmentAdd.clicked.connect(self.Equipment_ManualMode_Add)
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
-        self.button_EquipmentUp.clicked.connect(self.Equipment_ManualMode_Up)
-        self.button_EquipmentDown.clicked.connect(self.Equipment_ManualMode_Down)
+        # self.button_EquipmentUp.clicked.connect(self.Equipment_ManualMode_Up)
+        # self.button_EquipmentDown.clicked.connect(self.Equipment_ManualMode_Down)
         self.tableWidget_Equipment.currentCellChanged.connect(self.Equipment_ManualMode_Table_OnChange)
+        self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
+        self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
+        self.picture_equip_weaponright_1.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_1
+        self.picture_equip_weaponright_2.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_2
+        self.picture_equip_weaponright_3.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_3
+        self.picture_equip_weaponleft_1.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_1
+        self.picture_equip_weaponleft_2.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_2
+        # self.picture_equip_weaponleft_3.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_3
+        self.picture_equip_armor_head.mousePressEvent = self.Equipment_MouseClicked_Armor_Head
+        self.picture_equip_armor_torso.mousePressEvent = self.Equipment_MouseClicked_Armor_Torso
+        self.picture_equip_armor_hands.mousePressEvent = self.Equipment_MouseClicked_Armor_Hands
+        self.picture_equip_armor_legs.mousePressEvent = self.Equipment_MouseClicked_Armor_Legs
+        self.picture_equip_talisman_1.mousePressEvent = self.Equipment_MouseClicked_Talisman_1
+        self.picture_equip_talisman_2.mousePressEvent = self.Equipment_MouseClicked_Talisman_2
+        self.picture_equip_talisman_3.mousePressEvent = self.Equipment_MouseClicked_Talisman_3
+        self.picture_equip_talisman_4.mousePressEvent = self.Equipment_MouseClicked_Talisman_4
+
+        self.button_Equip_Clear.clicked.connect(self.button_Equip_Clear_Clicked)
+        self.button_Equip_DoNothing.clicked.connect(self.button_Equip_DoNothing_Clicked)
+        self.button_Equip_Cancel.clicked.connect(self.button_Equip_Cancel_Clicked)
 
         # Page "Magic"
         self.tableWidget_AvaiableMagic.itemSelectionChanged.connect(self.AvaiableMagic_OnChange)
@@ -375,6 +395,57 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_ControlKeyGuard.addItem(key)
             self.comboBox_ControlKeyUseItem.addItem(key)
             self.comboBox_ControlKeyUse.addItem(key)
+
+        self.set_font_size()
+
+    def set_font_size(self) -> None:
+        """
+
+        """
+
+        if not self.font_size_adjustment:
+            return
+
+        for name, obj in inspect.getmembers(self):
+            if isinstance(obj, QLabel) \
+                    or isinstance(obj, QComboBox) \
+                    or isinstance(obj, QCheckBox) \
+                    or isinstance(obj, QTableWidget) \
+                    or isinstance(obj, QSpinBox) \
+                    or isinstance(obj, QTextEdit) \
+                    or isinstance(obj, QLineEdit) \
+                    or isinstance(obj, QPushButton):
+                font_size = obj.fontInfo().pointSize()
+                font_family = obj.fontInfo().family()
+                obj.setFont(PyQt5.QtGui.QFont(font_family, font_size +
+                                              self.font_size_adjustment))
+
+    def change_font_size(self, adjust: int) -> None:
+        """
+
+        """
+
+        self.font_size_adjustment += adjust
+
+        # If font adjustment is too much, we're returning to opposite position.
+        if abs(self.font_size_adjustment) > 4:
+            adjust = adjust - self.font_size_adjustment
+            self.font_size_adjustment = 0
+
+        # TODO: сделать функционал гибкий на отдельную кнопку в настройках
+
+        for name, obj in inspect.getmembers(self):
+            if isinstance(obj, QLabel) \
+                    or isinstance(obj, QComboBox) \
+                    or isinstance(obj, QCheckBox) \
+                    or isinstance(obj, QTableWidget) \
+                    or isinstance(obj, QSpinBox) \
+                    or isinstance(obj, QTextEdit) \
+                    or isinstance(obj, QLineEdit) \
+                    or isinstance(obj, QPushButton):
+                font_size = obj.fontInfo().pointSize()
+                font_family = obj.fontInfo().family()
+                obj.setFont(PyQt5.QtGui.QFont(font_family, font_size + adjust))
 
     def save_settings(self):
         """
@@ -508,28 +579,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
-        self.current_macro.type = self.comboBox_MacroType.currentText()
-
-        # TODO: Не забыть стандартные значения забить при выборе типа
-        # Set standard values.
-        if self.current_macro.type == 'Equipment':
-            pass
-
-        if self.current_macro.type == 'Magic' \
-                and self.current_macro.settings['magic']['spell_number'] == 0:
-            if self.current_saveslot.spells:
-                self.current_macro.settings['magic']['spell_number'] = 1
-
-        if self.current_macro.type == 'Built-in' \
-                and self.current_macro.settings['built-in']['macro_name'] == '':
-            self.current_macro.settings['built-in']['macro_name'] = built_in_macros()[0]['name']
 
         self.set_macro_name_from_settings()
         self.hook_hotkeys()
         self.Pages_SetPage()
         self.Pages_RefreshAll()
-
-
 
     def OpenSaveFile_Click(self):
         """
@@ -747,6 +801,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText()
         self.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText()
 
+    def Equip_InstantAction_OnChange(self):
+        """
+
+        """
+
+        action = self.comboBox_Equip_InstantAction.currentText()
+        if not action:
+            self.current_macro.settings['equipment']['instant_action'] = ''
+        elif action == 'Attack':
+            self.current_macro.settings['equipment']['instant_action'] = 'attack'
+        elif action == 'Strong attack':
+            self.current_macro.settings['equipment']['instant_action'] = 'strong_attack'
+        elif action == 'Skill':
+            self.current_macro.settings['equipment']['instant_action'] = 'skill'
+        elif action == 'Stance attack':
+            self.current_macro.settings['equipment']['instant_action'] = 'stance_attack'
+        elif action == 'Stance strong attack':
+            self.current_macro.settings['equipment']['instant_action'] = 'stance_strong_attack'
+
     def DeleteMacros_Click(self):
         """
 
@@ -843,17 +916,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
 
-    def Pages_Equipment_Table_Refresh(self, type='weapons') -> None:
+    def Pages_Equipment_Table_Refresh(self) -> None:
         """
         Refill a table on "Equipment" page with equipment in saveslot settings.
         """
+        self.tableWidget_Equipment.blockSignals(True)
 
         table_Equipment = self.tableWidget_Equipment
         settings = self.current_macro.settings['equipment']
         manual_mode = settings['manual_mode']
+        choosing_now = (self.equipment_current_cell != '')
 
         # Permission to edit.
-        if not manual_mode:
+        if not manual_mode or choosing_now:
             table_Equipment.setEditTriggers(QTableWidget.NoEditTriggers)
         else:
             table_Equipment.setEditTriggers(QTableWidget.DoubleClicked|
@@ -870,10 +945,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         }
 
         # In manual mode we take separate collection.
-        collection = collections_from_type[type]
-        if type == 'weapons' and manual_mode:
-            collection = self.current_saveslot.weapons_manual.copy()
-            collection.sort(key=lambda x: x['order'])
+        collection = []
+        if manual_mode:
+            collection = self.current_saveslot.weapons_manual
+
+        if choosing_now:
+            if manual_mode and 'weapon' in self.equipment_current_cell:
+                collection = self.current_saveslot.weapons_manual
+            elif 'weapon' in self.equipment_current_cell:
+                collection = collections_from_type['weapons']
+            elif 'talisman' in self.equipment_current_cell:
+                collection = collections_from_type['talismans']
+            else:
+                # Armor.
+                collection = collections_from_type[self.equipment_current_cell]
+        elif manual_mode:
+            collection = self.current_saveslot.weapons_manual
+        else:
+            collection = collections_from_type['weapons']
 
         # Clearing table.
         while table_Equipment.rowCount():
@@ -886,6 +975,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             table_Equipment.setItem(i // 5, i % 5,
                                     QTableWidgetItem(equip['name']))
 
+        self.tableWidget_Equipment.blockSignals(False)
+
     def Pages_Equipment_Buttons_Refresh(self) -> None:
         """
         Refreshes buttons on "Equipment" page.
@@ -893,16 +984,100 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settings = self.current_macro.settings['equipment']
         manual_mode = settings['manual_mode']
+        choosing_now = (self.equipment_current_cell != '')
 
         self.checkBox_Equipment_ManualMode.setChecked(manual_mode)
+        self.checkBox_Equipment_ManualMode.setEnabled(not choosing_now)
 
-        self.button_EquipmentAdd.setHidden(not manual_mode)
-        self.button_EquipmentDelete.setHidden(not manual_mode)
-        self.button_EquipmentUp.setHidden(not manual_mode)
-        self.button_EquipmentDown.setHidden(not manual_mode)
+        show_weapon_manual_buttons = manual_mode and self.equipment_current_cell == ''
+        self.button_EquipmentAdd.setHidden(not show_weapon_manual_buttons)
+        self.button_EquipmentDelete.setHidden(not show_weapon_manual_buttons)
+        self.button_EquipmentUp.setHidden(not show_weapon_manual_buttons)
+        self.button_EquipmentDown.setHidden(not show_weapon_manual_buttons)
 
+        # Instant action.
+        action = self.current_macro.settings['equipment']['instant_action']
+        if not action:
+            self.comboBox_Equip_InstantAction.setCurrentText('')
+        elif action == 'attack':
+            self.comboBox_Equip_InstantAction.setCurrentText('Attack')
+        elif action == 'strong_attack':
+            self.comboBox_Equip_InstantAction.setCurrentText('Strong attack')
+        elif action == 'skill':
+            self.comboBox_Equip_InstantAction.setCurrentText('Skill')
+        elif action == 'stance_attack':
+            self.comboBox_Equip_InstantAction.setCurrentText('Stance attack')
+        elif action == 'stance_strong_attack':
+            self.comboBox_Equip_InstantAction.setCurrentText('Stance strong attack')
+
+        # Cells.
+
+        # TODO: Добавляем наименование поверх ячеек, если выбраны
+
+        # TODO: Выбираем картинки исходя из статуса clear или do_nothing или то, что сейчас выбираем (3 вида картинок)
+
+        # Cell buttons.
+        self.button_Equip_Cancel.setEnabled(choosing_now)
+        self.button_Equip_DoNothing.setEnabled(choosing_now)
+        self.button_Equip_Clear.setEnabled(choosing_now)
 
         # TODO: сделать так, чтобы только на оружиях отображались бы кнопки ручного режима.
+
+        # self.tableWidget_Equipment.blockSignals(False)
+
+
+    def button_Equip_Clear_Clicked(self) -> None:
+        """
+
+        """
+
+        if not self.equipment_current_cell:
+            return
+
+        # self.tableWidget_Equipment.blockSignals(True)
+
+        settings = self.current_macro.settings['equipment']
+        settings[self.equipment_current_cell]['action'] = 'clear'
+
+        self.equipment_current_cell = ''
+
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+        # self.tableWidget_Equipment.blockSignals(False)
+
+    def button_Equip_DoNothing_Clicked(self) -> None:
+        """
+
+        """
+
+        if not self.equipment_current_cell:
+            return
+        # self.tableWidget_Equipment.blockSignals(True)
+
+        settings = self.current_macro.settings['equipment']
+        settings[self.equipment_current_cell]['action'] = 'do_nothing'
+
+        self.equipment_current_cell = ''
+
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+        # self.tableWidget_Equipment.blockSignals(False)
+
+
+    def button_Equip_Cancel_Clicked(self) -> None:
+        """
+
+        """
+        # self.tableWidget_Equipment.blockSignals(True)
+
+        self.equipment_current_cell = ''
+
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+        # self.tableWidget_Equipment.blockSignals(False)
 
     def Equipment_ManualMode_OnChange(self) -> None:
         """
@@ -950,13 +1125,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Equipment_Table_Refresh()
 
-        # Selecting last cell.
-        row, column = inventory_row_column_from_order(len(manual_list))
-        index = self.tableWidget_Equipment.model().index(row, column)
-        self.tableWidget_Equipment.selectionModel().select(
-            index,
-            QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
-        )
+        # Clear selection.
+        self.tableWidget_Equipment.selectedItems().clear()
 
     def Equipment_ManualMode_Up(self) -> None:
         """
@@ -1022,6 +1192,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Change things after cell in table on "Equipment" page was changed.
         """
 
+        # self.tableWidget_Equipment.blockSignals(True)
+
+        choosing_now = (self.equipment_current_cell != '')
+        if choosing_now:
+            return
+
         # TODO: проблемы с up и down
         manual_list = self.current_saveslot.weapons_manual
         manual_list.clear()
@@ -1045,6 +1221,121 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if len(manual_list):
             while manual_list[-1]['name'] in ['', 'None']:
                 manual_list.pop()
+
+        # self.tableWidget_Equipment.blockSignals(False)
+
+    def Equipment_ManualMode_Table_DoubleClicked(self) -> None:
+        """
+
+        """
+
+        choosing_now = (self.equipment_current_cell != '')
+
+        if not choosing_now:
+            return
+
+        # Finding selected item.
+        items = self.tableWidget_Equipment.selectedItems()
+        if not len(items):
+            return
+
+        item = items[0]
+        order = (item.row() * 5) + item.column()
+        name = str(item.text())
+
+        settings = self.current_macro.settings['equipment']
+        settings[self.equipment_current_cell]['name'] = name
+        settings[self.equipment_current_cell]['order'] = order
+
+        self.equipment_current_cell = ''
+
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponRight_1(self, event) -> None:
+
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_right_1'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponRight_2(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_right_2'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponRight_3(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_right_3'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponLeft_1(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_left_1'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponLeft_2(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_left_2'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_WeaponLeft_3(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'weapon_left_3'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Armor_Head(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'armor_head'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Armor_Torso(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'armor_torso'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Armor_Hands(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'armor_hands'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Armor_Legs(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'armor_legs'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Talisman_1(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'talisman_1'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Talisman_2(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'talisman_2'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Talisman_3(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'talisman_3'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
+
+    def Equipment_MouseClicked_Talisman_4(self, event) -> None:
+        # self.tableWidget_Equipment.blockSignals(True)
+        self.equipment_current_cell = 'talisman_3'
+        self.Pages_Equipment_Table_Refresh()
+        self.Pages_Equipment_Buttons_Refresh()
 
     def Pages_Refresh_Magic(self) -> None:
         """
@@ -1277,17 +1568,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
     def center_window(self):
-        qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
+        pass
+        # qr = self.frameGeometry()
+        # cp = QDesktopWidget().availableGeometry().center()
+        # qr.moveCenter(cp)
+        # self.move(qr.topLeft())
 
 
 def start_application():
+
+    # TODO: Should make a normal size form in Qt Designer to get rid of scaling.
+    # While making Melina's Fingers I messed up a little bit and built interface
+    # with the laptop with crazy resolution and scale setting (2560x1600, 150%).
+    # Thats's why windows size is tiny (it was okay at my laptop).
+    # To compensate my mistake without rebuild all elements I just put a scale
+    # factor on application.
+
+    os.environ["QT_SCALE_FACTOR"] = "1.3"
+
     app = QApplication(sys.argv)
     window = MainWindow()
     sys.exit(app.exec_())
 
-
 if __name__ == '__main__':
+
     start_application()
