@@ -1021,8 +1021,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_Equip_DoNothing.setEnabled(choosing_now)
         self.button_Equip_Clear.setEnabled(choosing_now)
 
-        # TODO: сделать так, чтобы только на оружиях отображались бы кнопки ручного режима.
-
         # self.tableWidget_Equipment.blockSignals(False)
 
 
