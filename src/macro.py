@@ -37,16 +37,17 @@ def available_hotkey_buttons() -> tuple:
         "8",
         "9",
         "0",
-        "Num0",
-        "Num1",
-        "Num2",
-        "Num3",
-        "Num4",
-        "Num5",
-        "Num6",
-        "Num7",
-        "Num8",
-        "Num9",
+        # TODO: Need to find a way to use this numpad buttons, may be with pynput library.
+        # "Num0",
+        # "Num1Num1",
+        # "Num2",
+        # "Num3",
+        # "Num4",
+        # "Num5",
+        # "Num6",
+        # "Num7",
+        # "Num8",
+        # "Num9",
         "A",
         "B",
         "C",
@@ -112,20 +113,20 @@ class Macro:
             'equipment': {
                 'manual_mode': False,
                 'instant_action': '',
-                'weapon_right_1': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'weapon_right_2': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'weapon_right_3': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'weapon_left_1': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'weapon_left_2': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'weapon_left_3': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'armor_head': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'armor_torso': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'armor_hands': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'armor_legs': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'talisman_1': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'talisman_2': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'talisman_3': {'action': 'do_nothing', 'name': '', 'order': 0},
-                'talisman_4': {'action': 'do_nothing', 'name': '', 'order': 0}
+                'weapon_right_1': {'action': 'skip', 'name': '', 'order': 0},
+                'weapon_right_2': {'action': 'skip', 'name': '', 'order': 0},
+                'weapon_right_3': {'action': 'skip', 'name': '', 'order': 0},
+                'weapon_left_1': {'action': 'skip', 'name': '', 'order': 0},
+                'weapon_left_2': {'action': 'skip', 'name': '', 'order': 0},
+                'weapon_left_3': {'action': 'skip', 'name': '', 'order': 0},
+                'armor_head': {'action': 'skip', 'name': '', 'order': 0},
+                'armor_torso': {'action': 'skip', 'name': '', 'order': 0},
+                'armor_hands': {'action': 'skip', 'name': '', 'order': 0},
+                'armor_legs': {'action': 'skip', 'name': '', 'order': 0},
+                'talisman_1': {'action': 'skip', 'name': '', 'order': 0},
+                'talisman_2': {'action': 'skip', 'name': '', 'order': 0},
+                'talisman_3': {'action': 'skip', 'name': '', 'order': 0},
+                'talisman_4': {'action': 'skip', 'name': '', 'order': 0}
             },
             'magic': {
                 'spell_number': 1,
@@ -497,7 +498,7 @@ def built_in_macros() -> list:
                     '   - next stance attack will start as fast as possible.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
-                    'you actually deserve it.'},
+                    'you actually deserve this.'},
         {'name': 'Fast katana stance attacks (strong)',
          'keyline': 'skill_press300|strong_attack_pause1250|crouch_press20|crouch',
          'comment': 'Performs a strong skill attack and crouch to cancel a recovery\n'
@@ -510,7 +511,7 @@ def built_in_macros() -> list:
                     '   - next stance attack will start as fast as possible.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
-                    'you actually deserve it.'},
+                    'you actually deserve this.'},
         {'name': 'Reverse backstep',
          'keyline': 'roll|pause5|move_down',
          'comment': 'Performs reverse backstep. Good for mixups and acting cool in PvP.\n'
