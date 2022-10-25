@@ -9,6 +9,48 @@ from win32gui import GetWindowText, GetForegroundWindow
 
 pynput_in = Controller()
 
+
+def non_letter_keys() -> tuple:
+    """
+
+    """
+    return ('alt', 'alt_l', 'alt_r', 'alt_gr', 'backspace', 'caps_lock', 'cmd',
+            'cmd_r', 'ctrl', 'ctrl_l', 'ctrl_r', 'delete', 'down', 'end',
+            'enter', 'esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
+            'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17',
+            'f18', 'f19', 'f20', 'f21', 'f22', 'f23', 'f24', 'home', 'left',
+            'page_down', 'page_up', 'right', 'shift', 'shift_r', 'space',
+            'tab', 'up', 'media_play_pause', 'media_volume_mute',
+            'media_volume_down', 'media_volume_up', 'media_previous',
+            'media_next', 'insert', 'menu', 'num_lock', 'pause',
+            'print_screen', 'scroll_lock')
+
+
+def game_control_keys() -> tuple:
+    """
+
+    """
+
+    return (
+        'move_up',
+        'move_down',
+        'move_left',
+        'move_right',
+        'roll',
+        'jump',
+        'crouch',
+        'reset_camera',
+        'switch_spell',
+        'switch_item',
+        'attack',
+        'strong_attack',
+        'guard',
+        'skill',
+        'use_item',
+        'event_action'
+    )
+
+
 def available_hotkey_buttons() -> tuple:
     """
     List of keyboard buttons that can be used for hotkey assign.
@@ -74,6 +116,16 @@ def available_hotkey_buttons() -> tuple:
         "X",
         "Y",
         "Z",
+        '[',
+        ']',
+        ';',
+        '\'',
+        ',',
+        '.',
+        '/',
+        '-',
+        '=',
+        # "~" somehow tilda causing problems
         "Tab",
         "Space",
         "Backspace",
@@ -86,9 +138,9 @@ def available_hotkey_buttons() -> tuple:
         "Delete",
         "Ctrl",
         "Shift",
-        "Alt",
-        "~"
+        "Alt"
     )
+
 
 class Macro:
     """
@@ -113,20 +165,34 @@ class Macro:
             'equipment': {
                 'manual_mode': False,
                 'instant_action': '',
-                'weapon_right_1': {'action': 'skip', 'name': '', 'order': 0},
-                'weapon_right_2': {'action': 'skip', 'name': '', 'order': 0},
-                'weapon_right_3': {'action': 'skip', 'name': '', 'order': 0},
-                'weapon_left_1': {'action': 'skip', 'name': '', 'order': 0},
-                'weapon_left_2': {'action': 'skip', 'name': '', 'order': 0},
-                'weapon_left_3': {'action': 'skip', 'name': '', 'order': 0},
-                'armor_head': {'action': 'skip', 'name': '', 'order': 0},
-                'armor_torso': {'action': 'skip', 'name': '', 'order': 0},
-                'armor_hands': {'action': 'skip', 'name': '', 'order': 0},
-                'armor_legs': {'action': 'skip', 'name': '', 'order': 0},
-                'talisman_1': {'action': 'skip', 'name': '', 'order': 0},
-                'talisman_2': {'action': 'skip', 'name': '', 'order': 0},
-                'talisman_3': {'action': 'skip', 'name': '', 'order': 0},
-                'talisman_4': {'action': 'skip', 'name': '', 'order': 0}
+                'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
+                                   'name': '', 'order': 0},
+                'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
+                                   'name': '', 'order': 0},
+                'weapon_right_3': {'action': 'skip', 'not_enough_stats': False,
+                                   'name': '', 'order': 0},
+                'weapon_left_1': {'action': 'skip', 'not_enough_stats': False,
+                                  'name': '', 'order': 0},
+                'weapon_left_2': {'action': 'skip', 'not_enough_stats': False,
+                                  'name': '', 'order': 0},
+                'weapon_left_3': {'action': 'skip', 'not_enough_stats': False,
+                                  'name': '', 'order': 0},
+                'armor_head': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0},
+                'armor_torso': {'action': 'skip', 'not_enough_stats': False,
+                                'name': '', 'order': 0},
+                'armor_hands': {'action': 'skip', 'not_enough_stats': False,
+                                'name': '', 'order': 0},
+                'armor_legs': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0},
+                'talisman_1': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0},
+                'talisman_2': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0},
+                'talisman_3': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0},
+                'talisman_4': {'action': 'skip', 'not_enough_stats': False,
+                               'name': '', 'order': 0}
             },
             'magic': {
                 'spell_number': 1,
@@ -186,14 +252,15 @@ class Macro:
 
         # TODO: не забыть вернуть
         current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower(): # \
-        #         # and 'melina' not in current_window_text.lower():
+        # if 'elden' not in current_window_text.lower():  # \
+        #     # and 'melina' not in current_window_text.lower():
         #     return
 
         self.interrupted = False
         time_start = time.time()
-        print('='*40)
-        print('Macro:   ', f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
+        print('=' * 40)
+        print('Macro:   ',
+              f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
         print('Start:   ', time.ctime(time_start))
 
         # Nobody knows what can happen inside keylines mechanism
@@ -215,147 +282,206 @@ class Macro:
         'execute' function.
         """
 
-        def form_keyline_equipment(self):
-            pass
+        if self.type == 'Equipment':
+            self.form_keyline_equipment()
+        elif self.type == 'Magic':
+            self.form_keyline_magic()
+        elif self.type == 'Built-in':
+            self.form_keyline_builtin()
+        elif self.type == 'DIY':
+            self.form_keyline_diy()
 
-        def form_keyline_magic(self):
-            settings = self.settings['magic']
-            if not settings['spell_number']:
-                return
+    def form_keyline_equipment(self):
 
-            search_mode = self.saveslot.search_mode_magic
-            cur_spell = self.saveslot.current_spell
-            goal_spell = settings['spell_number']
-            total_spells = len(self.saveslot.spells)
-            print('Search mode -', search_mode)
-            print('Total spells -', total_spells)
-            print('Current spell -', cur_spell)
-            print('Goal spell -', goal_spell)
+        keys_list = []  # list to be turned to keyline
 
-            # If current spell is spell we need, then we just need to
-            # check "instant cast" afterwards.
-            spells_equal = False
-            if cur_spell == goal_spell:
-                self.macro_keyline = ' '
-                spells_equal = True
+        settings = self.settings['equipment']
+        search_mode_equipment = self.saveslot.search_mode_equipment
 
-            if not spells_equal:
-                # If we know what spell we're having right now then we save
-                # time if not pressing 'switch_spell' for half sec and
-                # calculate amount of keypresses to just switch to spell from macro.
-                # But this nice thing is for semi-manual mode only.
-                if search_mode == 'Semi-manual' and cur_spell:
-                    needed_switches = goal_spell - cur_spell
-                    if cur_spell > goal_spell:
-                        needed_switches = total_spells - cur_spell + goal_spell
-                    self.macro_keyline = '|switch_spell|pause10' * needed_switches
-                else:
-                    # In auto mode we find first spell by pressing a button for
-                    # little bit and not bother.
-                    self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (goal_spell - 1)}'
+        all_cells = ['weapon_right_1', 'weapon_right_2', 'weapon_right_3',
+                 'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
+                 'armor_head', 'armor_torso', 'armor_hands', 'armor_legs',
+                 'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4']
 
-            # Add instant actions.
-            if settings['instant_cast_right']:
-                self.macro_keyline += '|attack'
-            if settings['instant_cast_left']:
-                self.macro_keyline += '|guard'
+        all_cells = {x: settings[x] for x in all_cells}
 
-            # Set current number for next macro uses.
-            self.saveslot.current_spell = settings['spell_number']
-            print('Current spell now -', self.saveslot.current_spell)
 
-        def form_keyline_builtin(self):
-            built_in_macro_name = self.settings['built-in']['macro_name']
-            built_in_macro = next(x for x in built_in_macros() if
-                                  x['name'] == built_in_macro_name)
-            self.macro_keyline = built_in_macro['keyline']
+        # Actions to do after cell is passed to get to next cell.
+        actions_after_cell = ['right', 'right', 'right|down',
+                              'right', 'right', 'right|down',
+                              'right', 'right', 'right', 'right|down',
+                              'right', 'right', 'right', 'right|down']
+        for cell, action_after in zip(all_cells.keys(), actions_after_cell):
+            all_cells[cell]['action_after'] = action_after
 
-        def form_keyline_diy(self):
-            commands_list = self.settings['diy']['macro'].strip().split('\n')
-            keyline_list = []
-            for command in commands_list:
+        # Plan is simple, that's a Swiss f*cking watch:
+        #   0. if we're on "Auto" search mode, then firstly we clear all cells
+        #       to 'remove' or 'equip'; press "Q; press "E" again to return;
+        #   1. cycle through all cells and if it's 'remove' or 'equip', perform
+        #       corresponding action;
+        #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
+        #   3. if we have instant action - perform it.
 
-                keyline = ''
-                command = command.strip().lower()
+        keys_list.append('esc|e|e')  # Open inventory.
 
-                if not command:
-                    continue
+        # TODO: Возможно, ускорить это дело нужно, чтобы меньше нажатий было
+        #   при поиске по инвентарю. СЕйчас у нас цикл по всем. Было бы лучше
+        #   делать так:
+        #   - узнавать, какая ячейка следующая;
+        #   - посылать в какую-нибудь функцию номер текущей ячейки и следующей
+        #   - эта функция вычисляет кейлайн кратчайшего пути.
+        #   - внутри функции вычисление по номеру колонки и строки этой ячейки и следующей
+        #   -
 
-                mult = 0
-                pause_time = 0
-                press_time = 0
+        # 0. Preliminary clearing if "Auto" search mode.
+        if search_mode_equipment == 'auto':
+            cells_to_clear = {x: y for x, y in all_cells.items()
+                              if y['action'] in ['equip', 'clear']}
 
-                if '*' in command:
-                    parts = command.partition('*')
-                    mult = int(parts[2].strip())
-                    command = parts[0].strip()
+            for name, value in all_cells.items():
 
-                if '_pause' in command:
-                    parts = command.partition('_pause')
-                    pause_time = int(parts[2].strip())
-                    command = parts[0].strip()
+                if name in cells_to_clear:
+                    keys_list.append('r')
+                    cells_to_clear.pop(name)
+                    if not cells_to_clear:
+                        break
 
-                if '_press' in command:
-                    parts = command.partition('_press')
-                    press_time = int(parts[2].strip())
-                    command = parts[0].strip()
+                keys_list.append(value['action_after'])
 
-                if 'pause' in command:
-                    digits = command.replace('pause', '')
-                    if digits.isdigit():
-                        keyline = command
+            # Re-enter to inventory.
+            keys_list.append('q|e')
 
-                # Searching in plain buttons...
-                if command in game_control_keys() \
-                        or command in available_hotkey_buttons() \
-                        or command in non_letter_keys() \
-                        or len(command) == 1 and command.isalpha()\
-                        or command in []:
+        self.macro_keyline = '|'.join(keys_list)
+
+    def form_keyline_magic(self):
+        settings = self.settings['magic']
+        if not settings['spell_number']:
+            return
+
+        search_mode = self.saveslot.search_mode_magic
+        cur_spell = self.saveslot.current_spell
+        goal_spell = settings['spell_number']
+        total_spells = len(self.saveslot.spells)
+        print('Search mode -', search_mode)
+        print('Total spells -', total_spells)
+        print('Current spell -', cur_spell)
+        print('Goal spell -', goal_spell)
+
+        # If current spell is spell we need, then we just need to
+        # check "instant cast" afterwards.
+        spells_equal = False
+        if cur_spell == goal_spell:
+            self.macro_keyline = ' '
+            spells_equal = True
+
+        if not spells_equal:
+            # If we know what spell we're having right now then we save
+            # time if not pressing 'switch_spell' for half sec and
+            # calculate amount of keypresses to just switch to spell from macro.
+            # But this nice thing is for semi-manual mode only.
+            if search_mode == 'Semi-manual' and cur_spell:
+                needed_switches = goal_spell - cur_spell
+                if cur_spell > goal_spell:
+                    needed_switches = total_spells - cur_spell + goal_spell
+                self.macro_keyline = '|switch_spell|pause10' * needed_switches
+            else:
+                # In auto mode we find first spell by pressing a button for
+                # little bit and not bother.
+                self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (goal_spell - 1)}'
+
+        # Add instant actions.
+        if settings['instant_cast_right']:
+            self.macro_keyline += '|attack'
+        if settings['instant_cast_left']:
+            self.macro_keyline += '|guard'
+
+        # Set current number for next macro uses.
+        self.saveslot.current_spell = settings['spell_number']
+        print('Current spell now -', self.saveslot.current_spell)
+
+    def form_keyline_builtin(self):
+        built_in_macro_name = self.settings['built-in']['macro_name']
+        built_in_macro = next(x for x in built_in_macros() if
+                              x['name'] == built_in_macro_name)
+        self.macro_keyline = built_in_macro['keyline']
+
+    def form_keyline_diy(self):
+        commands_list = self.settings['diy']['macro'].strip().split('\n')
+        keyline_list = []
+        for command in commands_list:
+
+            keyline = ''
+            command = command.strip().lower()
+
+            if not command:
+                continue
+
+            mult = 0
+            pause_time = 0
+            press_time = 0
+
+            if '*' in command:
+                parts = command.partition('*')
+                mult = int(parts[2].strip())
+                command = parts[0].strip()
+
+            if '_pause' in command:
+                parts = command.partition('_pause')
+                pause_time = int(parts[2].strip())
+                command = parts[0].strip()
+
+            if '_press' in command:
+                parts = command.partition('_press')
+                press_time = int(parts[2].strip())
+                command = parts[0].strip()
+
+            if 'pause' in command:
+                digits = command.replace('pause', '')
+                if digits.isdigit():
                     keyline = command
 
-                # Searching in built-in macros...
-                if keyline == '':
-                    macro = next((x for x in built_in_macros() if
-                                  x['name'].lower() == command), None)
-                    if macro is not None:
-                        keyline = macro['keyline']
+            # Searching in plain buttons...
+            if command in game_control_keys() \
+                    or command in available_hotkey_buttons() \
+                    or command in non_letter_keys() \
+                    or len(command) == 1 and command.isalpha() \
+                    or command in []:
+                keyline = command
 
-                # Searching in other macroses in this save-file
-                if keyline == '':
-                    macro = next((x for x in self.saveslot.macros if
-                                  x.name.lower() == command), None)
-                    if macro is not None:
-                        macro.form_keyline()
-                        keyline = macro.macro_keyline
+            # Searching in built-in macros...
+            if keyline == '':
+                macro = next((x for x in built_in_macros() if
+                              x['name'].lower() == command), None)
+                if macro is not None:
+                    keyline = macro['keyline']
 
-                if keyline == '':
-                    self.interrupted = True
-                    break
+            # Searching in other macroses in this save-file
+            if keyline == '':
+                macro = next((x for x in self.saveslot.macros if
+                              x.name.lower() == command), None)
+                if macro is not None:
+                    macro.form_keyline()
+                    keyline = macro.macro_keyline
 
-                if pause_time:
-                    keyline += f'|pause{pause_time}'
+            if keyline == '':
+                self.interrupted = True
+                break
 
-                if press_time:
-                    keyline += f'_press{press_time}'
+            if pause_time:
+                keyline += f'|pause{pause_time}'
 
-                if mult:
-                    keyline_mult = []
-                    for _ in range(mult):
-                        keyline_mult.append(keyline)
-                    keyline = '|'.join(keyline_mult)
+            if press_time:
+                keyline += f'_press{press_time}'
 
-                keyline_list.append(keyline)
+            if mult:
+                keyline_mult = []
+                for _ in range(mult):
+                    keyline_mult.append(keyline)
+                keyline = '|'.join(keyline_mult)
 
-            self.macro_keyline = '|'.join(keyline_list)
+            keyline_list.append(keyline)
 
-        if self.type == 'Equipment':
-            form_keyline_equipment(self)
-        elif self.type == 'Magic':
-            form_keyline_magic(self)
-        elif self.type == 'Built-in':
-            form_keyline_builtin(self)
-        elif self.type == 'DIY':
-            form_keyline_diy(self)
+        self.macro_keyline = '|'.join(keyline_list)
 
     def execute_keyline(self) -> None:
         """
@@ -396,8 +522,8 @@ class Macro:
                 key_press = self.savefile.game_controls[key_press].lower()
 
             # TODO: need to understand, why 'keyboard' can't press arrows
-            # but 'pynput' can. Using two separate methods for input
-            # makes me feel silly.
+            #  but 'pynput' can. Using two separate methods for input
+            #  makes me feel silly.
 
             # Key presses execution.
             keys_for_pynput = ['up', 'left', 'right', 'down']
@@ -416,45 +542,6 @@ class Macro:
 
         self.interrupted = False
 
-def non_letter_keys() -> tuple:
-    """
-
-    """
-    return ('alt', 'alt_l', 'alt_r', 'alt_gr', 'backspace', 'caps_lock', 'cmd',
-            'cmd_r', 'ctrl', 'ctrl_l', 'ctrl_r', 'delete', 'down', 'end',
-            'enter', 'esc', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
-            'f9', 'f10', 'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17',
-            'f18', 'f19', 'f20', 'f21', 'f22', 'f23', 'f24', 'home', 'left',
-            'page_down', 'page_up', 'right', 'shift', 'shift_r', 'space',
-            'tab', 'up', 'media_play_pause', 'media_volume_mute',
-            'media_volume_down', 'media_volume_up', 'media_previous',
-            'media_next', 'insert', 'menu', 'num_lock', 'pause',
-            'print_screen', 'scroll_lock')
-
-
-def game_control_keys() -> tuple:
-    """
-
-    """
-
-    return (
-        'move_up',          
-        'move_down',
-        'move_left',
-        'move_right',
-        'roll',
-        'jump',
-        'crouch',
-        'reset_camera',
-        'switch_spell',
-        'switch_item',
-        'attack',
-        'strong_attack',
-        'guard',
-        'skill',
-        'use_item',
-        'event_action'
-    )
 
 def built_in_macros() -> list:
     """
@@ -544,7 +631,7 @@ def built_in_macros() -> list:
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
-                    'Usually that\'s enough to invade even\n with mediocre connection '
+                    'Usually that\'s enough to invade even with mediocre connection '
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades over all map.'},
@@ -553,7 +640,7 @@ def built_in_macros() -> list:
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
-                    'Usually that\'s enough to invade even\n with mediocre connection '
+                    'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades locally.'},
@@ -562,17 +649,17 @@ def built_in_macros() -> list:
     # Use item macros.
     for i in range(1, 11):
         macros_list.append({
-            'name': f'Use item #{str(i)}',
+            'name': f'Switch to quick item {str(i)}',
             'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}|use_item',
-            'comment': f'Selects item #{i} from quick item list.'
+            'comment': f'Selects item {i} from quick item list.'
         })
 
     # Switch to spell macros.
     for i in range(1, 13):
         macros_list.append({
-            'name': f'Switch to spell #{str(i)}',
+            'name': f'Switch to spell {str(i)}',
             'keyline': f'switch_spell_press600{"|switch_spell|pause10" * (i - 1)}',
-            'comment': f'Selects spell #{i} from spell list.'
+            'comment': f'Selects spell {i} from spell list.'
         })
 
     # 6 gestures.
@@ -580,9 +667,9 @@ def built_in_macros() -> list:
         downs = (i - 1) // 2
         rights = (i - 1) % 2
         macros_list.append({
-            'name': f'Gesture #{str(i)}',
+            'name': f'Gesture {str(i)}',
             'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e|esc',
-            'comment': f'Performs gesture #{i}.'
+            'comment': f'Performs gesture {i}.'
         })
 
     return macros_list
@@ -603,9 +690,10 @@ def keyline_to_sort_all_lists() -> str:
     keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
               'down|down|e|t|down|e|pause300|q|pause300|' \
               'down|e|t|down|e|pause300|q|pause300|'
-              # 'q|pause300|down|down|e|t|down|e|pause300|esc'
+    # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline
+
 
 def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
     """
@@ -639,7 +727,8 @@ def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
     return keyline
 
 
-def keyline_to_choose_next_weapon(weapons_pass: int = 0, left_hand = False) -> str:
+def keyline_to_choose_next_weapon(weapons_pass: int = 0,
+                                  left_hand=False) -> str:
     """
     Returns a macro keyline that chooses next weapon.
     :param weapons_pass: how many weapons will be passed before choosing.
@@ -651,7 +740,8 @@ def keyline_to_choose_next_weapon(weapons_pass: int = 0, left_hand = False) -> s
     return keyline
 
 
-def keyline_to_choose_previous_weapon(weapons_pass: int = 0, left_hand = False) -> str:
+def keyline_to_choose_previous_weapon(weapons_pass: int = 0,
+                                      left_hand=False) -> str:
     """
     Returns a macro keyline that chooses previous weapon.
     :param weapons_pass: how many weapons will be passed before choosing.
@@ -692,7 +782,6 @@ def keyline_to_find_item_number(item_number: int) -> str:
         key_presses.append('right')
 
     return '|'.join(key_presses)
-
 
 # def go_to_beginning_of_list(list_length: int = 50) -> None:
 #     """

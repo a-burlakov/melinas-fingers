@@ -342,8 +342,8 @@ class SaveSlot:
         self.talismans: list = []
         self.spells: list = []
         self.current_spell: int = 0
-        self.search_mode_equipment: str = 'Auto'
-        self.search_mode_magic: str = 'Auto'
+        self.search_mode_equipment: str = 'auto'
+        self.search_mode_magic: str = 'auto'
 
     @staticmethod
     def inventory_and_chest_separator() -> bytes:

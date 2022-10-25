@@ -3,9 +3,7 @@ import json
 import sys
 import os
 from pathlib import Path
-
 import PyQt5.QtGui
-
 from mainWindow import Ui_MainWindow
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
@@ -134,7 +132,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.AvailableSpells_RefillTable()
         self.refresh_all()
 
+        # Showing window on top.
+        self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
         self.show()
+        self.activateWindow()
+
+    def changeEvent(self, event):
+
+        pass
+
+        # print(self.isActiveWindow())
+        # if self.isActiveWindow():
+        #     self.hook_hotkeys()
+        # else:
+        #     # Try block, because 'Keyboard' clearing methods can call
+        #     # an unexpected exception if there's no assigned hotkeys.
+        #     try:
+        #         keyboard.remove_all_hotkeys()
+        #         keyboard._hotkeys.clear()
+        #     except:
+        #         pass
 
     def toJSON(self):
         return json.dumps(self.current_macro, default=lambda o: o.__dict__,
@@ -175,7 +192,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Sets macros settings with values from the window to all macros.
         """
 
-        # TODO: разобраться с кнопкой прерывания-обновления, на некрасиво задается в любом случае переделать на хранение в сейв-файле
         recovery_hotkey = self.recovery_hotkey
         if self.recovery_hotkey_alt:
             recovery_hotkey = 'alt+' + recovery_hotkey
@@ -201,20 +217,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             """
 
             # Need to rename some keys to make 'keyboard' eat it.
-            hotkey = hotkey.replace('~', 'ё')
-            if hotkey.lower().startswith('num') and len(hotkey) == 4:
-                hotkey = hotkey[:3].lower() + ' ' + hotkey[-1]
+            hotkey = hotkey.replace(',', 'comma')
 
             # As in Elden ring we can use hotkey during movement, we need to
             # hook a hotkey to any movement combination we can have, including
             # all 8 directions and sprint button.
-            # That's awful, but I don't know a method to do it differently.
+            # That's awful, but I don't know a method to do it differently yet.
             up = self.savefile.game_controls['move_up']
             down = self.savefile.game_controls['move_down']
             left = self.savefile.game_controls['move_left']
             right = self.savefile.game_controls['move_right']
             sprint = self.savefile.game_controls['roll']
-            move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+',
+            move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+', f'{sprint}+',
                                f'{up}+{left}+', f'{up}+{right}+',
                                f'{right}+{down}+', f'{left}+{down}+',
                                f'{sprint}+{up}+', f'{sprint}+{down}+',
@@ -222,12 +236,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                f'{sprint}+{up}+{left}+', f'{sprint}+{up}+{right}+',
                                f'{sprint}+{right}+{down}+', f'{sprint}+{left}+{down}+']
 
-            # TODO: все равно капризничает вот эта тильда, и с grave и с tilda
-            # for move_key in move_key_combos:
-            #     keyboard.add_hotkey(move_key + hotkey,
-            #                         func,
-            #                         suppress=True,
-            #                         trigger_on_release=True)
+            for move_key in move_key_combos:
+                # scan_code = keyboard.parse_hotkey_combinations(move_key + hotkey)
+                # pass
+                # while not isinstance(scan_code[-1], int):
+                #     scan_code = scan_code[-1]
+
+                keyboard.add_hotkey(move_key + hotkey,
+                                    func,
+                                    suppress=True,
+                                    trigger_on_release=True)
 
 
         # Try block, because 'Keyboard' clearing methods can call
@@ -238,9 +256,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
-
         if self.recovery_hotkey:
-            hook_for_elden_ring(self.recovery_hotkey, self.refresh_currents)
+            recovery_hotkey = self.recovery_hotkey
+            if self.recovery_hotkey_alt:
+                recovery_hotkey = 'alt+' + recovery_hotkey
+            if self.recovery_hotkey_shift:
+                recovery_hotkey = 'shift+' + recovery_hotkey
+            if self.recovery_hotkey_ctrl:
+                recovery_hotkey = 'ctrl+' + recovery_hotkey
+            hook_for_elden_ring(recovery_hotkey, self.refresh_currents)
 
         for macro in self.current_saveslot.macros:
 
@@ -321,9 +345,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
         self.button_EquipmentAdd.clicked.connect(self.Equipment_ManualMode_Add)
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
-        self.tableWidget_Equipment.currentCellChanged.connect(self.Equipment_ManualMode_Table_OnChange)
+        self.button_EquipmentReloadInventory.clicked.connect(self.Equipment_ReloadInventory)
+        self.tableWidget_Equipment.cellPressed.connect(self.Equipment_ManualMode_Table_OnChange)
+        # self.tableWidget_Equipment.currentCellChanged.connect(self.Equipment_ManualMode_Table_OnChange)
         self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
         self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
+        self.checkBox_Equipment_NotEnoughStats.clicked.connect(self.Equipment_NotEnoughStats_OnChange)
+
         self.picture_equip_weaponright_1.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_1
         self.picture_equip_weaponright_2.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_2
         self.picture_equip_weaponright_3.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_3
@@ -490,7 +518,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         if self.recovery_hotkey == '':
-            self.recovery_hotkey = '~'
+            self.recovery_hotkey = 'Tab'
+            self.recovery_hotkey_shift = True
 
         if self.standard_pause_time == 0:
             self.standard_pause_time = 20
@@ -784,11 +813,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
-        # TODO: отрефакторить в одну функцию: после изменения
         current_text = self.comboBox_RecoveryHotkey.currentText()
         self.recovery_hotkey = current_text
-
         self.set_macros_settings_from_window()
+        self.hook_hotkeys()
 
     def RecoveryKeyCtrl_Click(self):
         """
@@ -798,6 +826,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_RecoveryKeyCtrl.isChecked()
         self.recovery_hotkey_ctrl = checked
         self.set_macros_settings_from_window()
+        self.hook_hotkeys()
 
     def RecoveryKeyShift_Click(self):
         """
@@ -806,6 +835,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_RecoveryKeyShift.isChecked()
         self.recovery_hotkey_shift = checked
         self.set_macros_settings_from_window()
+        self.hook_hotkeys()
 
     def RecoveryKeyAlt_Click(self):
         """
@@ -815,33 +845,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         checked = self.checkBox_RecoveryKeyAlt.isChecked()
         self.recovery_hotkey_alt = checked
         self.set_macros_settings_from_window()
+        self.hook_hotkeys()
 
     def SearchMode_OnChange(self):
         """
         Changes search mode settings after changing them in "Settings" page.
         """
 
-        self.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText()
-        self.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText()
-
-    def Equip_InstantAction_OnChange(self):
-        """
-
-        """
-
-        action = self.comboBox_Equip_InstantAction.currentText()
-        if not action:
-            self.current_macro.settings['equipment']['instant_action'] = ''
-        elif action == 'Attack':
-            self.current_macro.settings['equipment']['instant_action'] = 'attack'
-        elif action == 'Strong attack':
-            self.current_macro.settings['equipment']['instant_action'] = 'strong_attack'
-        elif action == 'Skill':
-            self.current_macro.settings['equipment']['instant_action'] = 'skill'
-        elif action == 'Stance attack':
-            self.current_macro.settings['equipment']['instant_action'] = 'stance_attack'
-        elif action == 'Stance strong attack':
-            self.current_macro.settings['equipment']['instant_action'] = 'stance_strong_attack'
+        self.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText().lower()
+        self.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText().lower()
 
     def DeleteMacros_Click(self):
         """
@@ -937,6 +949,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
+
 
     def Pages_Equipment_Table_Refresh(self) -> None:
         """
@@ -1006,10 +1020,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settings = self.current_macro.settings['equipment']
         manual_mode = settings['manual_mode']
-        choosing_now = (self.equipment_current_cell != '')
+        current_cell = self.equipment_current_cell
+        is_choosing_now = (current_cell != '')
 
         self.checkBox_Equipment_ManualMode.setChecked(manual_mode)
-        self.checkBox_Equipment_ManualMode.setEnabled(not choosing_now)
+        self.checkBox_Equipment_ManualMode.setEnabled(not is_choosing_now)
 
         show_weapon_manual_buttons = manual_mode and self.equipment_current_cell == ''
         self.button_EquipmentAdd.setHidden(not show_weapon_manual_buttons)
@@ -1030,19 +1045,81 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif action == 'stance_strong_attack':
             self.comboBox_Equip_InstantAction.setCurrentText('Stance strong attack')
 
-        # Cells.
-
-        # TODO: Добавляем наименование поверх ячеек, если выбраны
-
-        # TODO: Выбираем картинки исходя из статуса clear или skip или то, что сейчас выбираем (3 вида картинок)
-
-        # Cell buttons.
-        self.button_Equip_Cancel.setEnabled(choosing_now)
-        self.button_Equip_Skip.setEnabled(choosing_now)
-        self.button_Equip_Clear.setEnabled(choosing_now)
+        # Not enough stats.
+        if not is_choosing_now:
+            self.checkBox_Equipment_NotEnoughStats.setEnabled(False)
+        else:
+            self.checkBox_Equipment_NotEnoughStats.setEnabled(True)
+            check = settings[current_cell]['not_enough_stats']
+            self.checkBox_Equipment_NotEnoughStats.setChecked(check)
 
         # self.tableWidget_Equipment.blockSignals(False)
 
+    def Pages_Equipment_Cells_Refresh(self) -> None:
+        """
+
+        """
+
+        settings = self.current_macro.settings['equipment']
+        manual_mode = settings['manual_mode']
+        current_cell = self.equipment_current_cell
+        is_choosing_now = (current_cell != '')
+
+        # Cells.
+        label_accordance = {
+            'weapon_right_1': self.label_Weapon_Right_1,
+            'weapon_right_2': self.label_Weapon_Right_2,
+            'weapon_right_3': self.label_Weapon_Right_3,
+            'weapon_left_1': self.label_Weapon_Left_1,
+            'weapon_left_2': self.label_Weapon_Left_2,
+            'weapon_left_3': self.label_Weapon_Left_3,
+            'armor_head': self.label_Armor_Head,
+            'armor_torso': self.label_Armor_Torso,
+            'armor_hands': self.label_Armor_Hands,
+            'armor_legs': self.label_Armor_Legs,
+            'talisman_1': self.label_Talisman_1,
+            'talisman_2': self.label_Talisman_2,
+            'talisman_3': self.label_Talisman_3,
+            'talisman_4': self.label_Talisman_4,
+        }
+
+        for cell_name, label in label_accordance.items():
+            cell_settings = settings[cell_name]
+            if cell_settings['action'] == 'skip':
+                label.setText('')
+            elif cell_settings['action'] == 'clear':
+                label.setText('<Clear>')
+            elif cell_settings['name']:
+                label.setText(f'{cell_settings["name"]}\n'
+                              f'({cell_settings["order"]})')
+            else:
+                label.setText('<error>')
+
+        # Current cell label.
+        cell_name_accordance = {
+                    '': '',
+                    'weapon_right_1': 'Right Hand Arnament 1',
+                    'weapon_right_2': 'Right Hand Arnament 2',
+                    'weapon_right_3': 'Right Hand Arnament 3',
+                    'weapon_left_1': 'Left Hand Arnament 1',
+                    'weapon_left_2': 'Left Hand Arnament 2',
+                    'weapon_left_3': 'Left Hand Arnament 3',
+                    'armor_head': 'Head',
+                    'armor_torso': 'Chest',
+                    'armor_hands': 'Arms',
+                    'armor_legs': 'Legs',
+                    'talisman_1': 'Talisman 1',
+                    'talisman_2': 'Talisman 2',
+                    'talisman_3': 'Talisman 3',
+                    'talisman_4': 'Talisman 4',
+                }
+
+        self.label_Choosing_Cell.setText(cell_name_accordance[current_cell])
+
+        # Cell buttons.
+        self.button_Equip_Cancel.setEnabled(is_choosing_now)
+        self.button_Equip_Skip.setEnabled(is_choosing_now)
+        self.button_Equip_Clear.setEnabled(is_choosing_now)
 
     def button_Equip_Clear_Clicked(self) -> None:
         """
@@ -1056,12 +1133,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settings = self.current_macro.settings['equipment']
         settings[self.equipment_current_cell]['action'] = 'clear'
+        settings[self.equipment_current_cell]['order'] = 0
+        settings[self.equipment_current_cell]['name'] = ''
 
         self.equipment_current_cell = ''
 
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
-
+        self.Pages_Equipment_Cells_Refresh()
         # self.tableWidget_Equipment.blockSignals(False)
 
     def button_Equip_Skip_Clicked(self) -> None:
@@ -1075,12 +1154,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settings = self.current_macro.settings['equipment']
         settings[self.equipment_current_cell]['action'] = 'skip'
+        settings[self.equipment_current_cell]['order'] = 0
+        settings[self.equipment_current_cell]['name'] = ''
 
         self.equipment_current_cell = ''
 
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
-
+        self.Pages_Equipment_Cells_Refresh()
         # self.tableWidget_Equipment.blockSignals(False)
 
 
@@ -1094,7 +1175,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
-
+        self.Pages_Equipment_Cells_Refresh()
         # self.tableWidget_Equipment.blockSignals(False)
 
     def Equipment_ManualMode_OnChange(self) -> None:
@@ -1111,7 +1192,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Add new item to the end of the list.
         """
-        # TODO: как-то запретить редактировать ячейки после последней, если они в одном ряду
+
+        self.Equipment_ManualMode_Table_OnChange()
+
         self.current_saveslot.weapons_manual.append({
             'name': '< weapon >',
             'order': len(self.current_saveslot.weapons_manual) + 1
@@ -1146,6 +1229,47 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Clear selection.
         self.tableWidget_Equipment.selectedItems().clear()
 
+    def Equip_InstantAction_OnChange(self):
+        """
+
+        """
+
+        settings = self.current_macro.settings['equipment']
+        action = self.comboBox_Equip_InstantAction.currentText()
+        if not action:
+            settings['instant_action'] = ''
+        elif action == 'Attack':
+            settings['instant_action'] = 'attack'
+        elif action == 'Strong attack':
+            settings['instant_action'] = 'strong_attack'
+        elif action == 'Skill':
+            settings['instant_action'] = 'skill'
+        elif action == 'Stance attack':
+            settings['instant_action'] = 'stance_attack'
+        elif action == 'Stance strong attack':
+            settings['instant_action'] = 'stance_strong_attack'
+
+    def Equipment_NotEnoughStats_OnChange(self) -> None:
+        """
+
+        """
+
+        if not self.equipment_current_cell:
+            return
+
+        settings = self.current_macro.settings['equipment']
+
+        settings[self.equipment_current_cell]['not_enough_stats'] = \
+            self.checkBox_Equipment_NotEnoughStats.isChecked()
+
+    def Equipment_ReloadInventory(self) -> None:
+        """
+
+        """
+
+        self.current_saveslot.get_equipment()
+        self.refresh_all()
+
     def Equipment_ManualMode_Table_OnChange(self) -> None:
         """
         Change things after cell in table on "Equipment" page was changed.
@@ -1157,7 +1281,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if choosing_now:
             return
 
-        # TODO: проблемы с up и down
         manual_list = self.current_saveslot.weapons_manual
         manual_list.clear()
 
@@ -1199,10 +1322,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
         item = items[0]
-        order = (item.row() * 5) + item.column()
+        order = (item.row() * 5) + item.column() + 1
         name = str(item.text())
 
         settings = self.current_macro.settings['equipment']
+        settings[self.equipment_current_cell]['action'] = 'equip'
         settings[self.equipment_current_cell]['name'] = name
         settings[self.equipment_current_cell]['order'] = order
 
@@ -1210,6 +1334,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponRight_1(self, event) -> None:
 
@@ -1217,84 +1342,98 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.equipment_current_cell = 'weapon_right_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponRight_2(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_right_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponRight_3(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_right_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_1(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_left_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_2(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_left_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_3(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_left_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Head(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'armor_head'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Torso(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'armor_torso'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Hands(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'armor_hands'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Legs(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'armor_legs'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_1(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'talisman_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_2(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'talisman_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_3(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'talisman_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_4(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
-        self.equipment_current_cell = 'talisman_3'
+        self.equipment_current_cell = 'talisman_4'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Cells_Refresh()
 
     def Pages_Refresh_Magic(self) -> None:
         """
