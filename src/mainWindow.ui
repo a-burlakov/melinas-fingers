@@ -501,7 +501,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -3737,7 +3737,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>120</x>
         <y>280</y>
-        <width>91</width>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>
@@ -3781,7 +3781,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_RecoveryKeyAlt">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>240</x>
         <y>320</y>
         <width>121</width>
         <height>20</height>
@@ -3803,7 +3803,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_RecoveryKeyCtrl">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>240</x>
         <y>276</y>
         <width>121</width>
         <height>20</height>
@@ -3825,7 +3825,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QCheckBox" name="checkBox_RecoveryKeyShift">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>240</x>
         <y>298</y>
         <width>121</width>
         <height>20</height>
@@ -4021,7 +4021,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>120</x>
         <y>230</y>
-        <width>91</width>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>
@@ -4047,7 +4047,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>120</x>
         <y>200</y>
-        <width>91</width>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>

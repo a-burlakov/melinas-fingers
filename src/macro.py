@@ -843,7 +843,7 @@ def keyline_to_sort_all_lists() -> str:
 
     keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
               'down|down|e|t|down|e|pause300|q|pause300|' \
-              'down|e|t|down|e|pause300|q|pause300|'
+              'down|e|t|down|e|pause300|q|pause300|esc'
     # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline
