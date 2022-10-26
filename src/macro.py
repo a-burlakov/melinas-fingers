@@ -325,7 +325,7 @@ class Macro:
         #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
         #   3. if we have instant action - performing it.
 
-        keys_list.append('esc|e|e')  # Open inventory.
+        keys_list.append('esc|e')  # Open inventory.
 
         # 0. Preliminary clearing if "Auto" search mode.
         if search_mode == 'auto':
@@ -337,7 +337,7 @@ class Macro:
             keys_list.append(self.keyline_for_cells(cells))
 
             # Re-enter to inventory.
-            keys_list.append('esc|esc|e|e')
+            keys_list.append('esc|esc|e')
 
         # 0.1. If we're in manual mode, but have some cells to 'equip' having
         # no current position, that means we need to clear them to put to
@@ -352,18 +352,21 @@ class Macro:
                 keys_list.append(self.keyline_for_cells(cells))
 
                 # Re-enter to inventory.
-                keys_list.append('esc|esc|e|e')
+                keys_list.append('esc|esc|e')
 
         # 1-2. Performing actions for cells.
         self.assign_keylines_to_cells(cells, search_mode)
         keys_list.append(self.keyline_for_cells(cells))
 
+        # Quit menu.
+        keys_list.append('esc')
+
         # 3. Instant action.
         if settings['instant_action']:
             if settings['instant_action'] == 'stance_attack':
-                keys_list.append('crouch|pause200|skill|attack')
+                keys_list.append('skill|attack')
             elif settings['instant_action'] == 'stance_strong_attack':
-                keys_list.append('crouch|pause200|skill|strong_attack')
+                keys_list.append('skill|strong_attack')
             else:
                 keys_list.append(settings['instant_action'])
 
@@ -402,12 +405,17 @@ class Macro:
 
         path_to_first_cell = '|'.join(path_to_first_cell)
 
-        # Shinking the path to 'talisman_1' from 13 to 1 press.
+        # TODO: Сделать так, чтобы пропускались первые правое 2 и 3 оружие, если надо
+        # TODO: ошибка с тем, что я не учитываю стрелы с права
+        # TODO: ошибка с тем, что первые ячейки не работают
+        # TODO: расходится порядок в броне...
+
+        # Shinking the path to 'talisman_1' from 13 to 3 press.
         path_to_first_cell = path_to_first_cell.replace(
             'right|right|right|down|'
             'right|right|right|down|'
             'right|right|right|right|down',
-            'up'
+            'down|down|down'
         )
         # Shinking the path to 'armor_head' from 8 to 2 presses.
         #                   or 'weapon_left_1' from 4 to 1 press.
@@ -454,11 +462,12 @@ class Macro:
             current_position = 1
             if search_mode != 'auto':
                 current_position = value['current_order']
+                if goal_position == current_position:
+                    continue  # We're on needed cell.
             goal_position = value['order']
             if not goal_position:
                 continue   # Something strange happened, ignoring cell.
-            if goal_position == current_position:
-                continue   # We're on needed cell.
+
 
             # Forming a way from current position to goal position.
             # +1 cel:      right; -1 cell:    left
@@ -496,10 +505,10 @@ class Macro:
             # Choosing equip.
             keys_list.append('e')
             if value['not_enough_stats']:
-                keys_list.append('e')
+                keys_list.append('pause50|e|pause50')
 
             # Quiting cell.
-            keys_list.append('q')
+            keys_list.append('q|pause200')
 
             cells[key]['keyline'] = '|'.join(keys_list)
 
@@ -722,10 +731,10 @@ def built_in_macros() -> list:
          'keyline': 'crouch|attack',
          'comment': 'Favourite UGS players\' button before 1.07.'},
         {'name': 'Stance attack',
-         'keyline': 'crouch|pause200|skill|attack',
+         'keyline': 'skill|attack',
          'comment': 'Goes to stance, then immediately perform an attack.'},
         {'name': 'Stance strong attack',
-         'keyline': 'crouch|pause200|skill|strong_attack',
+         'keyline': 'skill|strong_attack',
          'comment': 'Goes to stance, then immediately perform a strong attack.'},
         {'name': 'Fast katana stance attacks',
          'keyline': 'skill_press300|attack_pause1250|crouch_press20|crouch',
@@ -843,7 +852,7 @@ def keyline_to_sort_all_lists() -> str:
 
     keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
               'down|down|e|t|down|e|pause300|q|pause300|' \
-              'down|e|t|down|e|pause300|q|pause300|esc'
+              'down|e|t|down|e|pause300|esc'
     # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline

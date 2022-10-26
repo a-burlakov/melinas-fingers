@@ -546,6 +546,10 @@ class SaveSlot:
 
             inventory_order_id = position_in_file[2:]
 
+            # TODO: Поменять position на 'position_in_file'.
+            #   если пото везде order поменять на position, то  проблема
+            #   с порядком должна уйти.
+
             instance_dict = {}
             instance_dict.setdefault('type', 'spells')
             instance_dict.setdefault('name', spell_name)
