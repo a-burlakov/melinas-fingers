@@ -1,12 +1,12 @@
 """
 TODO: need to describe a save-file map
+    не забыть написать, что активная броня находится неподалеку от имени слота
 """
 
 import os
 import re
 import datasheets
 from pathlib import Path
-
 
 def endian_turn(hex_string: str) -> str:
     """
@@ -60,10 +60,18 @@ class SaveFile:
 
     """
     def __init__(self , location: str):
+
         self.location = location
         self.saveslots: list = []
-        self.game_controls: dict = {'': ''}
+        self.current_saveslot: SaveSlot = ''
+        self.font_size_adjustment: int = -1
+        self.standard_pause_time: int = 0
+        self.recovery_hotkey: str = ''
+        self.recovery_hotkey_ctrl: bool = False
+        self.recovery_hotkey_shift: bool = False
+        self.recovery_hotkey_alt: bool = False
 
+        self.game_controls: dict = {'': ''}
         for key in self.control_keys_ranges().keys():
             self.game_controls[key] = ''
 
@@ -334,12 +342,13 @@ class SaveSlot:
         self.savefile = SaveFile('')
         self.macros: list = []
         self.weapons: list = []
-        self.weapons_manual: list = []
         self.armor_head: list = []
-        self.armor_torso: list = []
-        self.armor_hands: list = []
+        self.armor_chest: list = []
+        self.armor_arms: list = []
         self.armor_legs: list = []
         self.talismans: list = []
+        self.weapons_manual: list = []
+        self.weapons_manual_mode: bool = False
         self.spells: list = []
         self.current_spell: int = 0
         self.search_mode_equipment: str = 'auto'
@@ -362,8 +371,8 @@ class SaveSlot:
 
         self.weapons = []
         self.armor_head = []
-        self.armor_torso = []
-        self.armor_hands = []
+        self.armor_chest = []
+        self.armor_arms = []
         self.armor_legs = []
         self.talismans = []
         self.spells = []
@@ -374,7 +383,6 @@ class SaveSlot:
             return
 
         slot_data = self.get_slot_data()
-        # slot_name = self.name
 
         # Looking for all equipment mentioned in save-file, whatever quantity
         # and position in inventory or chest.
@@ -420,15 +428,24 @@ class SaveSlot:
             # Each line represents an instance of equipment.
             id_for_reg = bytes.fromhex(equipment_mark + equipment_id)
             id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
-            reg_expression = b'.{2}(?=' + id_for_reg + b')'
 
+            reg_expression = b'.{2}(?=' + id_for_reg + b')'
             result = re.finditer(reg_expression,
-                                 slot_data[:instances_range[0] + separator_pos])
+                                 slot_data[:instances_range[0] + separator_pos],flags=re.MULTILINE)
+
+            def find_all(a_str, sub):
+                start = 0
+                while True:
+                    start = a_str.find(sub, start)
+                    if start == -1: return
+                    yield start
+                    start += len(
+                        sub)  # use start += 1 to find overlapping matches
 
             for match in result:
 
                 instance_id = match.group() + bytes.fromhex(equipment_mark)
-                instance_position = data_for_instances_search.find(instance_id)
+                instance_position = data_for_instances_search.rfind(instance_id)
                 if instance_position < 0:
                     continue
 
@@ -468,9 +485,9 @@ class SaveSlot:
                     if equipment_id_decimal.endswith('000'):
                         equipment_type += '_head'
                     elif equipment_id_decimal.endswith('100'):
-                        equipment_type += '_torso'
+                        equipment_type += '_chest'
                     elif equipment_id_decimal.endswith('200'):
-                        equipment_type += '_hands'
+                        equipment_type += '_arms'
                     elif equipment_id_decimal.endswith('300'):
                         equipment_type += '_legs'
 
@@ -479,8 +496,8 @@ class SaveSlot:
                 instance_dict.setdefault('name', equipment_name)
                 instance_dict.setdefault('id', equipment_id)
                 instance_dict.setdefault('instance_id', instance_id)
-                instance_dict.setdefault('order', inventory_order_id)
-                instance_dict.setdefault('position', position_in_file)
+                instance_dict.setdefault('order_in_file', inventory_order_id)
+                instance_dict.setdefault('position_in_file', position_in_file)
                 inventory_list.append(instance_dict)
 
         # Ta lismans are located in save-file simmilar to armor and weapons, but
@@ -520,8 +537,8 @@ class SaveSlot:
             instance_dict.setdefault('name', talisman_name)
             instance_dict.setdefault('id', talisman_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('order', inventory_order_id)
-            instance_dict.setdefault('position', position_in_file)
+            instance_dict.setdefault('order_in_file', inventory_order_id)
+            instance_dict.setdefault('position_in_file', position_in_file)
             inventory_list.append(instance_dict)
 
         # Chosen spells can be found pretty easily.
@@ -555,19 +572,19 @@ class SaveSlot:
             instance_dict.setdefault('name', spell_name)
             instance_dict.setdefault('id', spell_id)
             instance_dict.setdefault('instance_id', '')
-            instance_dict.setdefault('order', inventory_order_id)
-            instance_dict.setdefault('position', position_in_file)
+            instance_dict.setdefault('order_in_file', inventory_order_id)
+            instance_dict.setdefault('position_in_file', position_in_file)
             inventory_list.append(instance_dict)
 
         sorted_equipment = sorted(inventory_list,
                                   key=lambda x: (x['type'],
-                                                 int(x['order'], 16)))
+                                                 int(x['order_in_file'], 16)))
 
         fields_accordance = {
             'weapons': self.weapons,
             'armor_head': self.armor_head,
-            'armor_torso': self.armor_torso,
-            'armor_hands': self.armor_hands,
+            'armor_chest': self.armor_chest,
+            'armor_arms': self.armor_arms,
             'armor_legs': self.armor_legs,
             'talismans': self.talismans,
             'spells': self.spells,

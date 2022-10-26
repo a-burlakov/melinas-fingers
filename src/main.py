@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_hotkey_buttons
 from savefile import SaveFile, SaveSlot
 import keyboard
+import pickle
 
 
 def available_game_control_buttons() -> tuple:
@@ -80,13 +81,13 @@ def available_game_control_buttons() -> tuple:
     )
 
 
-def inventory_row_column_from_order(order: int) -> tuple:
+def inventory_row_column_from_position(position: int) -> tuple:
     """
-    Gets row and column indexes for order in table with 5 columns.
+    Gets row and column indexes for position in table with 5 columns.
     """
 
-    row = (order - 1) // 5
-    column = (order - 1) % 5
+    row = (position - 1) // 5
+    column = (position - 1) % 5
 
     return row, column
 
@@ -98,18 +99,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         self.savefile: SaveFile = SaveFile('')
-        self.current_saveslot: SaveSlot = SaveSlot()
-        self.current_macro: Macro = Macro()
-        self.font_size_adjustment: int = -1
-        self.standard_pause_time: int = 0
-        self.recovery_hotkey: str = ''
-        self.recovery_hotkey_ctrl: bool = False
-        self.recovery_hotkey_shift: bool = False
-        self.recovery_hotkey_alt: bool = False
         self.equipment_current_cell: str = ''
-
+        self.current_macro: Macro = Macro()
         self.init_ui()
-
         self.read_settings()
 
         # TODO: слишком сложно тут, надо все это выровнять в одну функцию, которую вызывать и из открытия сейва вручную
@@ -119,10 +111,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.savefile.fill_saveslots()
                 self.savefile.read_game_controls()
                 if self.savefile.saveslots:
-                    self.current_saveslot = self.savefile.saveslots[0]
-                    self.current_saveslot.get_equipment()
+                    self.savefile.current_saveslot = self.savefile.saveslots[0]
+                    self.savefile.current_saveslot.get_equipment()
                 else:
-                    self.current_saveslot = SaveSlot()
+                    self.savefile.current_saveslot = SaveSlot()
                 self.current_macro = Macro()
                 self.set_macros_settings_from_window()
 
@@ -139,6 +131,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def changeEvent(self, event):
 
+        print('event')
         pass
 
         # print(self.isActiveWindow())
@@ -192,19 +185,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Sets macros settings with values from the window to all macros.
         """
 
-        recovery_hotkey = self.recovery_hotkey
-        if self.recovery_hotkey_alt:
+        recovery_hotkey = self.savefile.recovery_hotkey
+        if self.savefile.recovery_hotkey_alt:
             recovery_hotkey = 'alt+' + recovery_hotkey
-        if self.recovery_hotkey_shift:
+        if self.savefile.recovery_hotkey_shift:
             recovery_hotkey = 'shift+' + recovery_hotkey
-        if self.recovery_hotkey_ctrl:
+        if self.savefile.recovery_hotkey_ctrl:
             recovery_hotkey = 'ctrl+' + recovery_hotkey
 
-        for macro in self.current_saveslot.macros:
-            macro.pause_time = self.standard_pause_time
+        for macro in self.savefile.current_saveslot.macros:
+            macro.pause_time = self.savefile.standard_pause_time
             macro.recovered = False
             macro.recovery_hotkey = recovery_hotkey
-            macro.saveslot = self.current_saveslot
+            macro.saveslot = self.savefile.current_saveslot
 
     def hook_hotkeys(self):
         """
@@ -256,17 +249,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
-        if self.recovery_hotkey:
-            recovery_hotkey = self.recovery_hotkey
-            if self.recovery_hotkey_alt:
+        if self.savefile.recovery_hotkey:
+            recovery_hotkey = self.savefile.recovery_hotkey
+            if self.savefile.recovery_hotkey_alt:
                 recovery_hotkey = 'alt+' + recovery_hotkey
-            if self.recovery_hotkey_shift:
+            if self.savefile.recovery_hotkey_shift:
                 recovery_hotkey = 'shift+' + recovery_hotkey
-            if self.recovery_hotkey_ctrl:
+            if self.savefile.recovery_hotkey_ctrl:
                 recovery_hotkey = 'ctrl+' + recovery_hotkey
             hook_for_elden_ring(recovery_hotkey, self.refresh_currents)
 
-        for macro in self.current_saveslot.macros:
+        for macro in self.savefile.current_saveslot.macros:
 
             hotkey_string = macro.hotkey_string()
             if not hotkey_string:
@@ -283,24 +276,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes current spells, weapons and equipment to 0.
         """
 
-        # All cells in inventory.
-        self.current_saveslot.current_weapon_right_1 = 0
-        self.current_saveslot.current_weapon_right_2 = 0
-        self.current_saveslot.current_weapon_right_3 = 0
-        self.current_saveslot.current_weapon_left_1 = 0
-        self.current_saveslot.current_weapon_left_2 = 0
-        self.current_saveslot.current_weapon_left_3 = 0
-        self.current_saveslot.current_armor_head = 0
-        self.current_saveslot.current_armor_torso = 0
-        self.current_saveslot.current_armor_hands = 0
-        self.current_saveslot.current_armor_legs = 0
-        self.current_saveslot.current_talisman_1 = 0
-        self.current_saveslot.current_talisman_2 = 0
-        self.current_saveslot.current_talisman_3 = 0
-        self.current_saveslot.current_talisman_4 = 0
+        # Equipment.
+        settings_to_recover = [
+            'weapon_right_1', 'weapon_right_2', 'weapon_right_3',
+            'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
+            'armor_head', 'armor_chest', 'armor_arms', 'armor_legs',
+            'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4'
+        ]
+        for macro in self.savefile.current_saveslot.macros:
+            for setting in settings_to_recover:
+                macro.settings['equipment'][setting]['current_position'] = 0
 
         # Magic.
-        self.current_saveslot.current_spell = 0
+        self.savefile.current_saveslot.current_spell = 0
 
         print('=' * 40)
         print('Currents were refreshed.')
@@ -347,7 +335,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
         self.button_EquipmentReloadInventory.clicked.connect(self.Equipment_ReloadInventory)
         self.tableWidget_Equipment.cellPressed.connect(self.Equipment_ManualMode_Table_OnChange)
-        # self.tableWidget_Equipment.currentCellChanged.connect(self.Equipment_ManualMode_Table_OnChange)
         self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
         self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
         self.checkBox_Equipment_NotEnoughStats.clicked.connect(self.Equipment_NotEnoughStats_OnChange)
@@ -359,8 +346,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.picture_equip_weaponleft_2.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_2
         self.picture_equip_weaponleft_3.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_3
         self.picture_equip_armor_head.mousePressEvent = self.Equipment_MouseClicked_Armor_Head
-        self.picture_equip_armor_chest.mousePressEvent = self.Equipment_MouseClicked_Armor_Torso
-        self.picture_equip_armor_arms.mousePressEvent = self.Equipment_MouseClicked_Armor_Hands
+        self.picture_equip_armor_chest.mousePressEvent = self.Equipment_MouseClicked_Armor_chest
+        self.picture_equip_armor_arms.mousePressEvent = self.Equipment_MouseClicked_Armor_Arms
         self.picture_equip_armor_legs.mousePressEvent = self.Equipment_MouseClicked_Armor_Legs
         self.picture_equip_talisman_1.mousePressEvent = self.Equipment_MouseClicked_Talisman_1
         self.picture_equip_talisman_2.mousePressEvent = self.Equipment_MouseClicked_Talisman_2
@@ -382,7 +369,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.label_Talisman_3.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Talisman_4.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
-        self.button_Equip_Remove.clicked.connect(self.button_Equip_Clear_Clicked)
+        self.button_Equip_Remove.clicked.connect(self.button_Equip_Remove_Clicked)
         self.button_Equip_Skip.clicked.connect(self.button_Equip_Skip_Clicked)
         self.button_Equip_Cancel.clicked.connect(self.button_Equip_Cancel_Clicked)
 
@@ -443,6 +430,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_ControlKeyUseItem.addItem(key)
             self.comboBox_ControlKeyUse.addItem(key)
 
+        self.spinBox_StandardPauseTime.valueChanged.connect(self.StandardPauseTime_OnChange)
         self.button_FontSizeUp.clicked.connect(lambda x: self.adjust_font_size(1))
         self.button_FontSizeDown.clicked.connect(lambda x: self.adjust_font_size(-1))
 
@@ -453,7 +441,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        if not self.font_size_adjustment:
+        if not self.savefile.font_size_adjustment:
             return
 
         for name, obj in inspect.getmembers(self):
@@ -468,18 +456,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 font_size = obj.fontInfo().pointSize()
                 font_family = obj.fontInfo().family()
                 obj.setFont(PyQt5.QtGui.QFont(font_family, font_size +
-                                              self.font_size_adjustment))
+                                              self.savefile.font_size_adjustment))
 
     def adjust_font_size(self, adjust: int) -> None:
         """
 
         """
 
-        self.font_size_adjustment += adjust
+        self.savefile.font_size_adjustment += adjust
 
         # If font adjustment is too much, we're returning to opposite position.
-        if abs(self.font_size_adjustment) > 4:
-            adjust = adjust - self.font_size_adjustment
+        if abs(self.savefile.font_size_adjustment) > 4:
+            adjust = adjust - self.savefile.font_size_adjustment
             self.font_size_adjustment = 0
 
         for name, obj in inspect.getmembers(self):
@@ -499,8 +487,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
+        with open('mf_settings.cfg', "wb") as settings_file:
+            pickle.dump(self.savefile, settings_file)
 
-        pass
 
     def read_settings(self):
         """
@@ -517,12 +506,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings file on manually.
         """
 
-        if self.recovery_hotkey == '':
-            self.recovery_hotkey = 'Tab'
-            self.recovery_hotkey_shift = True
+        if self.savefile.recovery_hotkey == '':
+            self.savefile.recovery_hotkey = 'Tab'
+            self.savefile.recovery_hotkey_shift = True
 
-        if self.standard_pause_time == 0:
-            self.standard_pause_time = 20
+        if self.savefile.standard_pause_time == 0:
+            self.savefile.standard_pause_time = 20
 
     def SaveSlotsComboBox_Refresh(self):
         """
@@ -536,7 +525,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.comboBox_SaveSlots.addItem(
                     f'{saveslot.number}. {saveslot.name}')
             self.comboBox_SaveSlots.setEnabled(True)
-            self.comboBox_SaveSlots.setCurrentIndex(self.current_saveslot.number - 1)
+            self.comboBox_SaveSlots.setCurrentIndex(self.savefile.current_saveslot.number - 1)
         else:
             self.comboBox_SaveSlots.addItem('<Choose save file!>')
             self.comboBox_SaveSlots.setEnabled(False)
@@ -547,8 +536,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         current_text = self.comboBox_SaveSlots.currentText()
         slot_number = int(current_text.split('.')[0])
-        self.current_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), SaveSlot())
-        self.current_saveslot.get_equipment()
+        self.savefile.current_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), SaveSlot())
+        self.savefile.current_saveslot.get_equipment()
         self.current_macro = Macro()
 
         self.AvailableSpells_RefillTable()
@@ -565,7 +554,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             return
 
-        self.current_macro = next((x for x in self.current_saveslot.macros if x.id == macro_id), Macro(self.current_saveslot))
+        self.current_macro = next((x for x in self.savefile.current_saveslot.macros if x.id == macro_id), Macro(self.savefile.current_saveslot))
 
         self.MacroArea_Refresh()
         self.Pages_SetPage()
@@ -576,8 +565,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes the macros table on a left side of the window.
         """
 
-        self.button_AddMacros.setEnabled(self.current_saveslot.number > 0)
-        self.button_DeleteMacros.setEnabled(self.current_saveslot.number > 0)
+        self.button_AddMacros.setEnabled(self.savefile.current_saveslot.number > 0)
+        self.button_DeleteMacros.setEnabled(self.savefile.current_saveslot.number > 0)
 
         # Remembering current id for case of changing table.
         current_macro_id = self.current_macro.id
@@ -586,7 +575,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while self.tableWidget_Macros.rowCount():
             self.tableWidget_Macros.removeRow(0)
 
-        macros = self.current_saveslot.macros
+        macros = self.savefile.current_saveslot.macros
         for i, macro in enumerate(sorted(macros, key=lambda x: x.id)):
 
             hotkey_list = []
@@ -660,11 +649,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.savefile.fill_saveslots()
             self.savefile.read_game_controls()
             if self.savefile.saveslots:
-                self.current_saveslot = self.savefile.saveslots[0]
-                self.current_saveslot.get_equipment()
+                self.savefile.current_saveslot = self.savefile.saveslots[0]
+                self.savefile.current_saveslot.get_equipment()
             else:
-                self.current_saveslot = SaveSlot()
-            self.current_macro = Macro(self.current_saveslot)
+                self.savefile.current_saveslot = SaveSlot()
+            self.current_macro = Macro(self.savefile.current_saveslot)
             self.hook_hotkeys()
             self.set_macros_settings_from_window()
 
@@ -687,12 +676,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        new_macro = Macro(self.current_saveslot)
+        new_macro = Macro(self.savefile.current_saveslot)
         new_macro.name = new_macro.name
         new_macro.id = new_macro.id
-        new_macro.type = 'Equipment'
+        new_macro.type = ''
 
-        self.current_saveslot.macros.append(new_macro)
+        self.savefile.current_saveslot.macros.append(new_macro)
         self.current_macro = new_macro
 
         self.set_macros_settings_from_window()
@@ -720,7 +709,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             return
 
-        previous_macro = next((x for x in self.current_saveslot.macros
+        previous_macro = next((x for x in self.savefile.current_saveslot.macros
                                if x.id == previous_id), None)
 
         if previous_macro is None:
@@ -756,7 +745,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             return
 
-        next_macro = next((x for x in self.current_saveslot.macros
+        next_macro = next((x for x in self.savefile.current_saveslot.macros
                                if x.id == next_id), None)
 
         if next_macro is None:
@@ -814,7 +803,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
         current_text = self.comboBox_RecoveryHotkey.currentText()
-        self.recovery_hotkey = current_text
+        self.savefile.recovery_hotkey = current_text
         self.set_macros_settings_from_window()
         self.hook_hotkeys()
 
@@ -824,7 +813,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         checked = self.checkBox_RecoveryKeyCtrl.isChecked()
-        self.recovery_hotkey_ctrl = checked
+        self.savefile.recovery_hotkey_ctrl = checked
         self.set_macros_settings_from_window()
         self.hook_hotkeys()
 
@@ -833,7 +822,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
         checked = self.checkBox_RecoveryKeyShift.isChecked()
-        self.recovery_hotkey_shift = checked
+        self.savefile.recovery_hotkey_shift = checked
         self.set_macros_settings_from_window()
         self.hook_hotkeys()
 
@@ -843,7 +832,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         checked = self.checkBox_RecoveryKeyAlt.isChecked()
-        self.recovery_hotkey_alt = checked
+        self.savefile.recovery_hotkey_alt = checked
         self.set_macros_settings_from_window()
         self.hook_hotkeys()
 
@@ -852,8 +841,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Changes search mode settings after changing them in "Settings" page.
         """
 
-        self.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText().lower()
-        self.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText().lower()
+        self.savefile.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText().lower()
+        self.savefile.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText().lower()
 
     def DeleteMacros_Click(self):
         """
@@ -861,7 +850,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :return:
         """
 
-        self.current_saveslot.macros.remove(self.current_macro)
+        self.savefile.current_saveslot.macros.remove(self.current_macro)
         self.current_macro = Macro()
         self.hook_hotkeys()
         self.set_macros_settings_from_window()
@@ -956,11 +945,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Refill a table on "Equipment" page with equipment in saveslot settings.
         """
+
         self.tableWidget_Equipment.blockSignals(True)
+
+        # self.Equipment_ManualMode_Table_OnChange()
 
         table_Equipment = self.tableWidget_Equipment
         settings = self.current_macro.settings['equipment']
-        manual_mode = settings['manual_mode']
+        manual_mode = self.savefile.current_saveslot.weapons_manual_mode
         choosing_now = (self.equipment_current_cell != '')
 
         # Permission to edit.
@@ -972,22 +964,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                             QTableWidget.AnyKeyPressed)
 
         collections_from_type = {
-            'weapons': self.current_saveslot.weapons,
-            'armor_head': self.current_saveslot.armor_head,
-            'armor_torso': self.current_saveslot.armor_torso,
-            'armor_hands': self.current_saveslot.armor_hands,
-            'armor_legs': self.current_saveslot.armor_legs,
-            'talismans': self.current_saveslot.talismans
+            'weapons': self.savefile.current_saveslot.weapons,
+            'armor_head': self.savefile.current_saveslot.armor_head,
+            'armor_chest': self.savefile.current_saveslot.armor_chest,
+            'armor_arms': self.savefile.current_saveslot.armor_arms,
+            'armor_legs': self.savefile.current_saveslot.armor_legs,
+            'talismans': self.savefile.current_saveslot.talismans
         }
 
         # In manual mode we take separate collection.
         collection = []
         if manual_mode:
-            collection = self.current_saveslot.weapons_manual
+            collection = self.savefile.current_saveslot.weapons_manual
 
         if choosing_now:
             if manual_mode and 'weapon' in self.equipment_current_cell:
-                collection = self.current_saveslot.weapons_manual
+                collection = self.savefile.current_saveslot.weapons_manual
             elif 'weapon' in self.equipment_current_cell:
                 collection = collections_from_type['weapons']
             elif 'talisman' in self.equipment_current_cell:
@@ -996,7 +988,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # Armor.
                 collection = collections_from_type[self.equipment_current_cell]
         elif manual_mode:
-            collection = self.current_saveslot.weapons_manual
+            collection = self.savefile.current_saveslot.weapons_manual
         else:
             collection = collections_from_type['weapons']
 
@@ -1019,7 +1011,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         settings = self.current_macro.settings['equipment']
-        manual_mode = settings['manual_mode']
+        manual_mode = self.savefile.current_saveslot.weapons_manual_mode
+
         current_cell = self.equipment_current_cell
         is_choosing_now = (current_cell != '')
 
@@ -1053,7 +1046,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             check = settings[current_cell]['not_enough_stats']
             self.checkBox_Equipment_NotEnoughStats.setChecked(check)
 
-        # self.tableWidget_Equipment.blockSignals(False)
+        
 
     def Pages_Equipment_Cells_Refresh(self) -> None:
         """
@@ -1061,7 +1054,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         settings = self.current_macro.settings['equipment']
-        manual_mode = settings['manual_mode']
+        manual_mode = self.savefile.current_saveslot.weapons_manual_mode
+
         current_cell = self.equipment_current_cell
         is_choosing_now = (current_cell != '')
 
@@ -1074,8 +1068,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'weapon_left_2': self.label_Weapon_Left_2,
             'weapon_left_3': self.label_Weapon_Left_3,
             'armor_head': self.label_Armor_Head,
-            'armor_torso': self.label_Armor_Chest,
-            'armor_hands': self.label_Armor_Arms,
+            'armor_chest': self.label_Armor_Chest,
+            'armor_arms': self.label_Armor_Arms,
             'armor_legs': self.label_Armor_Legs,
             'talisman_1': self.label_Talisman_1,
             'talisman_2': self.label_Talisman_2,
@@ -1087,26 +1081,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             cell_settings = settings[cell_name]
             if cell_settings['action'] == 'skip':
                 label.setText('')
-            elif cell_settings['action'] == 'clear':
-                label.setText('<Clear>')
+            elif cell_settings['action'] == 'remove':
+                label.setText('<remove>')
             elif cell_settings['name']:
-                label.setText(f'{cell_settings["name"]}\n'
-                              f'({cell_settings["order"]})')
+                label_text = f'{cell_settings["name"]}\n'\
+                             f'({cell_settings["position"]})'
+                if cell_settings['not_enough_stats']:
+                    label_text += ' (low stats)'
+                label.setText(label_text)
             else:
-                label.setText('<error>')
+                label.setText('<error!>')
 
         # Current cell label.
         cell_name_accordance = {
                     '': '',
-                    'weapon_right_1': 'Right Hand Arnament 1',
-                    'weapon_right_2': 'Right Hand Arnament 2',
-                    'weapon_right_3': 'Right Hand Arnament 3',
-                    'weapon_left_1': 'Left Hand Arnament 1',
-                    'weapon_left_2': 'Left Hand Arnament 2',
-                    'weapon_left_3': 'Left Hand Arnament 3',
+                    'weapon_right_1': 'Right Hand Armament 1',
+                    'weapon_right_2': 'Right Hand Armament 2',
+                    'weapon_right_3': 'Right Hand Armament 3',
+                    'weapon_left_1': 'Left Hand Armament 1',
+                    'weapon_left_2': 'Left Hand Armament 2',
+                    'weapon_left_3': 'Left Hand Armament 3',
                     'armor_head': 'Head',
-                    'armor_torso': 'Chest',
-                    'armor_hands': 'Arms',
+                    'armor_chest': 'Chest',
+                    'armor_arms': 'Arms',
                     'armor_legs': 'Legs',
                     'talisman_1': 'Talisman 1',
                     'talisman_2': 'Talisman 2',
@@ -1121,7 +1118,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_Equip_Skip.setEnabled(is_choosing_now)
         self.button_Equip_Remove.setEnabled(is_choosing_now)
 
-    def button_Equip_Clear_Clicked(self) -> None:
+    def button_Equip_Remove_Clicked(self) -> None:
         """
 
         """
@@ -1132,8 +1129,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.tableWidget_Equipment.blockSignals(True)
 
         settings = self.current_macro.settings['equipment']
-        settings[self.equipment_current_cell]['action'] = 'clear'
-        settings[self.equipment_current_cell]['order'] = 0
+        settings[self.equipment_current_cell]['action'] = 'remove'
+        settings[self.equipment_current_cell]['position'] = 0
         settings[self.equipment_current_cell]['name'] = ''
 
         self.equipment_current_cell = ''
@@ -1141,7 +1138,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
-        # self.tableWidget_Equipment.blockSignals(False)
 
     def button_Equip_Skip_Clicked(self) -> None:
         """
@@ -1154,7 +1150,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settings = self.current_macro.settings['equipment']
         settings[self.equipment_current_cell]['action'] = 'skip'
-        settings[self.equipment_current_cell]['order'] = 0
+        settings[self.equipment_current_cell]['position'] = 0
         settings[self.equipment_current_cell]['name'] = ''
 
         self.equipment_current_cell = ''
@@ -1162,7 +1158,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
-        # self.tableWidget_Equipment.blockSignals(False)
+        
 
 
     def button_Equip_Cancel_Clicked(self) -> None:
@@ -1176,7 +1172,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
-        # self.tableWidget_Equipment.blockSignals(False)
+        
 
     def Equipment_ManualMode_OnChange(self) -> None:
         """
@@ -1184,7 +1180,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         settings = self.current_macro.settings['equipment']
-        settings['manual_mode'] = self.checkBox_Equipment_ManualMode.isChecked()
+        self.savefile.current_saveslot.weapons_manual_mode = self.checkBox_Equipment_ManualMode.isChecked()
 
         self.Pages_Refresh_Equipment()
 
@@ -1195,15 +1191,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Equipment_ManualMode_Table_OnChange()
 
-        self.current_saveslot.weapons_manual.append({
+        self.savefile.current_saveslot.weapons_manual.append({
             'name': '< weapon >',
-            'order': len(self.current_saveslot.weapons_manual) + 1
+            'position': len(self.savefile.current_saveslot.weapons_manual) + 1
         })
 
         self.Pages_Equipment_Table_Refresh()
 
         # Selecting last cell.
-        row, column = inventory_row_column_from_order(len(self.current_saveslot.weapons_manual))
+        row, column = inventory_row_column_from_position(len(self.savefile.current_saveslot.weapons_manual))
         index = self.tableWidget_Equipment.model().index(row, column)
         self.tableWidget_Equipment.selectionModel().select(
             index, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
@@ -1214,7 +1210,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Deletes a selected item in the list.
         """
 
-        manual_list = self.current_saveslot.weapons_manual
+        manual_list = self.savefile.current_saveslot.weapons_manual
 
         items = self.tableWidget_Equipment.selectedItems()
         if not len(items):
@@ -1262,12 +1258,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings[self.equipment_current_cell]['not_enough_stats'] = \
             self.checkBox_Equipment_NotEnoughStats.isChecked()
 
+        self.Pages_Equipment_Cells_Refresh()
+
     def Equipment_ReloadInventory(self) -> None:
         """
 
         """
 
-        self.current_saveslot.get_equipment()
+        self.savefile.current_saveslot.get_equipment()
         self.refresh_all()
 
     def Equipment_ManualMode_Table_OnChange(self) -> None:
@@ -1275,36 +1273,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Change things after cell in table on "Equipment" page was changed.
         """
 
-        # self.tableWidget_Equipment.blockSignals(True)
-
         choosing_now = (self.equipment_current_cell != '')
         if choosing_now:
             return
 
-        manual_list = self.current_saveslot.weapons_manual
+        manual_list = self.savefile.current_saveslot.weapons_manual
         manual_list.clear()
 
         # Getting a collection from table.
         model = self.tableWidget_Equipment.model()
-        order = 0
+        position = 0
         for row in range(model.rowCount()):
             for i in range(5):
-                order += 1
+                position += 1
                 index = model.index(row, i)
                 name = str(model.data(index))
                 if name == 'None':
                     name = ''
                 manual_list.append({
                     'name': name,
-                    'order': order
+                    'position': position
                 })
 
         # Clear all empty items from the end of the collection.
         if len(manual_list):
             while manual_list[-1]['name'] in ['', 'None']:
                 manual_list.pop()
-
-        # self.tableWidget_Equipment.blockSignals(False)
 
     def Equipment_ManualMode_Table_DoubleClicked(self) -> None:
         """
@@ -1322,13 +1316,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
         item = items[0]
-        order = (item.row() * 5) + item.column() + 1
+        position = (item.row() * 5) + item.column() + 1
         name = str(item.text())
 
         settings = self.current_macro.settings['equipment']
         settings[self.equipment_current_cell]['action'] = 'equip'
         settings[self.equipment_current_cell]['name'] = name
-        settings[self.equipment_current_cell]['order'] = order
+        settings[self.equipment_current_cell]['position'] = position
 
         self.equipment_current_cell = ''
 
@@ -1386,16 +1380,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
-    def Equipment_MouseClicked_Armor_Torso(self, event) -> None:
+    def Equipment_MouseClicked_Armor_chest(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
-        self.equipment_current_cell = 'armor_torso'
+        self.equipment_current_cell = 'armor_chest'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
-    def Equipment_MouseClicked_Armor_Hands(self, event) -> None:
+    def Equipment_MouseClicked_Armor_Arms(self, event) -> None:
         # self.tableWidget_Equipment.blockSignals(True)
-        self.equipment_current_cell = 'armor_hands'
+        self.equipment_current_cell = 'armor_arms'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -1495,7 +1489,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while self.tableWidget_AvaiableMagic.rowCount():
             self.tableWidget_AvaiableMagic.removeRow(0)
 
-        for i, spell in enumerate(self.current_saveslot.spells):
+        for i, spell in enumerate(self.savefile.current_saveslot.spells):
             self.tableWidget_AvaiableMagic.insertRow(i)
             self.tableWidget_AvaiableMagic.setItem(i, 0, QTableWidgetItem(
                 spell['name']))
@@ -1543,14 +1537,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         # Recovery hotkey.
-        self.comboBox_RecoveryHotkey.setCurrentText(self.recovery_hotkey)
-        self.checkBox_RecoveryKeyCtrl.setChecked(self.recovery_hotkey_ctrl)
-        self.checkBox_RecoveryKeyShift.setChecked(self.recovery_hotkey_shift)
-        self.checkBox_RecoveryKeyAlt.setChecked(self.recovery_hotkey_alt)
+        self.comboBox_RecoveryHotkey.setCurrentText(self.savefile.recovery_hotkey)
+        self.checkBox_RecoveryKeyCtrl.setChecked(self.savefile.recovery_hotkey_ctrl)
+        self.checkBox_RecoveryKeyShift.setChecked(self.savefile.recovery_hotkey_shift)
+        self.checkBox_RecoveryKeyAlt.setChecked(self.savefile.recovery_hotkey_alt)
 
         # Search modes.
-        self.comboBox_EquipmentSearchMode.setCurrentText(self.current_saveslot.search_mode_equipment)
-        self.comboBox_MagicSearchMode.setCurrentText(self.current_saveslot.search_mode_magic)
+        self.comboBox_EquipmentSearchMode.setCurrentText(self.savefile.current_saveslot.search_mode_equipment)
+        self.comboBox_MagicSearchMode.setCurrentText(self.savefile.current_saveslot.search_mode_magic)
 
         # Controls in Elden Ring.
         self.comboBox_ControlKeyMove_Up.setCurrentText(self.savefile.game_controls['move_up'])
@@ -1571,7 +1565,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_ControlKeyUse.setCurrentText(self.savefile.game_controls['event_action'])
 
         # Standard pause time.
-        self.spinBox_StandardPauseTime.setValue(self.standard_pause_time)
+        self.spinBox_StandardPauseTime.setValue(self.savefile.standard_pause_time)
 
     def Pages_Refresh_Multiplayer(self) -> None:
         """
@@ -1620,6 +1614,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.set_macros_settings_from_window()
 
+    def StandardPauseTime_OnChange(self):
+        """
+
+        """
+
+        self.savefile.standard_pause_time = self.spinBox_StandardPauseTime.value()
+        self.set_macros_settings_from_window()
+
     def textEdit_DIY_OnChange(self):
         """
 
@@ -1642,7 +1644,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             spell_name = items[0].text()
             if self.current_macro.name != spell_name and\
                     (self.current_macro.name == self.current_macro.standard_name()
-                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells)):
+                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
                 self.current_macro.name = spell_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
@@ -1658,7 +1660,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             built_in_macro_name = items[0].text()
             if self.current_macro.name != built_in_macro_name \
                 and (self.current_macro.name == self.current_macro.standard_name()
-                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.current_saveslot.spells)):
+                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()

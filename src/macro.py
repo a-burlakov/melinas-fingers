@@ -163,36 +163,35 @@ class Macro:
         self.macro_keyline: str = ''
         self.settings = {
             'equipment': {
-                'manual_mode': False,
                 'instant_action': '',
                 'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0, 'current_order': 0},
+                                   'name': '', 'position': 0, 'current_position': 0},
                 'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0, 'current_order': 0},
+                                   'name': '', 'position': 0, 'current_position': 0},
                 'weapon_right_3': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0, 'current_order': 0},
+                                   'name': '', 'position': 0, 'current_position': 0},
                 'weapon_left_1': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0, 'current_order': 0},
+                                  'name': '', 'position': 0, 'current_position': 0},
                 'weapon_left_2': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0, 'current_order': 0},
+                                  'name': '', 'position': 0, 'current_position': 0},
                 'weapon_left_3': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0, 'current_order': 0},
+                                  'name': '', 'position': 0, 'current_position': 0},
                 'armor_head': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0},
-                'armor_torso': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'order': 0, 'current_order': 0},
-                'armor_hands': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'order': 0, 'current_order': 0},
+                               'name': '', 'position': 0, 'current_position': 0},
+                'armor_chest': {'action': 'skip', 'not_enough_stats': False,
+                                'name': '', 'position': 0, 'current_position': 0},
+                'armor_arms': {'action': 'skip', 'not_enough_stats': False,
+                                'name': '', 'position': 0, 'current_position': 0},
                 'armor_legs': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0},
+                               'name': '', 'position': 0, 'current_position': 0},
                 'talisman_1': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0},
+                               'name': '', 'position': 0, 'current_position': 0},
                 'talisman_2': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0},
+                               'name': '', 'position': 0, 'current_position': 0},
                 'talisman_3': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0},
+                               'name': '', 'position': 0, 'current_position': 0},
                 'talisman_4': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0, 'current_order': 0}
+                               'name': '', 'position': 0, 'current_position': 0}
             },
             'magic': {
                 'spell_number': 1,
@@ -301,7 +300,7 @@ class Macro:
 
         cells = ['weapon_right_1', 'weapon_right_2', 'weapon_right_3',
                  'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
-                 'armor_head', 'armor_torso', 'armor_hands', 'armor_legs',
+                 'armor_head', 'armor_chest', 'armor_arms', 'armor_legs',
                  'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4']
 
         cells = {x: settings[x] for x in cells}
@@ -331,7 +330,7 @@ class Macro:
         if search_mode == 'auto':
 
             for name, value in cells.items():
-                if value['action'] in ['equip', 'clear']:
+                if value['action'] in ['equip', 'remove']:
                     cells[name]['keyline'] = 'r'
 
             keys_list.append(self.keyline_for_cells(cells))
@@ -345,7 +344,7 @@ class Macro:
         if search_mode != 'auto':
             are_there_cells_to_clear = False
             for name, value in cells.items():
-                if value['action'] == 'equip' and not value['current_order']:
+                if value['action'] == 'equip' and not value['current_position']:
                     cells[name]['keyline'] = 'r'
                     are_there_cells_to_clear = True
             if are_there_cells_to_clear:
@@ -452,22 +451,25 @@ class Macro:
 
             if value['action'] == 'skip':
                 continue
-            elif value['action'] == 'clear':
+            elif value['action'] == 'remove':
                 cells[key]['keyline'] = 'r'
                 continue
 
             # Handling 'equip' action.
             keys_list = []
 
-            current_position = 1
+            current_position = 1  # Standard position for auto mode
+
+            # If we're in "semi-manual" mode, we don't need to change items
+            # if we already have it in our cell slots.
             if search_mode != 'auto':
-                current_position = value['current_order']
-                if goal_position == current_position:
-                    continue  # We're on needed cell.
-            goal_position = value['order']
+                current_position = value['current_position']
+                if current_position == value['position']:
+                    continue
+
+            goal_position = value['position']
             if not goal_position:
                 continue   # Something strange happened, ignoring cell.
-
 
             # Forming a way from current position to goal position.
             # +1 cel:      right; -1 cell:    left
@@ -514,7 +516,7 @@ class Macro:
 
             # Remembering current position in "semi-manual" mode.
             if search_mode != 'auto':
-                value['current_order'] = current_position
+                value['current_position'] = current_position
 
     def form_keyline_magic(self):
         settings = self.settings['magic']
@@ -542,7 +544,7 @@ class Macro:
             # time if not pressing 'switch_spell' for half sec and
             # calculate amount of keypresses to just switch to spell from macro.
             # But this nice thing is for semi-manual mode only.
-            if search_mode == 'Semi-manual' and cur_spell:
+            if search_mode == 'semi-manual' and cur_spell:
                 needed_switches = goal_spell - cur_spell
                 if cur_spell > goal_spell:
                     needed_switches = total_spells - cur_spell + goal_spell
@@ -664,9 +666,6 @@ class Macro:
             if self.interrupted:
                 break
 
-            if key_press.strip() == '':
-                continue
-
             # Additional pauses.
             if key_press.startswith('pause'):
                 pause_time = int(key_press.replace('pause', ''))
@@ -684,22 +683,27 @@ class Macro:
             if key_press in self.savefile.game_controls.keys():
                 key_press = self.savefile.game_controls[key_press].lower()
 
+            # We'll just skip empty keys to not get to exception.
+            if key_press.strip() == '':
+                continue
+
             # TODO: need to understand, why 'keyboard' can't press arrows
-            #  but 'pynput' can. Using two separate methods for input
+            #  in game but 'pynput' can. Using two separate methods for input
             #  makes me feel silly.
 
             # Key presses execution.
-            keys_for_pynput = ['up', 'left', 'right', 'down']
+            keys_for_pynput = {'up': 72, 'left': 75, 'right': 80, 'down': 77}
             if key_press in keys_for_pynput:
-                if key_press in non_letter_keys():
-                    key_press = Key[key_press]
-                pynput_in.press(key_press)
-                time.sleep(press_time)
-                pynput_in.release(key_press)
-            else:
-                keyboard.press(key_press)
-                time.sleep(press_time)
-                keyboard.release(key_press)
+                key_press = keyboard.key_to_scan_codes(key_press)
+            #     if key_press in non_letter_keys():
+            #         key_press = Key[key_press]
+            #     pynput_in.press(key_press)
+            #     time.sleep(press_time)
+            #     pynput_in.release(key_press)
+            # else:
+            keyboard.press(key_press)
+            time.sleep(press_time)
+            keyboard.release(key_press)
 
             time.sleep(sleep_time)
 
@@ -794,7 +798,7 @@ def built_in_macros() -> list:
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
-                    'Usually that\'s enough to invade even with mediocre connection '
+                    'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades over all map.'},
