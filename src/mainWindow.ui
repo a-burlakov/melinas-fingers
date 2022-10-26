@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1146</width>
-    <height>699</height>
+    <width>1138</width>
+    <height>676</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -698,7 +698,7 @@ border-image: url(:/newPrefix/images/armor_head_active.png);
        <enum>QFrame::Plain</enum>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="picture_equip_armor_hands">
+     <widget class="QGraphicsView" name="picture_equip_armor_arms">
       <property name="geometry">
        <rect>
         <x>180</x>
@@ -727,7 +727,7 @@ border-image: url(:/newPrefix/images/armor_hands_active.png);}</string>
        <enum>QFrame::Plain</enum>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="picture_equip_armor_torso">
+     <widget class="QGraphicsView" name="picture_equip_armor_chest">
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -971,7 +971,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>QFrame::Plain</enum>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_Equip_Clear">
+     <widget class="QPushButton" name="button_Equip_Remove">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -993,7 +993,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        </font>
       </property>
       <property name="text">
-       <string>Clear</string>
+       <string>Remove</string>
       </property>
      </widget>
      <widget class="QPushButton" name="button_Equip_Skip">
@@ -1917,7 +1917,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="label_Armor_Torso">
+     <widget class="QLabel" name="label_Armor_Chest">
       <property name="geometry">
        <rect>
         <x>100</x>
@@ -1954,7 +1954,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="label_Armor_Hands">
+     <widget class="QLabel" name="label_Armor_Arms">
       <property name="geometry">
        <rect>
         <x>180</x>
@@ -2195,7 +2195,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Not enough stats:</string>
+       <string>Low stats attention skip:</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_Equipment_NotEnoughStats">
@@ -2257,7 +2257,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="font">
        <font>
         <family>Garamond</family>
-        <pointsize>11</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="styleSheet">
@@ -2270,7 +2270,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>Qt::PlainText</enum>
       </property>
       <property name="alignment">
-       <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       <set>Qt::AlignCenter</set>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

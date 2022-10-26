@@ -359,8 +359,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.picture_equip_weaponleft_2.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_2
         self.picture_equip_weaponleft_3.mousePressEvent = self.Equipment_MouseClicked_WeaponLeft_3
         self.picture_equip_armor_head.mousePressEvent = self.Equipment_MouseClicked_Armor_Head
-        self.picture_equip_armor_torso.mousePressEvent = self.Equipment_MouseClicked_Armor_Torso
-        self.picture_equip_armor_hands.mousePressEvent = self.Equipment_MouseClicked_Armor_Hands
+        self.picture_equip_armor_chest.mousePressEvent = self.Equipment_MouseClicked_Armor_Torso
+        self.picture_equip_armor_arms.mousePressEvent = self.Equipment_MouseClicked_Armor_Hands
         self.picture_equip_armor_legs.mousePressEvent = self.Equipment_MouseClicked_Armor_Legs
         self.picture_equip_talisman_1.mousePressEvent = self.Equipment_MouseClicked_Talisman_1
         self.picture_equip_talisman_2.mousePressEvent = self.Equipment_MouseClicked_Talisman_2
@@ -374,15 +374,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.label_Weapon_Left_2.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Weapon_Left_3.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Armor_Head.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.label_Armor_Torso.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
-        self.label_Armor_Hands.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        self.label_Armor_Chest.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
+        self.label_Armor_Arms.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Armor_Legs.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Talisman_1.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Talisman_2.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Talisman_3.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
         self.label_Talisman_4.setAttribute(QtCore.Qt.WA_TransparentForMouseEvents)
 
-        self.button_Equip_Clear.clicked.connect(self.button_Equip_Clear_Clicked)
+        self.button_Equip_Remove.clicked.connect(self.button_Equip_Clear_Clicked)
         self.button_Equip_Skip.clicked.connect(self.button_Equip_Skip_Clicked)
         self.button_Equip_Cancel.clicked.connect(self.button_Equip_Cancel_Clicked)
 
@@ -1074,8 +1074,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'weapon_left_2': self.label_Weapon_Left_2,
             'weapon_left_3': self.label_Weapon_Left_3,
             'armor_head': self.label_Armor_Head,
-            'armor_torso': self.label_Armor_Torso,
-            'armor_hands': self.label_Armor_Hands,
+            'armor_torso': self.label_Armor_Chest,
+            'armor_hands': self.label_Armor_Arms,
             'armor_legs': self.label_Armor_Legs,
             'talisman_1': self.label_Talisman_1,
             'talisman_2': self.label_Talisman_2,
@@ -1119,7 +1119,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Cell buttons.
         self.button_Equip_Cancel.setEnabled(is_choosing_now)
         self.button_Equip_Skip.setEnabled(is_choosing_now)
-        self.button_Equip_Clear.setEnabled(is_choosing_now)
+        self.button_Equip_Remove.setEnabled(is_choosing_now)
 
     def button_Equip_Clear_Clicked(self) -> None:
         """

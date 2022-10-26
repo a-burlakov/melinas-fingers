@@ -166,33 +166,33 @@ class Macro:
                 'manual_mode': False,
                 'instant_action': '',
                 'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0},
+                                   'name': '', 'order': 0, 'current_order': 0},
                 'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0},
+                                   'name': '', 'order': 0, 'current_order': 0},
                 'weapon_right_3': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'order': 0},
+                                   'name': '', 'order': 0, 'current_order': 0},
                 'weapon_left_1': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0},
+                                  'name': '', 'order': 0, 'current_order': 0},
                 'weapon_left_2': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0},
+                                  'name': '', 'order': 0, 'current_order': 0},
                 'weapon_left_3': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'order': 0},
+                                  'name': '', 'order': 0, 'current_order': 0},
                 'armor_head': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0},
+                               'name': '', 'order': 0, 'current_order': 0},
                 'armor_torso': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'order': 0},
+                                'name': '', 'order': 0, 'current_order': 0},
                 'armor_hands': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'order': 0},
+                                'name': '', 'order': 0, 'current_order': 0},
                 'armor_legs': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0},
+                               'name': '', 'order': 0, 'current_order': 0},
                 'talisman_1': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0},
+                               'name': '', 'order': 0, 'current_order': 0},
                 'talisman_2': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0},
+                               'name': '', 'order': 0, 'current_order': 0},
                 'talisman_3': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0},
+                               'name': '', 'order': 0, 'current_order': 0},
                 'talisman_4': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'order': 0}
+                               'name': '', 'order': 0, 'current_order': 0}
             },
             'magic': {
                 'spell_number': 1,
@@ -208,7 +208,8 @@ class Macro:
             }
         }
 
-    def standard_name(self):
+    @staticmethod
+    def standard_name():
         return '< name >'
 
     def set_id(self):
@@ -296,62 +297,215 @@ class Macro:
         keys_list = []  # list to be turned to keyline
 
         settings = self.settings['equipment']
-        search_mode_equipment = self.saveslot.search_mode_equipment
+        search_mode = self.saveslot.search_mode_equipment
 
-        all_cells = ['weapon_right_1', 'weapon_right_2', 'weapon_right_3',
+        cells = ['weapon_right_1', 'weapon_right_2', 'weapon_right_3',
                  'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
                  'armor_head', 'armor_torso', 'armor_hands', 'armor_legs',
                  'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4']
 
-        all_cells = {x: settings[x] for x in all_cells}
-
+        cells = {x: settings[x] for x in cells}
 
         # Actions to do after cell is passed to get to next cell.
+        # Also put a key 'keyline' which will keep a keyline to handle a cell.
         actions_after_cell = ['right', 'right', 'right|down',
                               'right', 'right', 'right|down',
                               'right', 'right', 'right', 'right|down',
                               'right', 'right', 'right', 'right|down']
-        for cell, action_after in zip(all_cells.keys(), actions_after_cell):
-            all_cells[cell]['action_after'] = action_after
+        for cell, action_after in zip(cells.keys(), actions_after_cell):
+            cells[cell]['action_after'] = action_after
+            cells[cell]['keyline'] = ''
 
+        # TODO: комментарии подправить
         # Plan is simple, that's a Swiss f*cking watch:
         #   0. if we're on "Auto" search mode, then firstly we clear all cells
         #       to 'remove' or 'equip'; press "Q; press "E" again to return;
         #   1. cycle through all cells and if it's 'remove' or 'equip', perform
         #       corresponding action;
         #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
-        #   3. if we have instant action - perform it.
+        #   3. if we have instant action - performing it.
 
         keys_list.append('esc|e|e')  # Open inventory.
 
-        # TODO: Возможно, ускорить это дело нужно, чтобы меньше нажатий было
-        #   при поиске по инвентарю. СЕйчас у нас цикл по всем. Было бы лучше
-        #   делать так:
-        #   - узнавать, какая ячейка следующая;
-        #   - посылать в какую-нибудь функцию номер текущей ячейки и следующей
-        #   - эта функция вычисляет кейлайн кратчайшего пути.
-        #   - внутри функции вычисление по номеру колонки и строки этой ячейки и следующей
-        #   -
-
         # 0. Preliminary clearing if "Auto" search mode.
-        if search_mode_equipment == 'auto':
-            cells_to_clear = {x: y for x, y in all_cells.items()
-                              if y['action'] in ['equip', 'clear']}
+        if search_mode == 'auto':
 
-            for name, value in all_cells.items():
+            for name, value in cells.items():
+                if value['action'] in ['equip', 'clear']:
+                    cells[name]['keyline'] = 'r'
 
-                if name in cells_to_clear:
-                    keys_list.append('r')
-                    cells_to_clear.pop(name)
-                    if not cells_to_clear:
-                        break
-
-                keys_list.append(value['action_after'])
+            keys_list.append(self.keyline_for_cells(cells))
 
             # Re-enter to inventory.
-            keys_list.append('q|e')
+            keys_list.append('esc|esc|e|e')
+
+        # 0.1. If we're in manual mode, but have some cells to 'equip' having
+        # no current position, that means we need to clear them to put to
+        # position 1.
+        if search_mode != 'auto':
+            are_there_cells_to_clear = False
+            for name, value in cells.items():
+                if value['action'] == 'equip' and not value['current_order']:
+                    cells[name]['keyline'] = 'r'
+                    are_there_cells_to_clear = True
+            if are_there_cells_to_clear:
+                keys_list.append(self.keyline_for_cells(cells))
+
+                # Re-enter to inventory.
+                keys_list.append('esc|esc|e|e')
+
+        # 1-2. Performing actions for cells.
+        self.assign_keylines_to_cells(cells, search_mode)
+        keys_list.append(self.keyline_for_cells(cells))
+
+        # 3. Instant action.
+        if settings['instant_action']:
+            if settings['instant_action'] == 'stance_attack':
+                keys_list.append('crouch|pause200|skill|attack')
+            elif settings['instant_action'] == 'stance_strong_attack':
+                keys_list.append('crouch|pause200|skill|strong_attack')
+            else:
+                keys_list.append(settings['instant_action'])
 
         self.macro_keyline = '|'.join(keys_list)
+
+    @staticmethod
+    def keyline_for_cells(cells: dict) -> str:
+        """
+        Forms a general keyline for an ordered dict of inventory cells with
+        their local keylines in ('keyline' key).
+        """
+
+        keys_list = []
+        cells_to_handle = {}
+        first_cell_key_to_handle = ''
+        first_cell_index_to_handle = 0
+        last_cell_key_to_handle = ''
+        for key, value in cells.items():
+            if value['keyline']:
+                last_cell_key_to_handle = key
+                if not first_cell_key_to_handle:
+                    first_cell_key_to_handle = key
+                cells_to_handle[key] = value
+            if not first_cell_key_to_handle:
+                first_cell_index_to_handle += 1
+
+        # Seeking first cell to handle in full list and try to shrink
+        # a path from beginning to first cell if it's possible. It's handy
+        # if we handle far cells only, like 'talisman_3'.
+        path_to_first_cell = []
+        for key, value in cells.items():
+            if key == first_cell_key_to_handle:
+                break
+            if value['action_after']:
+                path_to_first_cell.append(value['action_after'])
+
+        path_to_first_cell = '|'.join(path_to_first_cell)
+
+        # Shinking the path to 'talisman_1' from 13 to 1 press.
+        path_to_first_cell = path_to_first_cell.replace(
+            'right|right|right|down|'
+            'right|right|right|down|'
+            'right|right|right|right|down',
+            'up'
+        )
+        # Shinking the path to 'armor_head' from 8 to 2 presses.
+        #                   or 'weapon_left_1' from 4 to 1 press.
+        path_to_first_cell = path_to_first_cell.replace(
+            'right|right|right|down',
+            'down'
+        )
+
+        # Replacing first sequence of not relevant cells to short path to first
+        # relevant one, if we can.
+        if path_to_first_cell:
+            keys_list.append(path_to_first_cell)
+            cells = {k: v for i, (k, v) in enumerate(cells.items())
+                     if i >= first_cell_index_to_handle}
+
+        # Gather keylines from relevant cells and keys to move further.
+        for key, value in cells.items():
+            if value['keyline']:
+                keys_list.append(value['keyline'])
+            if key == last_cell_key_to_handle:
+                break
+            keys_list.append(value['action_after'])
+
+        return '|'.join(keys_list)
+
+    @staticmethod
+    def assign_keylines_to_cells(cells: dict, search_mode: str) -> None:
+        """
+        Generates a keyline to each cell in dict concidering it's inner
+        settins. Puts a keyline to cell's 'keyline' key.
+        """
+
+        for key, value in cells.items():
+
+            if value['action'] == 'skip':
+                continue
+            elif value['action'] == 'clear':
+                cells[key]['keyline'] = 'r'
+                continue
+
+            # Handling 'equip' action.
+            keys_list = []
+
+            current_position = 1
+            if search_mode != 'auto':
+                current_position = value['current_order']
+            goal_position = value['order']
+            if not goal_position:
+                continue   # Something strange happened, ignoring cell.
+            if goal_position == current_position:
+                continue   # We're on needed cell.
+
+            # Forming a way from current position to goal position.
+            # +1 cel:      right; -1 cell:    left
+            # +5 cell:     down;  -5 cell:    up;
+            # +25 cell:    v;    -25 cell:    c.
+            path_list = []
+            key_25_amount = key_5_amount = key_1_amount = 0
+            key_25, key_5, key_1 = 'v', 'down', 'right'
+            if goal_position < current_position:
+                key_25, key_5, key_1 = 'c', 'up', 'left'
+
+            diff = abs(goal_position - current_position)
+            if diff // 25 > 0:
+                key_25_amount = diff // 25
+                diff = diff - key_25_amount * 25
+            if diff // 5 > 0:
+                key_5_amount = diff // 5
+                diff = diff - key_5_amount * 5
+            if diff > 0:
+                key_1_amount = diff
+
+            for _ in range(key_25_amount):
+                path_list.append(key_25)
+            for _ in range(key_5_amount):
+                path_list.append(key_5)
+            for _ in range(key_1_amount):
+                path_list.append(key_1)
+
+            # Entering cell.
+            keys_list.append('e')
+
+            # Going to goal cell.
+            keys_list.append('|'.join(path_list))
+
+            # Choosing equip.
+            keys_list.append('e')
+            if value['not_enough_stats']:
+                keys_list.append('e')
+
+            # Quiting cell.
+            keys_list.append('q')
+
+            cells[key]['keyline'] = '|'.join(keys_list)
+
+            # Remembering current position in "semi-manual" mode.
+            if search_mode != 'auto':
+                value['current_order'] = current_position
 
     def form_keyline_magic(self):
         settings = self.settings['magic']
@@ -752,56 +906,3 @@ def keyline_to_choose_previous_weapon(weapons_pass: int = 0,
     keyline = f'esc|e|{"down|" if left_hand else ""}e|{"left|" * left_amount}pause20|e|esc'
 
     return keyline
-
-
-def keyline_to_find_item_number(item_number: int) -> str:
-    """
-    Generates a keyline to get to item having a number from a
-    beginning of the list.
-    :param item_number:
-    :return:
-    """
-
-    # TODO: Сделать так, чтобы можно было вперёд пройти на 5 раз,
-    # назад на несколько. Но для этого нужен точный размер инвентаря,
-    # а также учитывать, как работает кнопка V ближе к концу - она же
-    # не всегда спускается на 25, она может спуститься в самый юго-запад...
-
-    v_amount: int = 0  # going to 5 items
-    right_amount: int = 0  # going to 1 item
-
-    key_presses = []
-    if item_number > 5:
-        v_amount = item_number // 25
-
-    right_amount = item_number - (v_amount * 25) - 1
-    for _ in range(v_amount):
-        key_presses.append('v')
-
-    for _ in range(right_amount):
-        key_presses.append('right')
-
-    return '|'.join(key_presses)
-
-# def go_to_beginning_of_list(list_length: int = 50) -> None:
-#     """
-#
-#     :param list_length:
-#     :return:
-#     """
-#
-#     max_amount_c = list_length // 25
-#
-#     keyboard_input.press(Key.left)
-#     # TODO: убрать это дело вообще, но подумать, действительно ли оно не нужно
-#     time4all = max(0.4, max_amount_c * 0.017)
-#     time.sleep(0.01)
-#     time_start = time.time()
-#     execute_key_macros('c|' * (max_amount_c - 1) + 'c')
-#     time_finish = time.time()
-#     print(time_finish - time_start)
-#     time_remain = time4all - (time_finish - time_start)
-#     if time_remain > 0:
-#         time.sleep(time_remain)
-#     keyboard_input.release(Key.left)
-#     time.sleep(0.01)
