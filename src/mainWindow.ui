@@ -21,7 +21,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>images/icon.jpg</normaloff>images/icon.jpg</iconset>
+    <normaloff>../../../Users/Flower/.designer/backup/images/icon.jpg</normaloff>../../../Users/Flower/.designer/backup/images/icon.jpg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -501,7 +501,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -2307,6 +2307,80 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
+     <widget class="QGraphicsView" name="picture_inventory">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>60</y>
+        <width>361</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/newPrefix/images/inventory.png);</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+     </widget>
+     <zorder>picture_inventory</zorder>
+     <zorder>picture_equip_weaponright_1</zorder>
+     <zorder>label_9</zorder>
+     <zorder>picture_equip_weaponright_2</zorder>
+     <zorder>picture_equip_weaponright_3</zorder>
+     <zorder>picture_equip_weaponleft_1</zorder>
+     <zorder>picture_equip_armor_head</zorder>
+     <zorder>picture_equip_armor_arms</zorder>
+     <zorder>picture_equip_armor_chest</zorder>
+     <zorder>picture_equip_armor_legs</zorder>
+     <zorder>picture_equip_talisman_1</zorder>
+     <zorder>picture_equip_weaponleft_2</zorder>
+     <zorder>picture_equip_weaponleft_3</zorder>
+     <zorder>picture_equip_talisman_2</zorder>
+     <zorder>picture_equip_talisman_3</zorder>
+     <zorder>picture_equip_talisman_4</zorder>
+     <zorder>button_Equip_Remove</zorder>
+     <zorder>button_Equip_Skip</zorder>
+     <zorder>button_Equip_Cancel</zorder>
+     <zorder>tableWidget_Equipment</zorder>
+     <zorder>comboBox_Equip_InstantAction</zorder>
+     <zorder>label_47</zorder>
+     <zorder>label_48</zorder>
+     <zorder>label_50</zorder>
+     <zorder>label_51</zorder>
+     <zorder>checkBox_Equipment_ManualMode</zorder>
+     <zorder>label_52</zorder>
+     <zorder>button_EquipmentAdd</zorder>
+     <zorder>label_49</zorder>
+     <zorder>button_EquipmentDelete</zorder>
+     <zorder>label_Weapon_Right_1</zorder>
+     <zorder>label_Weapon_Right_2</zorder>
+     <zorder>label_Weapon_Right_3</zorder>
+     <zorder>label_Weapon_Left_1</zorder>
+     <zorder>label_Weapon_Left_2</zorder>
+     <zorder>label_Weapon_Left_3</zorder>
+     <zorder>label_Armor_Head</zorder>
+     <zorder>label_Armor_Chest</zorder>
+     <zorder>label_Armor_Arms</zorder>
+     <zorder>label_Armor_Legs</zorder>
+     <zorder>label_Talisman_1</zorder>
+     <zorder>label_Talisman_2</zorder>
+     <zorder>label_Talisman_3</zorder>
+     <zorder>label_Talisman_4</zorder>
+     <zorder>label_54</zorder>
+     <zorder>checkBox_Equipment_NotEnoughStats</zorder>
+     <zorder>button_EquipmentReloadInventory</zorder>
+     <zorder>label_Choosing_Cell</zorder>
+     <zorder>label_55</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Magic">
      <widget class="QTableWidget" name="tableWidget_AvaiableMagic">
@@ -4448,28 +4522,6 @@ p, li { white-space: pre-wrap; }
      <string>Open save file</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="button_SaveSettings">
-    <property name="geometry">
-     <rect>
-      <x>960</x>
-      <y>40</y>
-      <width>71</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Garamond</family>
-      <pointsize>10</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Save</string>
-    </property>
-   </widget>
    <widget class="QTableWidget" name="tableWidget_Macros">
     <property name="enabled">
      <bool>true</bool>
@@ -4743,32 +4795,10 @@ p, li { white-space: pre-wrap; }
      <enum>QFrame::NoFrame</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="button_LoadSettings">
-    <property name="geometry">
-     <rect>
-      <x>1040</x>
-      <y>40</y>
-      <width>71</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Garamond</family>
-      <pointsize>10</pointsize>
-      <weight>50</weight>
-      <italic>false</italic>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Load</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="button_Settings">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>1040</x>
       <y>40</y>
       <width>71</width>
       <height>25</height>
@@ -4921,6 +4951,28 @@ p, li { white-space: pre-wrap; }
      <enum>Qt::PlainText</enum>
     </property>
    </widget>
+   <widget class="QPushButton" name="button_TurnOnOff">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>40</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Turn off</string>
+    </property>
+   </widget>
    <zorder>graphicsView_2</zorder>
    <zorder>comboBox_SaveSlots</zorder>
    <zorder>button_AddMacros</zorder>
@@ -4934,18 +4986,17 @@ p, li { white-space: pre-wrap; }
    <zorder>label_3</zorder>
    <zorder>stackedWidget_Pages</zorder>
    <zorder>button_OpenSaveFile</zorder>
-   <zorder>button_SaveSettings</zorder>
    <zorder>tableWidget_Macros</zorder>
    <zorder>lineEdit_MacroName</zorder>
    <zorder>label_15</zorder>
    <zorder>comboBox_MacroKey</zorder>
-   <zorder>button_LoadSettings</zorder>
    <zorder>button_Settings</zorder>
    <zorder>button_UpMacros</zorder>
    <zorder>button_DownMacros</zorder>
    <zorder>label_6</zorder>
    <zorder>label_7</zorder>
    <zorder>label_8</zorder>
+   <zorder>button_TurnOnOff</zorder>
   </widget>
  </widget>
  <resources>

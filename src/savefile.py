@@ -235,6 +235,17 @@ class SaveFile:
             198: 'Delete'
         }
 
+    def is_empty(self) -> bool:
+        """
+        Checks is the savefile has some macros in it.
+        """
+
+        for saveslot in self.saveslots:
+            if saveslot.macros:
+                return False
+
+        return True
+
     def calculate_savefile_location(self) -> None:
         r"""
         Tries to find a save-file location and returns a path to it.
@@ -361,6 +372,7 @@ class SaveSlot:
         weapon searching.
         """
         return bytes.fromhex('ffffffff00000000') * 4
+
 
     def get_equipment(self, equipment_type: str = '') -> None:
         """

@@ -11,85 +11,7 @@ from macro import Macro, built_in_macros, available_hotkey_buttons
 from savefile import SaveFile, SaveSlot
 import keyboard
 import pickle
-
-
-def available_game_control_buttons() -> tuple:
-    """
-    List of keyboard buttons that can be used to assign in Elden Ring.
-    """
-
-    return (
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "0",
-        "Num0",
-        "Num1",
-        "Num2",
-        "Num3",
-        "Num4",
-        "Num5",
-        "Num6",
-        "Num7",
-        "Num8",
-        "Num9",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        "Tab",
-        "Space",
-        "Backspace",
-        "Enter",
-        "Home",
-        "PageUp",
-        "End",
-        "PageDown",
-        "Insert",
-        "Delete",
-        "Ctrl",
-        "Shift",
-        "Alt"
-    )
-
-
-def inventory_row_column_from_position(position: int) -> tuple:
-    """
-    Gets row and column indexes for position in table with 5 columns.
-    """
-
-    row = (position - 1) // 5
-    column = (position - 1) % 5
-
-    return row, column
+from datetime import datetime
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -101,10 +23,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.savefile: SaveFile = SaveFile('')
         self.equipment_current_cell: str = ''
         self.current_macro: Macro = Macro()
+        self.turn_off: bool = False
         self.init_ui()
-        self.read_settings()
+        self.read_settings_from_file()
+        self.set_standard_settings()
 
-        # TODO: слишком сложно тут, надо все это выровнять в одну функцию, которую вызывать и из открытия сейва вручную
+        # TODO: too complicated
         if not self.savefile.location:
             self.savefile.calculate_savefile_location()
             if self.savefile.location:
@@ -116,12 +40,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 else:
                     self.savefile.current_saveslot = SaveSlot()
                 self.current_macro = Macro()
-                self.set_macros_settings_from_window()
 
-        self.add_introductory_macros()
+        if self.savefile.location and not self.savefile.current_saveslot.macros:
+            self.add_introductory_macros()
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
-        self.AvailableSpells_RefillTable()
         self.refresh_all()
 
         # Showing window on top.
@@ -129,22 +52,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
         self.activateWindow()
 
-    def changeEvent(self, event):
+    @staticmethod
+    def available_game_control_buttons() -> tuple:
+        """
+        List of keyboard buttons that can be used to assign in Elden Ring.
+        """
 
-        print('event')
-        pass
+        return (
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Num0", "Num1",
+            "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "A",
+            "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Tab",
+            "Space", "Backspace", "Enter", "Home", "PageUp", "End", "PageDown",
+            "Insert", "Delete", "Ctrl", "Shift", "Alt"
+        )
 
-        # print(self.isActiveWindow())
-        # if self.isActiveWindow():
-        #     self.hook_hotkeys()
-        # else:
-        #     # Try block, because 'Keyboard' clearing methods can call
-        #     # an unexpected exception if there's no assigned hotkeys.
-        #     try:
-        #         keyboard.remove_all_hotkeys()
-        #         keyboard._hotkeys.clear()
-        #     except:
-        #         pass
+    @staticmethod
+    def inventory_row_column_from_position(position: int) -> tuple:
+        """
+        Gets row and column indexes for position in table with 5 columns.
+        """
+
+        row = (position - 1) // 5
+        column = (position - 1) % 5
+
+        return row, column
+
+    def closeEvent(self, a0: PyQt5.QtGui.QCloseEvent) -> None:
+
+        self.save_settings_to_file()
 
     def toJSON(self):
         return json.dumps(self.current_macro, default=lambda o: o.__dict__,
@@ -170,15 +106,126 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings file yet.
         """
 
-        # Кружиться:
-        # w_press60
-        # a_press60
-        # s_press60
-        # d_press60
-        # w_press60
-        # pause20
+        macros = self.savefile.current_saveslot.macros
+        macros.clear()
 
-        # teagabbing and alt+f4
+        # Sort all: Asc. Acquisition.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Sort all: Asc. Acquisition'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F11'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Sort all: Asc. Acquisition'
+        macros.append(macro)
+
+        # Reverse backstep.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Reverse backstep'
+        macro.type = 'Built-in'
+        macro.hotkey = self.savefile.game_controls['roll']
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = True
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Reverse backstep'
+        macros.append(macro)
+
+        # Crouch attack.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Crouch attack'
+        macro.type = 'Built-in'
+        macro.hotkey = self.savefile.game_controls['crouch']
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = True
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Crouch attack'
+        macros.append(macro)
+
+        # Invasion attempts.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Six invasion attempts (wide)'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F10'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
+        macros.append(macro)
+
+        # Weeeeeeeeeeee.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Weeeeeeeeeeee'
+        macro.type = 'DIY'
+        macro.hotkey = 'Home'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = True
+        macro.settings['diy']['macro'] = 'w_press60\n' \
+                                         'a_press60\n' \
+                                         's_press60\n' \
+                                         'd_press60\n' \
+                                         'w_press60\n'
+        macros.append(macro)
+
+        # MLG Katana 360 no scope.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'MLG Katana 360 no scope'
+        macro.type = 'DIY'
+        macro.hotkey = 'F1'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['diy']['macro'] = ''
+        macros.append(macro)
+
+        # Filthy teabagging.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Filthy teabagging'
+        macro.type = 'DIY'
+        macro.hotkey = 'F4'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = True
+        macro.settings['diy']['macro'] = 'crouch_pause100 * 50'
+        macros.append(macro)
+
+        # Items.
+        for i in range(1,11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to quick item {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = True
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
+            macros.append(macro)
+
+        # Magic.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to spell {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
+            macros.append(macro)
+
+        # Gestures.
+        for i in range(1, 7):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Gesture {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = True
+            macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
+            macros.append(macro)
+
 
     def set_macros_settings_from_window(self) -> None:
         """
@@ -246,8 +293,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             keyboard.remove_all_hotkeys()
             keyboard._hotkeys.clear()
+            print('All keyhooks were removed.')
         except:
             pass
+
+        # If we're in 'off' mode, then not hooking anything.
+        if self.turn_off:
+            return
 
         if self.savefile.recovery_hotkey:
             recovery_hotkey = self.savefile.recovery_hotkey
@@ -302,7 +354,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setFixedSize(1150, 700)
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
-        self.button_SaveSettings.clicked.connect(self.save_settings)
         self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
 
@@ -328,6 +379,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_AddMacros.clicked.connect(self.AddMacro_Click)
         self.button_UpMacros.clicked.connect(self.UpMacro_Click)
         self.button_DownMacros.clicked.connect(self.DownMacro_Click)
+
+        # Upper panel.
+        self.button_TurnOnOff.clicked.connect(self.TurnOnOff_Click)
 
         # Page "Equipment"
         self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
@@ -412,7 +466,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_ControlKeyUseItem.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyUse.activated.connect(self.ControlKeys_OnChange)
 
-        for key in available_game_control_buttons():
+        for key in self.available_game_control_buttons():
             self.comboBox_ControlKeyMove_Up.addItem(key)
             self.comboBox_ControlKeyMove_Down.addItem(key)
             self.comboBox_ControlKeyMove_Left.addItem(key)
@@ -483,22 +537,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 font_family = obj.fontInfo().family()
                 obj.setFont(PyQt5.QtGui.QFont(font_family, font_size + adjust))
 
-    def save_settings(self):
+    def save_settings_to_file(self):
         """
-
+        Saves settings to file 'mf_settings.cfg' in the same folder.
         """
-        with open('mf_settings.cfg', "wb") as settings_file:
+        with open(r'mf_settings.cfg', "wb") as settings_file:
             pickle.dump(self.savefile, settings_file)
 
 
-    def read_settings(self):
+    def read_settings_from_file(self):
+        """
+        Reads settings from file 'mf_settings.cfg' in the same folder.
         """
 
-        """
+        if not os.path.exists('mf_settings.cfg'):
+            return
 
-        # Reading file.
-
-        self.set_standard_settings()
+        with open('mf_settings.cfg', "rb") as settings_file:
+            self.savefile = pickle.load(settings_file)
 
     def set_standard_settings(self) -> None:
         """
@@ -536,11 +592,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         current_text = self.comboBox_SaveSlots.currentText()
         slot_number = int(current_text.split('.')[0])
-        self.savefile.current_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), SaveSlot())
+        new_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), None)
+        if new_saveslot is None:
+            return
+
+        self.savefile.current_saveslot = new_saveslot
         self.savefile.current_saveslot.get_equipment()
         self.current_macro = Macro()
 
-        self.AvailableSpells_RefillTable()
+        if self.savefile.location and not self.savefile.current_saveslot.macros:
+            self.add_introductory_macros()
+
         self.refresh_all()
 
     def tableWidget_Macros_OnSelect(self):
@@ -556,9 +618,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.current_macro = next((x for x in self.savefile.current_saveslot.macros if x.id == macro_id), Macro(self.savefile.current_saveslot))
 
+        self.tableWidget_Macros.blockSignals(True)
+        self.tableWidget_AvaiableMagic.blockSignals(True)
+
         self.MacroArea_Refresh()
         self.Pages_SetPage()
         self.Pages_RefreshAll()
+
+        self.tableWidget_Macros.blockSignals(False)
+        self.tableWidget_AvaiableMagic.blockSignals(False)
 
     def MacrosTable_Refresh(self):
         """
@@ -598,6 +666,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Selecting current macro.
         self.tableWidget_Macros.clearSelection()
         model = self.tableWidget_Macros.model()
+        self.tableWidget_Macros.blockSignals(True)
         if current_macro_id:
             for row in range(model.rowCount()):
                 index = model.index(row, 0)
@@ -605,6 +674,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if macro_id == current_macro_id:
                     self.tableWidget_Macros.selectRow(row)
                     break
+        self.tableWidget_Macros.blockSignals(False)
 
     def MacroName_OnChange(self):
         """
@@ -645,6 +715,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                                   options=options)
 
         if location:
+
+            # If there're some macros already, saving settings to a backup folder.
+            if not self.savefile.is_empty():
+                if not os.path.exists('mf_settings_backups'):
+                    os.mkdir("mf_settings_backups")
+                mark_date = datetime.today().strftime('%Y%m%d%H%M%S')
+                file_name = f'mf_settings_{mark_date}.cfg'
+                with open(rf'mf_settings_backups/{file_name}', "wb") as settings_file:
+                    pickle.dump(self.savefile, settings_file)
+
             self.savefile = SaveFile(location)
             self.savefile.fill_saveslots()
             self.savefile.read_game_controls()
@@ -656,9 +736,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.current_macro = Macro(self.savefile.current_saveslot)
             self.hook_hotkeys()
             self.set_macros_settings_from_window()
-
-            self.AvailableSpells_RefillTable()
             self.refresh_all()
+
+    def TurnOnOff_Click(self) -> None:
+        """
+
+        """
+
+        self.turn_off = not self.turn_off
+        self.Pages_Refresh_Settings()
+        self.hook_hotkeys()
 
     def Settings_Click(self):
         """
@@ -686,6 +773,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.set_macros_settings_from_window()
         self.refresh_all()
+
+        self.save_settings_to_file()
 
     def UpMacro_Click(self):
         """
@@ -746,7 +835,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
         next_macro = next((x for x in self.savefile.current_saveslot.macros
-                               if x.id == next_id), None)
+                           if x.id == next_id), None)
 
         if next_macro is None:
             return
@@ -766,13 +855,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.current_macro.hotkey = current_text
 
         self.hook_hotkeys()
+        self.tableWidget_Macros.blockSignals(True)
         self.MacrosTable_Refresh()
+        self.tableWidget_Macros.blockSignals(False)
 
     def MacroKeyCtrl_Click(self):
         """
 
         """
-
 
         checked = self.checkBox_MacroKeyCtrl.isChecked()
         self.current_macro.hotkey_ctrl = checked
@@ -858,6 +948,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.MacrosTable_Refresh()
         self.MacroArea_Refresh()
         self.Pages_SetPage()
+
+        # Selecting first macro.
+        self.tableWidget_Macros.clearSelection()
+        self.tableWidget_Macros.blockSignals(True)
+        model = self.tableWidget_Macros.model()
+        if model.rowCount() and self.savefile.current_saveslot.macros:
+            self.tableWidget_Macros.selectRow(0)
+            self.current_macro = self.savefile.current_saveslot.macros[0]
+        self.tableWidget_Macros.blockSignals(False)
 
     def refresh_all(self) -> None:
         """
@@ -974,8 +1073,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # In manual mode we take separate collection.
         collection = []
-        if manual_mode:
-            collection = self.savefile.current_saveslot.weapons_manual
 
         if choosing_now:
             if manual_mode and 'weapon' in self.equipment_current_cell:
@@ -1046,7 +1143,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             check = settings[current_cell]['not_enough_stats']
             self.checkBox_Equipment_NotEnoughStats.setChecked(check)
 
-        
+
 
     def Pages_Equipment_Cells_Refresh(self) -> None:
         """
@@ -1084,7 +1181,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             elif cell_settings['action'] == 'remove':
                 label.setText('<remove>')
             elif cell_settings['name']:
-                label_text = f'{cell_settings["name"]}\n'\
+                label_text = f'{cell_settings["name"]}\n' \
                              f'({cell_settings["position"]})'
                 if cell_settings['not_enough_stats']:
                     label_text += ' (low stats)'
@@ -1094,22 +1191,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Current cell label.
         cell_name_accordance = {
-                    '': '',
-                    'weapon_right_1': 'Right Hand Armament 1',
-                    'weapon_right_2': 'Right Hand Armament 2',
-                    'weapon_right_3': 'Right Hand Armament 3',
-                    'weapon_left_1': 'Left Hand Armament 1',
-                    'weapon_left_2': 'Left Hand Armament 2',
-                    'weapon_left_3': 'Left Hand Armament 3',
-                    'armor_head': 'Head',
-                    'armor_chest': 'Chest',
-                    'armor_arms': 'Arms',
-                    'armor_legs': 'Legs',
-                    'talisman_1': 'Talisman 1',
-                    'talisman_2': 'Talisman 2',
-                    'talisman_3': 'Talisman 3',
-                    'talisman_4': 'Talisman 4',
-                }
+            '': '',
+            'weapon_right_1': 'Right Hand Armament 1',
+            'weapon_right_2': 'Right Hand Armament 2',
+            'weapon_right_3': 'Right Hand Armament 3',
+            'weapon_left_1': 'Left Hand Armament 1',
+            'weapon_left_2': 'Left Hand Armament 2',
+            'weapon_left_3': 'Left Hand Armament 3',
+            'armor_head': 'Head',
+            'armor_chest': 'Chest',
+            'armor_arms': 'Arms',
+            'armor_legs': 'Legs',
+            'talisman_1': 'Talisman 1',
+            'talisman_2': 'Talisman 2',
+            'talisman_3': 'Talisman 3',
+            'talisman_4': 'Talisman 4',
+        }
 
         self.label_Choosing_Cell.setText(cell_name_accordance[current_cell])
 
@@ -1158,7 +1255,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
-        
+
 
 
     def button_Equip_Cancel_Clicked(self) -> None:
@@ -1172,7 +1269,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
-        
+
 
     def Equipment_ManualMode_OnChange(self) -> None:
         """
@@ -1199,7 +1296,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
 
         # Selecting last cell.
-        row, column = inventory_row_column_from_position(len(self.savefile.current_saveslot.weapons_manual))
+        row, column = self.inventory_row_column_from_position(len(self.savefile.current_saveslot.weapons_manual))
         index = self.tableWidget_Equipment.model().index(row, column)
         self.tableWidget_Equipment.selectionModel().select(
             index, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
@@ -1433,6 +1530,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Refreshes elements on "Magic" page.
         """
+
+        self.AvailableSpells_RefillTable()
+
         magic_settings = self.current_macro.settings['magic']
 
         self.checkBox_MagicInstantUseLeftHand.setChecked(magic_settings['instant_cast_left'])
@@ -1515,13 +1615,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if len(items):
             current_name_in_table = items[0].text()
 
+        self.tableWidget_BuiltInMacros.blockSignals(True)
         if current_builtin_macro_name:
             for i, item in enumerate(built_in_macros()):
-                if item['name'] == current_builtin_macro_name\
+                if item['name'] == current_builtin_macro_name \
                         and current_name_in_table != current_builtin_macro_name:
                     self.tableWidget_BuiltInMacros.clearSelection()
                     self.tableWidget_BuiltInMacros.selectRow(i)
                     break
+        self.tableWidget_BuiltInMacros.blockSignals(False)
 
 
     def Pages_Refresh_DIY(self) -> None:
@@ -1533,8 +1635,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def Pages_Refresh_Settings(self) -> None:
         """
-        Refreshes elements on "Settings" page.
+        Refreshes elements on "Settings" page and buttons on upper panel.
         """
+
+        # Turn on/off button.
+        buttonTurnOff = self.button_TurnOnOff
+        if self.turn_off:
+            buttonTurnOff.setText('Turned off')
+            buttonTurnOff.setStyleSheet("background-color: rgb(72,15,12)")
+        else:
+            buttonTurnOff.setText('Turned on')
+            buttonTurnOff.setStyleSheet("background-color: rgb(31,32,27)")
 
         # Recovery hotkey.
         self.comboBox_RecoveryHotkey.setCurrentText(self.savefile.recovery_hotkey)
@@ -1635,37 +1746,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if macro name wasn't set by user.
         """
 
+        self.tableWidget_Macros.blockSignals(True)
+
         if self.current_macro.type == 'Magic':
 
             items = self.tableWidget_AvaiableMagic.selectedItems()
             if not len(items):
+                self.tableWidget_Macros.blockSignals(False)
                 return
 
             spell_name = items[0].text()
-            if self.current_macro.name != spell_name and\
+            if self.current_macro.name != spell_name and \
                     (self.current_macro.name == self.current_macro.standard_name()
-                    or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
+                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
                 self.current_macro.name = spell_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
-
-            return
 
         if self.current_macro.type == 'Built-in':
 
             items = self.tableWidget_BuiltInMacros.selectedItems()
             if not len(items):
+                self.tableWidget_Macros.blockSignals(False)
                 return
 
             built_in_macro_name = items[0].text()
             if self.current_macro.name != built_in_macro_name \
-                and (self.current_macro.name == self.current_macro.standard_name()
-                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
+                    and (self.current_macro.name == self.current_macro.standard_name()
+                         or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
 
-            return
+        self.tableWidget_Macros.blockSignals(False)
 
     def center_window(self):
         pass

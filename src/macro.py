@@ -165,31 +165,44 @@ class Macro:
             'equipment': {
                 'instant_action': '',
                 'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0, 'current_position': 0},
+                                   'name': '', 'position': 0,
+                                   'current_position': 0},
                 'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0, 'current_position': 0},
+                                   'name': '', 'position': 0,
+                                   'current_position': 0},
                 'weapon_right_3': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0, 'current_position': 0},
+                                   'name': '', 'position': 0,
+                                   'current_position': 0},
                 'weapon_left_1': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0, 'current_position': 0},
+                                  'name': '', 'position': 0,
+                                  'current_position': 0},
                 'weapon_left_2': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0, 'current_position': 0},
+                                  'name': '', 'position': 0,
+                                  'current_position': 0},
                 'weapon_left_3': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0, 'current_position': 0},
+                                  'name': '', 'position': 0,
+                                  'current_position': 0},
                 'armor_head': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'armor_chest': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'position': 0, 'current_position': 0},
+                                'name': '', 'position': 0,
+                                'current_position': 0},
                 'armor_arms': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'armor_legs': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'talisman_1': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'talisman_2': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'talisman_3': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0},
+                               'name': '', 'position': 0,
+                               'current_position': 0},
                 'talisman_4': {'action': 'skip', 'not_enough_stats': False,
                                'name': '', 'position': 0, 'current_position': 0}
             },
@@ -307,18 +320,16 @@ class Macro:
 
         # Actions to do after cell is passed to get to next cell.
         # Also put a key 'keyline' which will keep a keyline to handle a cell.
-        actions_after_cell = ['right', 'right', 'right|down',
-                              'right', 'right', 'right|down',
+        actions_after_cell = ['right', 'right', 'left|left|down',
+                              'right', 'right', 'left|left|down',
                               'right', 'right', 'right', 'right|down',
                               'right', 'right', 'right', 'right|down']
         for cell, action_after in zip(cells.keys(), actions_after_cell):
             cells[cell]['action_after'] = action_after
             cells[cell]['keyline'] = ''
 
-        # TODO: комментарии подправить
         # Plan is simple, that's a Swiss f*cking watch:
-        #   0. if we're on "Auto" search mode, then firstly we clear all cells
-        #       to 'remove' or 'equip'; press "Q; press "E" again to return;
+        #   0. firstly we clear all cells to 'remove' or 'equip' if needed
         #   1. cycle through all cells and if it's 'remove' or 'equip', perform
         #       corresponding action;
         #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
@@ -347,17 +358,16 @@ class Macro:
                 if value['action'] == 'equip' and not value['current_position']:
                     cells[name]['keyline'] = 'r'
                     are_there_cells_to_clear = True
+                    break
             if are_there_cells_to_clear:
                 keys_list.append(self.keyline_for_cells(cells))
+                keys_list.append('esc|esc|e')  # Re-enter to inventory.
 
-                # Re-enter to inventory.
-                keys_list.append('esc|esc|e')
-
-        # 1-2. Performing actions for cells.
+        # 1. Performing actions for cells.
         self.assign_keylines_to_cells(cells, search_mode)
         keys_list.append(self.keyline_for_cells(cells))
 
-        # Quit menu.
+        # 2. Quit menu.
         keys_list.append('esc')
 
         # 3. Instant action.
@@ -392,43 +402,40 @@ class Macro:
             if not first_cell_key_to_handle:
                 first_cell_index_to_handle += 1
 
-        # Seeking first cell to handle in full list and try to shrink
-        # a path from beginning to first cell if it's possible. It's handy
-        # if we handle far cells only, like 'talisman_3'.
-        path_to_first_cell = []
-        for key, value in cells.items():
-            if key == first_cell_key_to_handle:
-                break
-            if value['action_after']:
-                path_to_first_cell.append(value['action_after'])
+        # Shrinking a path if we have some big and frequent gaps of not-handling.
+        # We call it "костыль" ("crutch") in Russia.
+        # But here is important crutch.
 
-        path_to_first_cell = '|'.join(path_to_first_cell)
+        # Ignoring 2 and 3 weapon slots if they're not to equip.
+        if cells['weapon_right_2']['keyline'] == '' \
+                and cells['weapon_right_3']['keyline'] == '':
+            cells['weapon_right_1']['action_after'] = 'down'
+            cells['weapon_right_2']['action_after'] = ''
+            cells['weapon_right_3']['action_after'] = ''
 
-        # TODO: Сделать так, чтобы пропускались первые правое 2 и 3 оружие, если надо
-        # TODO: ошибка с тем, что я не учитываю стрелы с права
-        # TODO: ошибка с тем, что первые ячейки не работают
-        # TODO: расходится порядок в броне...
+        if cells['weapon_left_2']['keyline'] == '' \
+                and cells['weapon_left_3']['keyline'] == '':
+            cells['weapon_left_1']['action_after'] = 'down'
+            cells['weapon_left_2']['action_after'] = ''
+            cells['weapon_left_3']['action_after'] = ''
 
-        # Shinking the path to 'talisman_1' from 13 to 3 press.
-        path_to_first_cell = path_to_first_cell.replace(
-            'right|right|right|down|'
-            'right|right|right|down|'
-            'right|right|right|right|down',
-            'down|down|down'
-        )
-        # Shinking the path to 'armor_head' from 8 to 2 presses.
-        #                   or 'weapon_left_1' from 4 to 1 press.
-        path_to_first_cell = path_to_first_cell.replace(
-            'right|right|right|down',
-            'down'
-        )
+        # Ignoring 2, 3 and 4 armor slots if they're not to equip.
+        if cells['armor_chest']['keyline'] == '' \
+                and cells['armor_arms']['keyline'] == '' \
+                and cells['armor_legs']['keyline'] == '':
+            cells['armor_head']['action_after'] = 'down'
+            cells['armor_chest']['action_after'] = ''
+            cells['armor_arms']['action_after'] = ''
+            cells['armor_legs']['action_after'] = ''
 
-        # Replacing first sequence of not relevant cells to short path to first
-        # relevant one, if we can.
-        if path_to_first_cell:
-            keys_list.append(path_to_first_cell)
-            cells = {k: v for i, (k, v) in enumerate(cells.items())
-                     if i >= first_cell_index_to_handle}
+        # Ignoring 2, 3 and 4 talisman slots if they're not to equip.
+        if cells['talisman_2']['keyline'] == '' \
+                and cells['talisman_3']['keyline'] == '' \
+                and cells['talisman_4']['keyline'] == '':
+            cells['talisman_1']['action_after'] = ''
+            cells['talisman_2']['action_after'] = ''
+            cells['talisman_3']['action_after'] = ''
+            cells['talisman_4']['action_after'] = ''
 
         # Gather keylines from relevant cells and keys to move further.
         for key, value in cells.items():
@@ -436,7 +443,8 @@ class Macro:
                 keys_list.append(value['keyline'])
             if key == last_cell_key_to_handle:
                 break
-            keys_list.append(value['action_after'])
+            if value['action_after']:
+                keys_list.append(value['action_after'])
 
         return '|'.join(keys_list)
 
@@ -458,11 +466,11 @@ class Macro:
             # Handling 'equip' action.
             keys_list = []
 
-            current_position = 1  # Standard position for auto mode
-
-            # If we're in "semi-manual" mode, we don't need to change items
-            # if we already have it in our cell slots.
-            if search_mode != 'auto':
+            if search_mode == 'auto':
+                current_position = 1  # Standard position for "auto" mode.
+            else:
+                # If we're in "semi-manual" mode, we don't need to change items
+                # if we already have it in our cell slots.
                 current_position = value['current_position']
                 if current_position == value['position']:
                     continue
@@ -516,7 +524,7 @@ class Macro:
 
             # Remembering current position in "semi-manual" mode.
             if search_mode != 'auto':
-                value['current_position'] = current_position
+                value['current_position'] = goal_position
 
     def form_keyline_magic(self):
         settings = self.settings['magic']
@@ -692,18 +700,18 @@ class Macro:
             #  makes me feel silly.
 
             # Key presses execution.
-            keys_for_pynput = {'up': 72, 'left': 75, 'right': 80, 'down': 77}
+            keys_for_pynput = ['up', 'left', 'right', 'down']
             if key_press in keys_for_pynput:
-                key_press = keyboard.key_to_scan_codes(key_press)
-            #     if key_press in non_letter_keys():
-            #         key_press = Key[key_press]
-            #     pynput_in.press(key_press)
-            #     time.sleep(press_time)
-            #     pynput_in.release(key_press)
-            # else:
-            keyboard.press(key_press)
-            time.sleep(press_time)
-            keyboard.release(key_press)
+                # key_press = keyboard.key_to_scan_codes(key_press)
+                if key_press in non_letter_keys():
+                    key_press = Key[key_press]
+                pynput_in.press(key_press)
+                time.sleep(press_time)
+                pynput_in.release(key_press)
+            else:
+                keyboard.press(key_press)
+                time.sleep(press_time)
+                keyboard.release(key_press)
 
             time.sleep(sleep_time)
 
@@ -733,7 +741,7 @@ def built_in_macros() -> list:
                     '      the end of the list.'},
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
-         'comment': 'Favourite UGS players\' button before 1.07.'},
+         'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
         {'name': 'Stance attack',
          'keyline': 'skill|attack',
          'comment': 'Goes to stance, then immediately perform an attack.'},
@@ -776,22 +784,26 @@ def built_in_macros() -> list:
          'keyline': keyline_to_choose_next_weapon(),
          'comment': 'Chooses next weapon in list for right hand.\n'
                     '\n'
-                    'Acts like mouse wheel in old school shooters.'},
+                    'You can choose 3 weapons for Right Hand Armament 1 slot\n'
+                    'and play like Dante in classic weapon-juggling Devil May Cry style.'},
         {'name': 'Previous weapon (right)',
          'keyline': keyline_to_choose_previous_weapon(),
          'comment': 'Chooses previous weapon in list for right hand.\n'
                     '\n'
-                    'Acts like mouse wheel in old school shooters.'},
+                    'You can choose 3 weapons for Right Hand Armament 1 slot\n'
+                    'and play like Dante in classic weapon-juggling Devil May Cry style.'},
         {'name': 'Next weapon (left)',
          'keyline': keyline_to_choose_next_weapon(left_hand=True),
          'comment': 'Chooses next weapon in list for left hand.\n'
                     '\n'
-                    'Acts like mouse wheel in old school shooters.'},
+                    'You can choose 3 weapons for Left Hand Armament 1 slot\n'
+                    'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'Chooses previous weapon in list for left hand.\n'
                     '\n'
-                    'Acts like mouse wheel in old school shooters.'},
+                    'You can choose 3 weapons for Left Hand Armament 1 slot\n'
+                    'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
         # TODO: Посмотреть, можно ли уменьшить 4000
         {'name': 'Six invasion attempts (wide)',
          'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
@@ -811,6 +823,11 @@ def built_in_macros() -> list:
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades locally.'},
+        {'name': 'Fast quit to main menu',
+         'keyline': 'esc|up|e|z|e|left|e',
+         'comment': 'Quits to main menu very fast.\n'
+                    '\n'
+                    'Useful if you lost to gravity but still want to cheat death.'}
     ]
 
     # Use item macros.

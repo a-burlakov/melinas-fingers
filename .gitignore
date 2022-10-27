@@ -3,3 +3,4 @@
 **/.idea
 **/venv
 mf_settings.cfg
+**/mf_settings_backups
