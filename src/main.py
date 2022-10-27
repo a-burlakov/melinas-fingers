@@ -7,9 +7,10 @@ import PyQt5.QtGui
 from mainWindow import Ui_MainWindow
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
-from macro import Macro, built_in_macros, available_hotkey_buttons
+from macro import Macro, built_in_macros, available_buttons_with_codes
 from savefile import SaveFile, SaveSlot
 import keyboard
+from pynput import  keyboard as keyb
 import pickle
 from datetime import datetime
 
@@ -257,36 +258,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             """
 
             # Need to rename some keys to make 'keyboard' eat it.
-            hotkey = hotkey.replace(',', 'comma')
+            # hotkey = hotkey.replace(',', 'comma')
 
             # As in Elden ring we can use hotkey during movement, we need to
             # hook a hotkey to any movement combination we can have, including
             # all 8 directions and sprint button.
             # That's awful, but I don't know a method to do it differently yet.
-            up = self.savefile.game_controls['move_up']
-            down = self.savefile.game_controls['move_down']
-            left = self.savefile.game_controls['move_left']
-            right = self.savefile.game_controls['move_right']
-            sprint = self.savefile.game_controls['roll']
-            move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+', f'{sprint}+',
-                               f'{up}+{left}+', f'{up}+{right}+',
-                               f'{right}+{down}+', f'{left}+{down}+',
-                               f'{sprint}+{up}+', f'{sprint}+{down}+',
-                               f'{sprint}+{right}+', f'{sprint}+{left}+',
-                               f'{sprint}+{up}+{left}+', f'{sprint}+{up}+{right}+',
-                               f'{sprint}+{right}+{down}+', f'{sprint}+{left}+{down}+']
+            # up = self.savefile.game_controls['move_up']
+            # down = self.savefile.game_controls['move_down']
+            # left = self.savefile.game_controls['move_left']
+            # right = self.savefile.game_controls['move_right']
+            # sprint = self.savefile.game_controls['roll']
+            # move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+', f'{sprint}+',
+            #                    f'{up}+{left}+', f'{up}+{right}+',
+            #                    f'{right}+{down}+', f'{left}+{down}+',
+            #                    f'{sprint}+{up}+', f'{sprint}+{down}+',
+            #                    f'{sprint}+{right}+', f'{sprint}+{left}+',
+            #                    f'{sprint}+{up}+{left}+', f'{sprint}+{up}+{right}+',
+            #                    f'{sprint}+{right}+{down}+', f'{sprint}+{left}+{down}+']
 
-            for move_key in move_key_combos:
-                # scan_code = keyboard.parse_hotkey_combinations(move_key + hotkey)
-                # pass
-                # while not isinstance(scan_code[-1], int):
-                #     scan_code = scan_code[-1]
-
-                keyboard.add_hotkey(move_key + hotkey,
-                                    func,
-                                    suppress=True,
-                                    trigger_on_release=True)
-
+            # for move_key in move_key_combos:
+            #     # scan_code = keyboard.parse_hotkey_combinations(move_key + hotkey)
+            #     # pass
+            #     # while not isinstance(scan_code[-1], int):
+            #     #     scan_code = scan_code[-1]
+            #
+            #     keyboard.add_hotkey(move_key + hotkey,
+            #                         func,
+            #                         suppress=True,
+            #                         trigger_on_release=True)
 
         # Try block, because 'Keyboard' clearing methods can call
         # an unexpected exception if there's no assigned hotkeys.
@@ -297,31 +297,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except:
             pass
 
+        HOTKEYS.clear()
+
         # If we're in 'off' mode, then not hooking anything.
         if self.turn_off:
             return
 
         if self.savefile.recovery_hotkey:
+            dict_vk = []
             recovery_hotkey = self.savefile.recovery_hotkey
             if self.savefile.recovery_hotkey_alt:
-                recovery_hotkey = 'alt+' + recovery_hotkey
+                dict_vk.append(164)
             if self.savefile.recovery_hotkey_shift:
-                recovery_hotkey = 'shift+' + recovery_hotkey
+                dict_vk.append(160)
             if self.savefile.recovery_hotkey_ctrl:
-                recovery_hotkey = 'ctrl+' + recovery_hotkey
-            hook_for_elden_ring(recovery_hotkey, self.refresh_currents)
+                dict_vk.append(162)
+            dict_vk.append(available_buttons_with_codes()[recovery_hotkey])
+            HOTKEYS[frozenset(dict_vk)] = self.refresh_currents
 
         for macro in self.savefile.current_saveslot.macros:
 
-            hotkey_string = macro.hotkey_string()
-            if not hotkey_string:
-                continue
 
-            # Condition helps to correct a situation when several hotkeys
-            # are assign to one key.
-            if hotkey_string not in keyboard._hotkeys:
-                hook_for_elden_ring(hotkey_string, macro.execute)
-                print(f'{macro.name} hooked to "{hotkey_string}"')
+            if not macro.hotkey or not macro.type:
+                continue
+            hotkey = macro.hotkey
+            dict_vk = []
+            dict_vk.append(available_buttons_with_codes()[hotkey])
+            if macro.hotkey_alt:
+                dict_vk.append(164)
+            if macro.hotkey_shift:
+                dict_vk.append(160)
+            if macro.hotkey_ctrl:
+                dict_vk.append(162)
+            HOTKEYS[frozenset(dict_vk)] = macro.execute
+
+        print(HOTKEYS)
+        # # Condition helps to correct a situation when several hotkeys
+        # # are assign to one key.
+        # if hotkey_string not in keyboard._hotkeys:
+        #     hook_for_elden_ring(hotkey_string, macro.execute)
+        #     print(f'{macro.name} hooked to "{hotkey_string}"')
 
     def refresh_currents(self):
         """
@@ -364,7 +379,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_MacroKeyCtrl.clicked.connect(self.MacroKeyCtrl_Click)
         self.checkBox_MacroKeyShift.clicked.connect(self.MacroKeyShift_Click)
         self.checkBox_MacroKeyAlt.clicked.connect(self.MacroKeyAlt_Click)
-        for key in available_hotkey_buttons():
+        for key in available_buttons_with_codes().keys():
             self.comboBox_MacroKey.addItem(key)
             self.comboBox_RecoveryHotkey.addItem(key)
 
@@ -563,8 +578,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         if self.savefile.recovery_hotkey == '':
-            self.savefile.recovery_hotkey = 'Tab'
-            self.savefile.recovery_hotkey_shift = True
+            self.savefile.recovery_hotkey = '~'
 
         if self.savefile.standard_pause_time == 0:
             self.savefile.standard_pause_time = 20
@@ -1654,8 +1668,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_RecoveryKeyAlt.setChecked(self.savefile.recovery_hotkey_alt)
 
         # Search modes.
-        self.comboBox_EquipmentSearchMode.setCurrentText(self.savefile.current_saveslot.search_mode_equipment)
-        self.comboBox_MagicSearchMode.setCurrentText(self.savefile.current_saveslot.search_mode_magic)
+        if self.savefile.current_saveslot.search_mode_equipment == 'semi-manual':
+            self.comboBox_EquipmentSearchMode.setCurrentText('Semi-manual')
+        else:
+            self.comboBox_EquipmentSearchMode.setCurrentText('Auto')
+        if self.savefile.current_saveslot.search_mode_magic == 'semi-manual':
+            self.comboBox_MagicSearchMode.setCurrentText('Semi-manual')
+        else:
+            self.comboBox_MagicSearchMode.setCurrentText('Auto')
 
         # Controls in Elden Ring.
         self.comboBox_ControlKeyMove_Up.setCurrentText(self.savefile.game_controls['move_up'])
@@ -1803,6 +1823,40 @@ def start_application():
     window = MainWindow()
     sys.exit(app.exec_())
 
+
+# This set is constantly being filled and cleared with pressed keyboard keys.
+# At the moment when some macro key combination are in this set, macro is
+# going to be executed.
+current_keyboard_combination = set()
+HOTKEYS = {}
+
+
+def on_press(key):
+    if hasattr(key, 'vk'):
+        current_keyboard_combination.add(key.vk)
+    else:
+        current_keyboard_combination.add(key.value.vk)
+    print(current_keyboard_combination)
+
+    for combination, func in HOTKEYS.items():
+        if combination <= current_keyboard_combination:
+            func()
+            current_keyboard_combination.clear()
+            break
+
+def on_release(key):
+    pass
+    try:
+        current_keyboard_combination.clear()
+    except KeyError:
+        pass
+
+
 if __name__ == '__main__':
+
+    listener = keyb.Listener(
+        on_press=on_press,
+    on_release=on_release)
+    listener.start()
 
     start_application()

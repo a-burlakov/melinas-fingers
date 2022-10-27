@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>images/icon.jpg</file>
     <file>images/down_arrow_combobox.png</file>
     <file>images/inventory.png</file>
     <file>images/weapon_right.png</file>

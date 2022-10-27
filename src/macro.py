@@ -51,95 +51,96 @@ def game_control_keys() -> tuple:
     )
 
 
-def available_hotkey_buttons() -> tuple:
+def available_buttons_with_codes() -> dict:
     """
-    List of keyboard buttons that can be used for hotkey assign.
+    Dict of keyboard buttons that can be used for hotkey assign.
+    Values are VK codes used by 'pynput'.
     """
 
-    return (
-        "F1",
-        "F2",
-        "F3",
-        "F4",
-        "F5",
-        "F6",
-        "F7",
-        "F8",
-        "F9",
-        "F10",
-        "F11",
-        "F12",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "0",
-        # TODO: Need to find a way to use this numpad buttons, may be with pynput library.
-        # "Num0",
-        # "Num1Num1",
-        # "Num2",
-        # "Num3",
-        # "Num4",
-        # "Num5",
-        # "Num6",
-        # "Num7",
-        # "Num8",
-        # "Num9",
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-        '[',
-        ']',
-        ';',
-        '\'',
-        ',',
-        '.',
-        '/',
-        '-',
-        '=',
-        # "~" somehow tilda causing problems
-        "Tab",
-        "Space",
-        "Backspace",
-        "Enter",
-        "Home",
-        "PageUp",
-        "End",
-        "PageDown",
-        "Insert",
-        "Delete",
-        "Ctrl",
-        "Shift",
-        "Alt"
-    )
+    return {
+        "F1": 112,
+        "F2": 113,
+        "F3": 114,
+        "F4": 115,
+        "F5": 116,
+        "F6": 117,
+        "F7": 118,
+        "F8": 119,
+        "F9": 120,
+        "F10": 121,
+        "F11": 122,
+        "F12": 123,
+        "1": 49,
+        "2": 50,
+        "3": 51,
+        "4": 52,
+        "5": 53,
+        "6": 54,
+        "7": 55,
+        "8": 56,
+        "9": 57,
+        "0": 48,
+        "Num0": 96,
+        "Num1": 97,
+        "Num2": 98,
+        "Num3": 99,
+        "Num4": 100,
+        "Num5": 101,
+        "Num6": 102,
+        "Num7": 103,
+        "Num8": 104,
+        "Num9": 105,
+        "A": 65,
+        "B": 66,
+        "C": 67,
+        "D": 68,
+        "E": 69,
+        "F": 70,
+        "G": 71,
+        "H": 72,
+        "I": 73,
+        "J": 74,
+        "K": 75,
+        "L": 76,
+        "M": 77,
+        "N": 78,
+        "O": 79,
+        "P": 80,
+        "Q": 81,
+        "R": 82,
+        "S": 83,
+        "T": 84,
+        "U": 85,
+        "V": 86,
+        "W": 87,
+        "X": 88,
+        "Y": 89,
+        "Z": 90,
+        "[": 219,
+        "]": 221,
+        ";": 186,
+        "'": 222,
+        "\\": 220,
+        ",": 188,
+        ".": 190,
+        "/": 191,
+        "-": 189,
+        "=": 187,
+        "~": 192,
+        "Tab": 9,
+        "Space": 32,
+        "Backspace": 8,
+        "Enter": 13,
+        "Home": 36,
+        "PageUp": 33,
+        "PageDown": 34,
+        "End": 35,
+        "Insert": 45,
+        "Delete": 46,
+        "Ctrl": 162,
+        "Shift": 160,
+        "Alt": 164
+    }
 
 
 class Macro:
@@ -263,11 +264,11 @@ class Macro:
 
         """
 
-        # TODO: не забыть вернуть
+        # TODO: не забыть вернутьw
         current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower():  # \
-        #     # and 'melina' not in current_window_text.lower():
-        #     return
+        if 'elden' not in current_window_text.lower():  # \
+            # and 'melina' not in current_window_text.lower():
+            return
 
         self.interrupted = False
         time_start = time.time()
@@ -615,7 +616,7 @@ class Macro:
 
             # Searching in plain buttons...
             if command in game_control_keys() \
-                    or command in available_hotkey_buttons() \
+                    or command in available_buttons_with_codes() \
                     or command in non_letter_keys() \
                     or len(command) == 1 and command.isalpha() \
                     or command in []:
@@ -834,7 +835,7 @@ def built_in_macros() -> list:
     for i in range(1, 11):
         macros_list.append({
             'name': f'Switch to quick item {str(i)}',
-            'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}|use_item',
+            'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}',
             'comment': f'Selects item {i} from quick item list.'
         })
 

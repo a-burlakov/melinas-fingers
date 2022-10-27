@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1138</width>
-    <height>676</height>
+    <width>1149</width>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,8 +20,8 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../../Users/Flower/.designer/backup/images/icon.jpg</normaloff>../../../Users/Flower/.designer/backup/images/icon.jpg</iconset>
+   <iconset resource="ui.qrc">
+    <normaloff>:/newPrefix/images/icon.jpg</normaloff>:/newPrefix/images/icon.jpg</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -200,6 +200,9 @@ QScrollBar {
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <item>
      <property name="text">
       <string>&lt; Save slot 1 &gt;</string>
@@ -266,6 +269,9 @@ QScrollBar {
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Add</string>
     </property>
@@ -288,6 +294,9 @@ QScrollBar {
       <bold>false</bold>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Delete Hotkey</string>
     </property>
@@ -306,6 +315,9 @@ QScrollBar {
       <family>Garamond</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
     </property>
     <property name="acceptDrops">
      <bool>false</bool>
@@ -501,7 +513,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -1071,7 +1083,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        </font>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="toolTipDuration">
        <number>-1</number>
@@ -1402,6 +1414,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -1560,6 +1575,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -1603,6 +1621,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
        <string>Add</string>
@@ -1653,6 +1674,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
        <string>Delete</string>
@@ -2213,6 +2237,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -2234,6 +2261,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
        <string>Reload from save file</string>
@@ -2357,7 +2387,6 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>label_48</zorder>
      <zorder>label_50</zorder>
      <zorder>label_51</zorder>
-     <zorder>checkBox_Equipment_ManualMode</zorder>
      <zorder>label_52</zorder>
      <zorder>button_EquipmentAdd</zorder>
      <zorder>label_49</zorder>
@@ -2377,10 +2406,11 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>label_Talisman_3</zorder>
      <zorder>label_Talisman_4</zorder>
      <zorder>label_54</zorder>
-     <zorder>checkBox_Equipment_NotEnoughStats</zorder>
      <zorder>button_EquipmentReloadInventory</zorder>
      <zorder>label_Choosing_Cell</zorder>
      <zorder>label_55</zorder>
+     <zorder>checkBox_Equipment_NotEnoughStats</zorder>
+     <zorder>checkBox_Equipment_ManualMode</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Magic">
      <widget class="QTableWidget" name="tableWidget_AvaiableMagic">
@@ -2520,6 +2550,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -2541,6 +2574,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -2701,6 +2737,14 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
+     <zorder>tableWidget_AvaiableMagic</zorder>
+     <zorder>label_5</zorder>
+     <zorder>label_10</zorder>
+     <zorder>label_13</zorder>
+     <zorder>label_17</zorder>
+     <zorder>label_41</zorder>
+     <zorder>checkBox_MagicInstantUseLeftHand</zorder>
+     <zorder>checkBox_MagicInstantUseRightHand</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_BuiltIn">
      <widget class="QTableWidget" name="tableWidget_BuiltInMacros">
@@ -2712,7 +2756,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <x>20</x>
         <y>30</y>
         <width>251</width>
-        <height>451</height>
+        <height>461</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -3049,7 +3093,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <x>20</x>
         <y>30</y>
         <width>281</width>
-        <height>451</height>
+        <height>461</height>
        </rect>
       </property>
       <property name="font">
@@ -3059,7 +3103,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        </font>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::ClickFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -3184,7 +3228,7 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for making a pause after pressing a button, where N is ms. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -3246,6 +3290,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
       <property name="minimum">
        <number>5</number>
       </property>
@@ -3299,6 +3346,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3319,6 +3369,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3341,6 +3394,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3361,6 +3417,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3383,6 +3442,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3403,6 +3465,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3425,6 +3490,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3445,6 +3513,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3467,6 +3538,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3487,6 +3561,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3509,6 +3586,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3529,6 +3609,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3821,6 +3904,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3867,6 +3953,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -3888,6 +3977,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -3911,6 +4003,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
@@ -3933,6 +4028,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3953,6 +4051,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -3975,6 +4076,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string/>
@@ -3995,6 +4099,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -4105,6 +4212,9 @@ p, li { white-space: pre-wrap; }
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <item>
        <property name="text">
         <string>Auto</string>
@@ -4130,6 +4240,9 @@ p, li { white-space: pre-wrap; }
         <family>Garamond</family>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <item>
        <property name="text">
@@ -4372,6 +4485,9 @@ p, li { white-space: pre-wrap; }
         <bold>false</bold>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="text">
        <string>+</string>
       </property>
@@ -4393,6 +4509,9 @@ p, li { white-space: pre-wrap; }
         <italic>false</italic>
         <bold>false</bold>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
        <string>-</string>
@@ -4451,6 +4570,59 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
+     <zorder>comboBox_ControlKeyRoll</zorder>
+     <zorder>comboBox_ControlKeyJump</zorder>
+     <zorder>comboBox_ControlKeyCrouch</zorder>
+     <zorder>comboBox_ControlKeyResetCamera</zorder>
+     <zorder>comboBox_ControlKeySwitchItem</zorder>
+     <zorder>comboBox_ControlKeyAttack</zorder>
+     <zorder>comboBox_ControlKeyStrongAttack</zorder>
+     <zorder>comboBox_ControlKeyGuard</zorder>
+     <zorder>comboBox_ControlKeySkill</zorder>
+     <zorder>comboBox_ControlKeyUseItem</zorder>
+     <zorder>comboBox_ControlKeyUse</zorder>
+     <zorder>label_20</zorder>
+     <zorder>label_21</zorder>
+     <zorder>label_22</zorder>
+     <zorder>label_23</zorder>
+     <zorder>label_25</zorder>
+     <zorder>label_26</zorder>
+     <zorder>label_27</zorder>
+     <zorder>label_28</zorder>
+     <zorder>label_29</zorder>
+     <zorder>label_30</zorder>
+     <zorder>label_31</zorder>
+     <zorder>comboBox_RecoveryHotkey</zorder>
+     <zorder>label_19</zorder>
+     <zorder>checkBox_RecoveryKeyAlt</zorder>
+     <zorder>checkBox_RecoveryKeyCtrl</zorder>
+     <zorder>checkBox_RecoveryKeyShift</zorder>
+     <zorder>comboBox_ControlKeyMove_Down</zorder>
+     <zorder>comboBox_ControlKeyMove_Left</zorder>
+     <zorder>comboBox_ControlKeyMove_Right</zorder>
+     <zorder>label_33</zorder>
+     <zorder>label_34</zorder>
+     <zorder>label_35</zorder>
+     <zorder>comboBox_MagicSearchMode</zorder>
+     <zorder>label_36</zorder>
+     <zorder>label_18</zorder>
+     <zorder>label_39</zorder>
+     <zorder>label_40</zorder>
+     <zorder>label_43</zorder>
+     <zorder>label_44</zorder>
+     <zorder>label_46</zorder>
+     <zorder>button_FontSizeUp</zorder>
+     <zorder>button_FontSizeDown</zorder>
+     <zorder>label_53</zorder>
+     <zorder>label_45</zorder>
+     <zorder>comboBox_EquipmentSearchMode</zorder>
+     <zorder>label_37</zorder>
+     <zorder>comboBox_ControlKeyMove_Up</zorder>
+     <zorder>label_24</zorder>
+     <zorder>label_32</zorder>
+     <zorder>comboBox_ControlKeySwitchSpell</zorder>
+     <zorder>spinBox_StandardPauseTime</zorder>
+     <zorder>label_4</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_About">
      <widget class="QLabel" name="label_16">
@@ -4515,6 +4687,9 @@ p, li { white-space: pre-wrap; }
       <kerning>true</kerning>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true"/>
     </property>
@@ -4531,7 +4706,7 @@ p, li { white-space: pre-wrap; }
       <x>60</x>
       <y>250</y>
       <width>281</width>
-      <height>431</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -4754,6 +4929,9 @@ p, li { white-space: pre-wrap; }
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
     <item>
      <property name="text">
       <string/>
@@ -4813,6 +4991,9 @@ p, li { white-space: pre-wrap; }
       <bold>false</bold>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Settings</string>
     </property>
@@ -4832,6 +5013,9 @@ p, li { white-space: pre-wrap; }
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="text">
      <string>Up</string>
     </property>
@@ -4850,6 +5034,9 @@ p, li { white-space: pre-wrap; }
       <family>Garamond</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="text">
      <string>Down</string>
@@ -4968,6 +5155,9 @@ p, li { white-space: pre-wrap; }
       <italic>false</italic>
       <bold>false</bold>
      </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="text">
      <string>Turn off</string>
