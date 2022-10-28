@@ -1,11 +1,13 @@
 """
 
 """
+import sys
+import traceback
 import time
-from pynput.keyboard import Key, Controller
-import keyboard
-from savefile import SaveSlot
 from win32gui import GetWindowText, GetForegroundWindow
+import keyboard
+from pynput.keyboard import Key, Controller
+from savefile import SaveSlot
 
 pynput_in = Controller()
 
@@ -166,50 +168,36 @@ class Macro:
             'equipment': {
                 'instant_action': '',
                 'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0,
-                                   'current_position': 0},
+                                   'name': '', 'position': 0},
                 'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0,
-                                   'current_position': 0},
+                                   'name': '', 'position': 0},
                 'weapon_right_3': {'action': 'skip', 'not_enough_stats': False,
-                                   'name': '', 'position': 0,
-                                   'current_position': 0},
+                                   'name': '', 'position': 0},
                 'weapon_left_1': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0,
-                                  'current_position': 0},
+                                  'name': '', 'position': 0},
                 'weapon_left_2': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0,
-                                  'current_position': 0},
+                                  'name': '', 'position': 0},
                 'weapon_left_3': {'action': 'skip', 'not_enough_stats': False,
-                                  'name': '', 'position': 0,
-                                  'current_position': 0},
+                                  'name': '', 'position': 0},
                 'armor_head': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'armor_chest': {'action': 'skip', 'not_enough_stats': False,
-                                'name': '', 'position': 0,
-                                'current_position': 0},
+                                'name': '', 'position': 0},
                 'armor_arms': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'armor_legs': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'talisman_1': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'talisman_2': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'talisman_3': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0,
-                               'current_position': 0},
+                               'name': '', 'position': 0},
                 'talisman_4': {'action': 'skip', 'not_enough_stats': False,
-                               'name': '', 'position': 0, 'current_position': 0}
+                               'name': '', 'position': 0}
             },
             'magic': {
                 'spell_number': 1,
-                'current_number': 0,
                 'instant_cast_right': False,
                 'instant_cast_left': False
             },
@@ -264,17 +252,15 @@ class Macro:
 
         """
 
-        # TODO: не забыть вернутьw
-        current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        if 'elden' not in current_window_text.lower():  # \
-            # and 'melina' not in current_window_text.lower():
-            return
+        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        # if 'elden' not in current_window_text.lower():
+        #     print('Hotkey not started because Elden Ring is not open.')
+        #     return
 
         self.interrupted = False
         time_start = time.time()
         print('=' * 40)
-        print('Macro:   ',
-              f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
+        print('Macro:   ', f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
         print('Start:   ', time.ctime(time_start))
 
         # Nobody knows what can happen inside keylines mechanism
@@ -283,8 +269,8 @@ class Macro:
             self.form_keyline()
             self.execute_keyline()
         except Exception as e:
-            print('Exception!')
-            print(e)
+            print('Exception: ', e)
+            print(traceback.format_exc())
 
         time_end = time.time()
         print('End:     ', time.ctime(time_end))
@@ -353,10 +339,11 @@ class Macro:
         # 0.1. If we're in manual mode, but have some cells to 'equip' having
         # no current position, that means we need to clear them to put to
         # position 1.
+        currents = self.saveslot.current_equipment
         if search_mode != 'auto':
             are_there_cells_to_clear = False
             for name, value in cells.items():
-                if value['action'] == 'equip' and not value['current_position']:
+                if value['action'] == 'equip' and not currents[name]:
                     cells[name]['keyline'] = 'r'
                     are_there_cells_to_clear = True
                     break
@@ -365,10 +352,15 @@ class Macro:
                 keys_list.append('esc|esc|e')  # Re-enter to inventory.
 
         # 1. Performing actions for cells.
-        self.assign_keylines_to_cells(cells, search_mode)
+        self.assign_keylines_to_cells(cells, search_mode, currents)
         keys_list.append(self.keyline_for_cells(cells))
 
-        # 2. Quit menu.
+        # Making last cell handling little quicker if we can.
+        last_cell_keyline = keys_list[-1]
+        if last_cell_keyline.endswith('|q|pause200'):
+            keys_list[-1] = keys_list[-1].replace('|q|pause200', '')
+
+        # 2. Quiting menu.
         keys_list.append('esc')
 
         # 3. Instant action.
@@ -439,6 +431,7 @@ class Macro:
             cells['talisman_4']['action_after'] = ''
 
         # Gather keylines from relevant cells and keys to move further.
+        # TODO: дает пустую строку, когда 1 предмет в инвентаре
         for key, value in cells.items():
             if value['keyline']:
                 keys_list.append(value['keyline'])
@@ -450,13 +443,18 @@ class Macro:
         return '|'.join(keys_list)
 
     @staticmethod
-    def assign_keylines_to_cells(cells: dict, search_mode: str) -> None:
+    def assign_keylines_to_cells(cells: dict, search_mode: str, currents: dict) -> None:
         """
         Generates a keyline to each cell in dict concidering it's inner
         settins. Puts a keyline to cell's 'keyline' key.
         """
 
+        count = len(cells)
+        pos_in_dict = 0
+
         for key, value in cells.items():
+
+            pos_in_dict += 1
 
             if value['action'] == 'skip':
                 continue
@@ -472,7 +470,7 @@ class Macro:
             else:
                 # If we're in "semi-manual" mode, we don't need to change items
                 # if we already have it in our cell slots.
-                current_position = value['current_position']
+                current_position = currents[key]
                 if current_position == value['position']:
                     continue
 
@@ -525,7 +523,7 @@ class Macro:
 
             # Remembering current position in "semi-manual" mode.
             if search_mode != 'auto':
-                value['current_position'] = goal_position
+                currents[key] = goal_position
 
     def form_keyline_magic(self):
         settings = self.settings['magic']
@@ -629,13 +627,13 @@ class Macro:
                 if macro is not None:
                     keyline = macro['keyline']
 
-            # Searching in other macroses in this save-file
+            # Searching in other macros in this save-file...
             if keyline == '':
-                macro = next((x for x in self.saveslot.macros if
-                              x.name.lower() == command), None)
-                if macro is not None:
-                    macro.form_keyline()
-                    keyline = macro.macro_keyline
+                for macro in self.saveslot.macros:
+                    name = macro.name
+                    if command.lower() == name.lower():
+                        macro.form_keyline()
+                        keyline = macro.macro_keyline
 
             if keyline == '':
                 self.interrupted = True
@@ -664,13 +662,24 @@ class Macro:
         Additional press time can be made with 'pressN'.
         """
 
-        sleep_time = self.pause_time / 1000
+        window_title_before_executing = GetWindowText(GetForegroundWindow())
+
         keyline = self.macro_keyline
         print('Keyline: ', keyline)
         key_presses = keyline.split('|')
 
         # Execution.
-        for key_press in key_presses:
+        for i, key_press in enumerate(key_presses):
+
+            sleep_time = self.pause_time / 1000
+
+            # Checking every several keypress was window changed or not.
+            # If changed: it's better to stop executing.
+            if i % 4:
+                window_title = GetWindowText(GetForegroundWindow())
+                if window_title_before_executing != window_title:
+                    print('Window changed. Macro execution was broken.')
+                    break
 
             if self.interrupted:
                 break
@@ -681,6 +690,12 @@ class Macro:
                 time.sleep(pause_time / 1000)
                 continue
 
+            # Pause after command.
+            if '_pause' in key_press:
+                    parts = key_press.partition('_pause')
+                    sleep_time = int(parts[2].strip()) / 1000
+                    key_press = parts[0].strip()
+
             # Additional press time.
             press_time = sleep_time
             if '_press' in key_press:
@@ -690,7 +705,11 @@ class Macro:
 
             # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
             if key_press in self.savefile.game_controls.keys():
+                key_for_message = key_press
                 key_press = self.savefile.game_controls[key_press].lower()
+                if key_for_message and not key_press:
+                    print(f'Key "{key_for_message}" was not found in ER controls. Check Melina\'s Fingers settings.')
+                    break
 
             # We'll just skip empty keys to not get to exception.
             if key_press.strip() == '':
@@ -703,7 +722,6 @@ class Macro:
             # Key presses execution.
             keys_for_pynput = ['up', 'left', 'right', 'down']
             if key_press in keys_for_pynput:
-                # key_press = keyboard.key_to_scan_codes(key_press)
                 if key_press in non_letter_keys():
                     key_press = Key[key_press]
                 pynput_in.press(key_press)
@@ -805,7 +823,7 @@ def built_in_macros() -> list:
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
-        # TODO: Посмотреть, можно ли уменьшить 4000
+        # TODO: Can I decrease pause4000?
         {'name': 'Six invasion attempts (wide)',
          'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
          'comment': 'Performs an attempt to invade as bloody finger,\n'

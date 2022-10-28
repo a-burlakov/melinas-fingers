@@ -2,48 +2,60 @@ import inspect
 import json
 import sys
 import os
+import pickle
+from datetime import datetime
 from pathlib import Path
+from pynput import keyboard
 import PyQt5.QtGui
 from mainWindow import Ui_MainWindow
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_buttons_with_codes
 from savefile import SaveFile, SaveSlot
-from pynput import keyboard
-import pickle
-from datetime import datetime
 
 # This set is constantly being filled and cleared with pressed keyboard keys.
 # At the moment when some macro key combination are in this set, macro is
 # going to be executed.
-KEY_PRESSES = set()
+CURRENT_KEY_COMBINATION = set()
+
+# This set acts like a buffer for already pressed key. It's needed to
+# prevent hotkeys to start up if the key is pressed for long: that would
+# start 69 hotkeys in a row, causing a mess.
+LAST_KEY_COMBINATION = set()
 
 # This dict is filled in 'hook_hotkeys()' and keep frozen sets of hotkey
-# keyboard pressesas keys and fuctions to call as values. If hotkey keyboard
-# presses are in current KEY_PRESSES, then corresponding function is called.
+# keyboard presses keys and functions to call as values. If hotkey keyboard
+# presses are in current CURRENT_KEY_COMBINATION, then corresponding function is called.
 HOTKEYS = {}
 
 
 def pynput_on_press(key):
+
+    global LAST_KEY_COMBINATION
+    global CURRENT_KEY_COMBINATION
+
     if hasattr(key, 'vk'):
-        KEY_PRESSES.add(key.vk)
+        CURRENT_KEY_COMBINATION.add(key.vk)
     else:
-        KEY_PRESSES.add(key.value.vk)
+        CURRENT_KEY_COMBINATION.add(key.value.vk)
+
+    if CURRENT_KEY_COMBINATION == LAST_KEY_COMBINATION:
+        return
+
+    LAST_KEY_COMBINATION = CURRENT_KEY_COMBINATION.copy()
 
     for combination, func in HOTKEYS.items():
 
-        if len(KEY_PRESSES) == 3:
-            print(KEY_PRESSES)
-        if combination <= KEY_PRESSES:
-            print('ok')
+        if combination <= CURRENT_KEY_COMBINATION:
             func()
-            KEY_PRESSES.clear()
+            CURRENT_KEY_COMBINATION.clear()
             break
 
 
 def pynput_on_release(key):
     try:
-        KEY_PRESSES.clear()
+        CURRENT_KEY_COMBINATION.clear()
+        LAST_KEY_COMBINATION.clear()
     except KeyError:
         pass
 
@@ -89,7 +101,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @staticmethod
     def available_game_control_buttons() -> tuple:
         """
-        List of keyboard buttons that can be used to assign in Elden Ring.
+        List of keyboard buttons that can be used to assign in Elden Ring
+        and are used on control panel on "Settings" page.
         """
 
         return (
@@ -214,9 +227,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.settings['diy']['macro'] = ''
         macros.append(macro)
 
-        # Filthy teabagging.
+        # Teabagging.
         macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Filthy teabagging'
+        macro.name = 'Teabagging'
         macro.type = 'DIY'
         macro.hotkey = 'F4'
         macro.hotkey_ctrl = False
@@ -251,13 +264,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Gestures.
         for i in range(1, 7):
+
+            hotkeys = {
+                1: 'Num7',
+                2: 'Num8',
+                3: 'Num4',
+                4: 'Num5',
+                5: 'Num1',
+                6: 'Num2'
+            }
+
             macro = Macro(self.savefile.current_saveslot)
             macro.name = f'Gesture {str(i)}'
             macro.type = 'Built-in'
-            macro.hotkey = str(i)
-            macro.hotkey_ctrl = False
+            macro.hotkey = hotkeys[i]
+            macro.hotkey_ctrl = True
             macro.hotkey_shift = False
-            macro.hotkey_alt = True
+            macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
             macros.append(macro)
 
@@ -287,6 +310,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         HOTKEYS.clear()
+        print('Hotkeys are cleared.')
 
         # If we're in 'off' mode, then not hooking anything.
         if self.turn_off:
@@ -330,7 +354,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                key=lambda x: len(x[0]),
                                reverse=True):
             HOTKEYS[frozenset(vk)] = func
-        print(HOTKEYS)
+
+        print('Hotkeys are hooked.')
 
     def refresh_currents(self):
         """
@@ -338,15 +363,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         # Equipment.
-        settings_to_recover = [
-            'weapon_right_1', 'weapon_right_2', 'weapon_right_3',
-            'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
-            'armor_head', 'armor_chest', 'armor_arms', 'armor_legs',
-            'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4'
-        ]
-        for macro in self.savefile.current_saveslot.macros:
-            for setting in settings_to_recover:
-                macro.settings['equipment'][setting]['current_position'] = 0
+        for k in self.savefile.current_saveslot.current_equipment.keys():
+            self.savefile.current_saveslot.current_equipment[k] = 0
 
         # Magic.
         self.savefile.current_saveslot.current_spell = 0
@@ -956,9 +974,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.hook_hotkeys()
         self.set_macros_settings_from_window()
 
-        self.MacrosTable_Refresh()
-        self.MacroArea_Refresh()
-        self.Pages_SetPage()
 
         # Selecting first macro.
         self.tableWidget_Macros.clearSelection()
@@ -968,6 +983,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_Macros.selectRow(0)
             self.current_macro = self.savefile.current_saveslot.macros[0]
         self.tableWidget_Macros.blockSignals(False)
+
+        self.MacrosTable_Refresh()
+        self.MacroArea_Refresh()
+        self.Pages_SetPage()
 
     def refresh_all(self) -> None:
         """
@@ -1808,11 +1827,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 def start_application():
 
     # TODO: Should make a normal size form in Qt Designer to get rid of scaling.
-    # While making Melina's Fingers I messed up a little bit and built interface
-    # with the laptop with high resolution and scale setting (2560x1600, 150%).
-    # Thats's why windows size is tiny (it was okay at my laptop).
-    # To compensate my mistake without rebuild all elements I just put a scale
-    # factor on application.
+    #  While making Melina's Fingers I messed up a little bit and built interface
+    #  with the laptop with high resolution and scale setting (2560x1600, 150%).
+    #  Thats's why windows size is tiny (it was okay at my laptop).
+    #  To compensate my mistake without rebuild all elements I just put a scale
+    #  factor on application.
 
     os.environ["QT_SCALE_FACTOR"] = "1.3"
 

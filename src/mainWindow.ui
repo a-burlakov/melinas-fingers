@@ -513,7 +513,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -4458,7 +4458,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Auto &lt;/span&gt;mode current item is removed and new one is being searched form the start of list. Slow but stable. &lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Semi-manual &lt;/span&gt;mode Melina's Fingers remembers your current item. Next search will be calculated based on your current item position. Very fast but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you''ll have to clear Melina's Fingers memory using &lt;span style=&quot; color:#b4a68a;&quot;&gt;Recovery &lt;/span&gt;key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Auto &lt;/span&gt;mode current item is removed and new one is being searched form the start of list. Slow but stable. &lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Semi-manual &lt;/span&gt;mode Melina's Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you''ll have to clear Melina's Fingers memory using &lt;span style=&quot; color:#b4a68a;&quot;&gt;Recovery &lt;/span&gt;key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -4570,6 +4570,31 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
+     <widget class="QPushButton" name="button_ControlsReload">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>330</y>
+        <width>171</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>Reload from save file</string>
+      </property>
+     </widget>
      <zorder>comboBox_ControlKeyRoll</zorder>
      <zorder>comboBox_ControlKeyJump</zorder>
      <zorder>comboBox_ControlKeyCrouch</zorder>
@@ -4623,6 +4648,7 @@ p, li { white-space: pre-wrap; }
      <zorder>comboBox_ControlKeySwitchSpell</zorder>
      <zorder>spinBox_StandardPauseTime</zorder>
      <zorder>label_4</zorder>
+     <zorder>button_ControlsReload</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_About">
      <widget class="QLabel" name="label_16">
@@ -4654,6 +4680,81 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_GitHub">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>280</y>
+        <width>71</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>GitHub</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_PayPal">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>280</y>
+        <width>71</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>PayPal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_Nexus">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>280</y>
+        <width>71</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>Nexus</string>
       </property>
      </widget>
     </widget>
@@ -4706,7 +4807,7 @@ p, li { white-space: pre-wrap; }
       <x>60</x>
       <y>250</y>
       <width>281</width>
-      <height>421</height>
+      <height>425</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -4977,7 +5078,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>1040</x>
-      <y>40</y>
+      <y>30</y>
       <width>71</width>
       <height>25</height>
      </rect>
@@ -5142,7 +5243,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>960</x>
-      <y>40</y>
+      <y>30</y>
       <width>71</width>
       <height>25</height>
      </rect>
@@ -5161,6 +5262,31 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Turn off</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_About">
+    <property name="geometry">
+     <rect>
+      <x>1040</x>
+      <y>60</y>
+      <width>71</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="text">
+     <string>About</string>
     </property>
    </widget>
    <zorder>graphicsView_2</zorder>
@@ -5187,6 +5313,7 @@ p, li { white-space: pre-wrap; }
    <zorder>label_7</zorder>
    <zorder>label_8</zorder>
    <zorder>button_TurnOnOff</zorder>
+   <zorder>button_About</zorder>
   </widget>
  </widget>
  <resources>

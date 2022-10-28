@@ -5,8 +5,8 @@ TODO: need to describe a save-file map
 
 import os
 import re
-import datasheets
 from pathlib import Path
+import datasheets
 
 def endian_turn(hex_string: str) -> str:
     """
@@ -130,7 +130,7 @@ class SaveFile:
         Returns HEX-ranges of places in save-file that keeps controls for some
         actions that could be used in macros.
         """
-        # TODO: поправить мувы
+
         return {
             'move_up': 0x019034dd,
             'move_down': 0x019034f1,
@@ -361,9 +361,23 @@ class SaveSlot:
         self.weapons_manual: list = []
         self.weapons_manual_mode: bool = False
         self.spells: list = []
-        self.current_spell: int = 0
-        self.search_mode_equipment: str = 'auto'
         self.search_mode_magic: str = 'auto'
+        self.search_mode_equipment: str = 'auto'
+        self.current_spell: int = 0
+        self.current_equipment = {'weapon_right_1': 0,
+                                  'weapon_right_2': 0,
+                                  'weapon_right_3': 0,
+                                  'weapon_left_1': 0,
+                                  'weapon_left_2': 0,
+                                  'weapon_left_3': 0,
+                                  'armor_head': 0,
+                                  'armor_chest': 0,
+                                  'armor_arms': 0,
+                                  'armor_legs': 0,
+                                  'talisman_1': 0,
+                                  'talisman_2': 0,
+                                  'talisman_3': 0,
+                                  'talisman_4': 0}
 
     @staticmethod
     def inventory_and_chest_separator() -> bytes:
@@ -425,6 +439,7 @@ class SaveSlot:
 
         inventory_list = []
         for equipment in all_equipment_having:
+
             equipment_name = equipment[0]
             equipment_id = equipment[1]
             equipment_type = equipment[2]
@@ -443,7 +458,7 @@ class SaveSlot:
 
             reg_expression = b'.{2}(?=' + id_for_reg + b')'
             result = re.finditer(reg_expression,
-                                 slot_data[:instances_range[0] + separator_pos],flags=re.MULTILINE)
+                                 slot_data[:instances_range[0] + separator_pos])
 
             def find_all(a_str, sub):
                 start = 0
@@ -574,10 +589,6 @@ class SaveSlot:
                                    + SaveFile.range_before_saveslots())
 
             inventory_order_id = position_in_file[2:]
-
-            # TODO: Поменять position на 'position_in_file'.
-            #   если пото везде order поменять на position, то  проблема
-            #   с порядком должна уйти.
 
             instance_dict = {}
             instance_dict.setdefault('type', 'spells')
