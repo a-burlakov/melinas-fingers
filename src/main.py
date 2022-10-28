@@ -9,10 +9,43 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_buttons_with_codes
 from savefile import SaveFile, SaveSlot
-import keyboard
-from pynput import  keyboard as keyb
+from pynput import keyboard
 import pickle
 from datetime import datetime
+
+# This set is constantly being filled and cleared with pressed keyboard keys.
+# At the moment when some macro key combination are in this set, macro is
+# going to be executed.
+KEY_PRESSES = set()
+
+# This dict is filled in 'hook_hotkeys()' and keep frozen sets of hotkey
+# keyboard pressesas keys and fuctions to call as values. If hotkey keyboard
+# presses are in current KEY_PRESSES, then corresponding function is called.
+HOTKEYS = {}
+
+
+def pynput_on_press(key):
+    if hasattr(key, 'vk'):
+        KEY_PRESSES.add(key.vk)
+    else:
+        KEY_PRESSES.add(key.value.vk)
+
+    for combination, func in HOTKEYS.items():
+
+        if len(KEY_PRESSES) == 3:
+            print(KEY_PRESSES)
+        if combination <= KEY_PRESSES:
+            print('ok')
+            func()
+            KEY_PRESSES.clear()
+            break
+
+
+def pynput_on_release(key):
+    try:
+        KEY_PRESSES.clear()
+    except KeyError:
+        pass
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -162,11 +195,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.hotkey_ctrl = False
         macro.hotkey_shift = False
         macro.hotkey_alt = True
-        macro.settings['diy']['macro'] = 'w_press60\n' \
-                                         'a_press60\n' \
-                                         's_press60\n' \
-                                         'd_press60\n' \
-                                         'w_press60\n'
+        macro.settings['diy']['macro'] = 'w_press50\n' \
+                                         'a_press50\n' \
+                                         's_press50\n' \
+                                         'd_press50\n' \
+                                         'w_press50\n' \
+                                         'pause20\n' * 6
         macros.append(macro)
 
         # MLG Katana 360 no scope.
@@ -252,91 +286,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        def hook_for_elden_ring(hotkey: str, func) -> None:
-            """
-            Hooks a hotkey in a way that fits to our process.
-            """
-
-            # Need to rename some keys to make 'keyboard' eat it.
-            # hotkey = hotkey.replace(',', 'comma')
-
-            # As in Elden ring we can use hotkey during movement, we need to
-            # hook a hotkey to any movement combination we can have, including
-            # all 8 directions and sprint button.
-            # That's awful, but I don't know a method to do it differently yet.
-            # up = self.savefile.game_controls['move_up']
-            # down = self.savefile.game_controls['move_down']
-            # left = self.savefile.game_controls['move_left']
-            # right = self.savefile.game_controls['move_right']
-            # sprint = self.savefile.game_controls['roll']
-            # move_key_combos = ['', f'{up}+', f'{left}+', f'{down}+', f'{right}+', f'{sprint}+',
-            #                    f'{up}+{left}+', f'{up}+{right}+',
-            #                    f'{right}+{down}+', f'{left}+{down}+',
-            #                    f'{sprint}+{up}+', f'{sprint}+{down}+',
-            #                    f'{sprint}+{right}+', f'{sprint}+{left}+',
-            #                    f'{sprint}+{up}+{left}+', f'{sprint}+{up}+{right}+',
-            #                    f'{sprint}+{right}+{down}+', f'{sprint}+{left}+{down}+']
-
-            # for move_key in move_key_combos:
-            #     # scan_code = keyboard.parse_hotkey_combinations(move_key + hotkey)
-            #     # pass
-            #     # while not isinstance(scan_code[-1], int):
-            #     #     scan_code = scan_code[-1]
-            #
-            #     keyboard.add_hotkey(move_key + hotkey,
-            #                         func,
-            #                         suppress=True,
-            #                         trigger_on_release=True)
-
-        # Try block, because 'Keyboard' clearing methods can call
-        # an unexpected exception if there's no assigned hotkeys.
-        try:
-            keyboard.remove_all_hotkeys()
-            keyboard._hotkeys.clear()
-            print('All keyhooks were removed.')
-        except:
-            pass
-
         HOTKEYS.clear()
 
         # If we're in 'off' mode, then not hooking anything.
         if self.turn_off:
             return
 
+        # We need to gather all possible hotkeys and sort them by hotkey
+        # length. It's needed for longer hotkeys (e.g. Ctrl+Shift+Q) would have
+        # priority over shorter ones (e.g. Ctrl+Q).
+        list_to_hotkeys = []
+
         if self.savefile.recovery_hotkey:
             dict_vk = []
             recovery_hotkey = self.savefile.recovery_hotkey
-            if self.savefile.recovery_hotkey_alt:
-                dict_vk.append(164)
             if self.savefile.recovery_hotkey_shift:
                 dict_vk.append(160)
             if self.savefile.recovery_hotkey_ctrl:
                 dict_vk.append(162)
+            if self.savefile.recovery_hotkey_alt:
+                dict_vk.append(164)
             dict_vk.append(available_buttons_with_codes()[recovery_hotkey])
-            HOTKEYS[frozenset(dict_vk)] = self.refresh_currents
+            list_to_hotkeys.append((dict_vk, self.refresh_currents,))
 
         for macro in self.savefile.current_saveslot.macros:
 
-
             if not macro.hotkey or not macro.type:
                 continue
+
             hotkey = macro.hotkey
             dict_vk = []
             dict_vk.append(available_buttons_with_codes()[hotkey])
-            if macro.hotkey_alt:
-                dict_vk.append(164)
             if macro.hotkey_shift:
                 dict_vk.append(160)
             if macro.hotkey_ctrl:
                 dict_vk.append(162)
-            HOTKEYS[frozenset(dict_vk)] = macro.execute
+            if macro.hotkey_alt:
+                dict_vk.append(164)
+            list_to_hotkeys.append((dict_vk, macro.execute,))
 
+        # Hooking gathered hotkeys.
+        for vk, func in sorted(list_to_hotkeys,
+                               key=lambda x: len(x[0]),
+                               reverse=True):
+            HOTKEYS[frozenset(vk)] = func
         print(HOTKEYS)
-        # # Condition helps to correct a situation when several hotkeys
-        # # are assign to one key.
-        # if hotkey_string not in keyboard._hotkeys:
-        #     hook_for_elden_ring(hotkey_string, macro.execute)
-        #     print(f'{macro.name} hooked to "{hotkey_string}"')
 
     def refresh_currents(self):
         """
@@ -647,6 +641,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes the macros table on a left side of the window.
         """
 
+        self.tableWidget_Macros.blockSignals(True)
+
         self.button_AddMacros.setEnabled(self.savefile.current_saveslot.number > 0)
         self.button_DeleteMacros.setEnabled(self.savefile.current_saveslot.number > 0)
 
@@ -680,7 +676,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Selecting current macro.
         self.tableWidget_Macros.clearSelection()
         model = self.tableWidget_Macros.model()
-        self.tableWidget_Macros.blockSignals(True)
+
         if current_macro_id:
             for row in range(model.rowCount()):
                 index = model.index(row, 0)
@@ -688,6 +684,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if macro_id == current_macro_id:
                     self.tableWidget_Macros.selectRow(row)
                     break
+
         self.tableWidget_Macros.blockSignals(False)
 
     def MacroName_OnChange(self):
@@ -1824,39 +1821,12 @@ def start_application():
     sys.exit(app.exec_())
 
 
-# This set is constantly being filled and cleared with pressed keyboard keys.
-# At the moment when some macro key combination are in this set, macro is
-# going to be executed.
-current_keyboard_combination = set()
-HOTKEYS = {}
-
-
-def on_press(key):
-    if hasattr(key, 'vk'):
-        current_keyboard_combination.add(key.vk)
-    else:
-        current_keyboard_combination.add(key.value.vk)
-    print(current_keyboard_combination)
-
-    for combination, func in HOTKEYS.items():
-        if combination <= current_keyboard_combination:
-            func()
-            current_keyboard_combination.clear()
-            break
-
-def on_release(key):
-    pass
-    try:
-        current_keyboard_combination.clear()
-    except KeyError:
-        pass
-
-
 if __name__ == '__main__':
 
-    listener = keyb.Listener(
-        on_press=on_press,
-    on_release=on_release)
+    # Startin 'pyntut' listener to read player's keypresses
+    listener = keyboard.Listener(
+        on_press=pynput_on_press,
+        on_release=pynput_on_release)
     listener.start()
 
     start_application()

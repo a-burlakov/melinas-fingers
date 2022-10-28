@@ -776,7 +776,7 @@ def built_in_macros() -> list:
                     'They hated you because you\'re Moonveil user, but now\n'
                     'you actually deserve this.'},
         {'name': 'Reverse backstep',
-         'keyline': 'roll|pause5|move_down',
+         'keyline': 'roll|pause15|move_down',
          'comment': 'Performs reverse backstep. Good for mixups and acting cool in PvP.\n'
                     '\n'
                     'Be like your favourite YouTube player without\n'
