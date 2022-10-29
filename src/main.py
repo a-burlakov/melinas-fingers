@@ -92,6 +92,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
         self.refresh_all()
+        self.refresh_currents()
+        self.set_font_size()
 
         # Showing window on top.
         self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
@@ -370,7 +372,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.savefile.current_saveslot.current_spell = 0
 
         print('=' * 40)
-        print('Currents were refreshed.')
+        print('Current positions were refreshed.')
+
+    def ControlsReload(self) -> None:
+        """
+
+        """
+
+        self.savefile.read_game_controls()
+        self.Pages_Refresh_Settings()
 
     def init_ui(self):
         """
@@ -511,11 +521,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_ControlKeyUseItem.addItem(key)
             self.comboBox_ControlKeyUse.addItem(key)
 
+        self.button_ControlsReload.clicked.connect(self.ControlsReload)
+
         self.spinBox_StandardPauseTime.valueChanged.connect(self.StandardPauseTime_OnChange)
         self.button_FontSizeUp.clicked.connect(lambda x: self.adjust_font_size(1))
         self.button_FontSizeDown.clicked.connect(lambda x: self.adjust_font_size(-1))
-
-        self.set_font_size()
 
     def set_font_size(self) -> None:
         """
@@ -549,7 +559,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # If font adjustment is too much, we're returning to opposite position.
         if abs(self.savefile.font_size_adjustment) > 4:
             adjust = adjust - self.savefile.font_size_adjustment
-            self.font_size_adjustment = 0
+            self.savefile.font_size_adjustment = 0
 
         for name, obj in inspect.getmembers(self):
             if isinstance(obj, QLabel) \
@@ -593,7 +603,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.savefile.recovery_hotkey = '~'
 
         if self.savefile.standard_pause_time == 0:
-            self.savefile.standard_pause_time = 20
+            self.savefile.standard_pause_time = 50
 
     def SaveSlotsComboBox_Refresh(self):
         """
@@ -984,9 +994,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.current_macro = self.savefile.current_saveslot.macros[0]
         self.tableWidget_Macros.blockSignals(False)
 
-        self.MacrosTable_Refresh()
-        self.MacroArea_Refresh()
-        self.Pages_SetPage()
+        self.Pages_RefreshAll()
 
     def refresh_all(self) -> None:
         """
@@ -1568,9 +1576,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_MagicInstantUseLeftHand.setChecked(magic_settings['instant_cast_left'])
         self.checkBox_MagicInstantUseRightHand.setChecked(magic_settings['instant_cast_right'])
 
+        self.tableWidget_AvaiableMagic.blockSignals(True)
         self.tableWidget_AvaiableMagic.clearSelection()
         if magic_settings['spell_number']:
             self.tableWidget_AvaiableMagic.selectRow(magic_settings['spell_number']-1)
+        self.tableWidget_AvaiableMagic.blockSignals(False)
 
     def AvailableMagic_OnChange(self) -> None:
         """

@@ -346,7 +346,7 @@ class Macro:
                 if value['action'] == 'equip' and not currents[name]:
                     cells[name]['keyline'] = 'r'
                     are_there_cells_to_clear = True
-                    break
+
             if are_there_cells_to_clear:
                 keys_list.append(self.keyline_for_cells(cells))
                 keys_list.append('esc|esc|e')  # Re-enter to inventory.
@@ -356,9 +356,10 @@ class Macro:
         keys_list.append(self.keyline_for_cells(cells))
 
         # Making last cell handling little quicker if we can.
+        last_quit_piece = '|q|pause200'
         last_cell_keyline = keys_list[-1]
-        if last_cell_keyline.endswith('|q|pause200'):
-            keys_list[-1] = keys_list[-1].replace('|q|pause200', '')
+        if last_cell_keyline.endswith(last_quit_piece):
+            keys_list[-1] = keys_list[-1][:-len(last_quit_piece)]
 
         # 2. Quiting menu.
         keys_list.append('esc')
@@ -465,12 +466,13 @@ class Macro:
             # Handling 'equip' action.
             keys_list = []
 
-            if search_mode == 'auto':
-                current_position = 1  # Standard position for "auto" mode.
-            else:
-                # If we're in "semi-manual" mode, we don't need to change items
-                # if we already have it in our cell slots.
-                current_position = currents[key]
+            current_position = 1 # Standard position for "auto" mode.
+
+            # If we're in "semi-manual" mode, we don't need to change items
+            # if we already have it in our cell slots.
+            if search_mode != 'auto':
+                if currents[key]:
+                    current_position = currents[key]
                 if current_position == value['position']:
                     continue
 
