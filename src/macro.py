@@ -200,6 +200,10 @@ class Macro:
                 'instant_cast_right': False,
                 'instant_cast_left': False
             },
+            'items': {
+                'item_number': 1,
+                'instant_use': False
+            },
             'built-in': {
                 'macro_name': built_in_macros()[0]['name']
             },
@@ -286,6 +290,8 @@ class Macro:
             self.form_keyline_equipment()
         elif self.type == 'Magic':
             self.form_keyline_magic()
+        elif self.type == 'Items':
+            self.form_keyline_items()
         elif self.type == 'Built-in':
             self.form_keyline_builtin()
         elif self.type == 'DIY':
@@ -543,18 +549,19 @@ class Macro:
                 currents[key] = goal_position
 
     def form_keyline_magic(self):
+
         settings = self.settings['magic']
         if not settings['spell_number']:
             return
 
-        search_mode = self.saveslot.search_mode_magic
+        search_mode = self.saveslot.search_mode_magic.lower()
         cur_spell = self.saveslot.current_spell
         goal_spell = settings['spell_number']
         total_spells = len(self.saveslot.spells)
         self.savefile.make_journal_entry(f'Search mode - {search_mode}\n'
-                                         f'Total spells - {total_spells})\n'
-                                         f'Current spell - {cur_spell})\n'
-                                         f'Goal spell - {goal_spell})')
+                                         f'Total spells - {total_spells}\n'
+                                         f'Current spell - {cur_spell}\n'
+                                         f'Goal spell - {goal_spell}')
 
         # If current spell is spell we need, then we just need to
         # check "instant cast" afterwards.
@@ -585,8 +592,55 @@ class Macro:
             self.macro_keyline += '|guard'
 
         # Set current number for next macro uses.
-        self.saveslot.current_spell = settings['spell_number']
+        if search_mode == 'semi-manual':
+            self.saveslot.current_spell = settings['spell_number']
         self.savefile.make_journal_entry(f'Current spell now - {self.saveslot.current_spell}')
+
+    def form_keyline_items(self):
+
+        settings = self.settings['items']
+        if not settings['item_number']:
+            return
+
+        search_mode = self.saveslot.search_mode_items.lower()
+        cur_item = self.saveslot.current_item
+        goal_item = settings['item_number']
+        total_items = len(self.saveslot.items)
+        self.savefile.make_journal_entry(f'Search mode - {search_mode}\n'
+                                         f'Total items - {total_items}\n'
+                                         f'Current item - {cur_item}\n'
+                                         f'Goal item - {goal_item}')
+
+        # If current item is item we need, then we just need to
+        # check "instant cast" afterwards.
+        items_equal = False
+        if cur_item == goal_item:
+            self.macro_keyline = ' '
+            items_equal = True
+
+        if not items_equal:
+            # If we know what item we're having right now then we save
+            # time if not pressing 'switch_item' for half sec and
+            # calculate amount of keypresses to just switch to item from macro.
+            # But this nice thing is for semi-manual mode only.
+            if search_mode == 'semi-manual' and cur_item:
+                needed_switches = goal_item - cur_item
+                if cur_item > goal_item:
+                    needed_switches = total_items - cur_item + goal_item
+                self.macro_keyline = '|switch_item|pause10' * needed_switches
+            else:
+                # In auto mode we find first item by pressing a button for
+                # little bit and not bother.
+                self.macro_keyline = f'switch_item_press600{"|switch_item|pause10" * (goal_item - 1)}'
+
+        # Add instant actions.
+        if settings['instant_use']:
+            self.macro_keyline += '|use_item'
+
+        # Set current number for next macro uses.
+        if search_mode == 'semi-manual':
+             self.saveslot.current_item = settings['item_number']
+        self.savefile.make_journal_entry(f'Current item now - {self.saveslot.current_item}')
 
     def form_keyline_builtin(self):
         built_in_macro_name = self.settings['built-in']['macro_name']

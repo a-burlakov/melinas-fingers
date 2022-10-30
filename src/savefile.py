@@ -381,9 +381,12 @@ class SaveSlot:
         self.weapons_manual: list = []
         self.weapons_manual_mode: bool = False
         self.spells: list = []
+        self.items: list = []
+        self.current_spell: int = 0
+        self.current_item: int = 0
         self.search_mode_magic: str = 'auto'
         self.search_mode_equipment: str = 'auto'
-        self.current_spell: int = 0
+        self.search_mode_items: str = 'auto'
         self.current_equipment = {'weapon_right_1': 0,
                                   'weapon_right_2': 0,
                                   'weapon_right_3': 0,
@@ -547,7 +550,7 @@ class SaveSlot:
                 instance_dict.setdefault('position_in_file', position_in_file)
                 inventory_list.append(instance_dict)
 
-        # Ta lismans are located in save-file simmilar to armor and weapons, but
+        # Talismans are located in save-file simmilar to armor and weapons, but
         # not identical.
         # Talisman line looks like: XX XX 00A001000000 NN NN, where
         #   XX XX - talisman ID.
@@ -619,9 +622,37 @@ class SaveSlot:
             instance_dict.setdefault('position_in_file', position_in_file)
             inventory_list.append(instance_dict)
 
+        # To find items in quick slots we need to find first "46 41 43 45"
+        # sequience in safe-file ("FACE"). End of quick slots will be 88
+        # symbols earlier.
+        # Quick slots are just sequence of 10 "XX XX XX XX"-like words, where
+        # XX XX XX XX - is item ID.
+        #
+        # In save-file these lines are in order identical to order in game.
+        face_search = bytes.fromhex('46414345')
+        face_pos = slot_data_for_equipment_search.find(face_search)
+        if face_pos:
+            items_datasheet = datasheets.items()
+            items_line = slot_data_for_equipment_search[face_pos-44-40:face_pos-44]
+            for i in range(10):
+                item_hex = items_line[i*4:i*4+2]
+                item_search = item_hex.hex(' ').replace(' ', '')
+
+                item_name = next((x[2] for x in items_datasheet if x[1] == item_search), None)
+                if item_name is None:
+                    item_name = ''
+
+                item_dict = {}
+                item_dict.setdefault('type', 'items')
+                item_dict.setdefault('name', item_name)
+                item_dict.setdefault('id', item_search)
+                item_dict.setdefault('order_in_file', str(i))
+                inventory_list.append(item_dict)
+
         sorted_equipment = sorted(inventory_list,
                                   key=lambda x: (x['type'],
-                                                 int(x['order_in_file'], 16)))
+                                                 int(x['order_in_file'],
+                                                     16)))
 
         fields_accordance = {
             'weapons': self.weapons,
@@ -631,11 +662,13 @@ class SaveSlot:
             'armor_legs': self.armor_legs,
             'talismans': self.talismans,
             'spells': self.spells,
+            'items': self.items,
         }
 
         for equipment in sorted_equipment:
             type = equipment['type']
             fields_accordance[type].append(equipment)
+
 
     def instances_search_range(self) -> tuple:
         """

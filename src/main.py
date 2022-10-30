@@ -1,5 +1,4 @@
 import inspect
-import json
 import sys
 import os
 import pickle
@@ -480,7 +479,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.checkBox_MagicInstantUseLeftHand.clicked.connect(self.MagicInstantUseLeftHandCheck_OnChange)
         self.checkBox_MagicInstantUseRightHand.clicked.connect(self.MagicInstantUseRightHandCheck_OnChange)
         self.button_MagicReload.clicked.connect(self.Magic_Reload)
-        
+
+        # Page "Items"
+        self.tableWidget_Items.itemSelectionChanged.connect(self.Items_OnChange)
+        self.tableWidget_Items.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.checkBox_ItemInstantUse.clicked.connect(self.ItemInstantUse_OnChange)
+        self.pushButton_ItemReload.clicked.connect(self.Items_Reload)
+
         # Page "Built-in"
         self.tableWidget_BuiltInMacros.itemSelectionChanged.connect(self.BuiltInMacros_OnSelect)
         self.tableWidget_BuiltInMacros.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -808,8 +813,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        if self.stackedWidget_Pages.currentIndex() != 6:
-            self.stackedWidget_Pages.setCurrentIndex(6)
+        if self.stackedWidget_Pages.currentIndex() != 7:
+            self.stackedWidget_Pages.setCurrentIndex(7)
         else:
             self.Pages_SetPage()
 
@@ -821,8 +826,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Pages_Refresh_Journal()
 
-        if self.stackedWidget_Pages.currentIndex() != 7:
-            self.stackedWidget_Pages.setCurrentIndex(7)
+        if self.stackedWidget_Pages.currentIndex() != 8:
+            self.stackedWidget_Pages.setCurrentIndex(8)
         else:
             self.Pages_SetPage()
 
@@ -1096,8 +1101,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             types_indexes = {
                 'Equipment': 1,
                 'Magic': 2,
-                'Built-in': 3,
-                'DIY': 4
+                'Items': 3,
+                'Built-in': 4,
+                'DIY': 5
             }
 
             self.stackedWidget_Pages.setCurrentIndex(types_indexes[current_type])
@@ -1110,6 +1116,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         self.Pages_Refresh_Equipment()
         self.Pages_Refresh_Magic()
+        self.Pages_Refresh_Items()
         self.Pages_Refresh_Builtin()
         self.Pages_Refresh_DIY()
         self.Pages_Refresh_Settings()
@@ -1690,6 +1697,70 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.savefile.current_saveslot.get_equipment()
         self.refresh_all()
 
+    def Pages_Refresh_Items(self) -> None:
+        """
+        Refreshes elements on "Items" page.
+        """
+
+        self.Items_RefillTable()
+
+        item_settings = self.current_macro.settings['items']
+
+        self.checkBox_ItemInstantUse.setChecked(item_settings['instant_use'])
+
+        self.tableWidget_Items.blockSignals(True)
+        self.tableWidget_Items.clearSelection()
+        if item_settings['item_number']:
+            self.tableWidget_Items.selectRow(item_settings['item_number']-1)
+        self.tableWidget_Items.blockSignals(False)
+
+    def Items_OnChange(self) -> None:
+        """
+        Changes setting in macro if another item is chosen.
+        """
+
+        items = self.tableWidget_Items.selectedItems()
+        if not len(items):
+            return
+
+        self.current_macro.settings['items']['item_number'] = items[0].row() + 1
+
+        self.set_macro_name_from_settings()
+
+    def ItemInstantUse_OnChange(self) -> None:
+        """
+        Changes setting in macro if check "Instant use" on "Items" page
+        is changed.
+        """
+        self.current_macro.settings['items']['instant_use'] = \
+            self.checkBox_ItemInstantUse.isChecked()
+
+        if self.checkBox_ItemInstantUse.isChecked():
+            self.checkBox_ItemInstantUse.setChecked(False)
+            self.current_macro.settings['items']['instant_use'] = False
+
+        self.Pages_Refresh_Items()
+
+    def Items_RefillTable(self) -> None:
+        """
+        Refills spells on "Magic" page.
+        """
+
+        while self.tableWidget_Items.rowCount():
+            self.tableWidget_Items.removeRow(0)
+
+        for i, item in enumerate(self.savefile.current_saveslot.items):
+            self.tableWidget_Items.insertRow(i)
+            self.tableWidget_Items.setItem(i, 0, QTableWidgetItem(item['name']))
+
+    def Items_Reload(self) -> None:
+        """
+
+        """
+
+        self.savefile.current_saveslot.get_equipment()
+        self.refresh_all()
+
     def Pages_Refresh_Builtin(self) -> None:
         """
         Refreshes elements on "Built-in" page.
@@ -1757,6 +1828,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_MagicSearchMode.setCurrentText('Semi-manual')
         else:
             self.comboBox_MagicSearchMode.setCurrentText('Auto')
+        if self.savefile.current_saveslot.search_mode_items == 'semi-manual':
+            self.comboBox_ItemsSearchMode.setCurrentText('Semi-manual')
+        else:
+            self.comboBox_ItemsSearchMode.setCurrentText('Auto')
 
         # Controls in Elden Ring.
         self.comboBox_ControlKeyMove_Up.setCurrentText(self.savefile.game_controls['move_up'])
@@ -1901,6 +1976,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
+
+        # TODO: сделать выбор имени из предметов
 
         self.tableWidget_Macros.blockSignals(False)
 
