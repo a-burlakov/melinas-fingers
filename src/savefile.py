@@ -4,6 +4,7 @@ TODO: need to describe a save-file map
 """
 
 import os
+import time
 import re
 from pathlib import Path
 import datasheets
@@ -70,6 +71,7 @@ class SaveFile:
         self.recovery_hotkey_ctrl: bool = False
         self.recovery_hotkey_shift: bool = False
         self.recovery_hotkey_alt: bool = False
+        self.journal: list = []
 
         self.game_controls: dict = {'': ''}
         for key in self.control_keys_ranges().keys():
@@ -286,6 +288,24 @@ class SaveFile:
             data = f.read()
             return data
 
+    def make_journal_entry(self, entry: str) -> None:
+        """
+        Makes an entry to journal that can be seen in "Journal" page.
+        """
+
+        # Keeping journal at adequate length.
+        while len(self.journal) > 300:
+            self.journal.pop(0)
+
+        entry_time = time.strftime('%Y.%m.%d %H:%M:%S')
+        entry_as_tuple = entry_time, entry
+
+        # For developer.
+        print(*entry_as_tuple)
+
+        self.journal.append(entry_as_tuple)
+
+
     def fill_saveslots(self):
         """
 
@@ -435,7 +455,7 @@ class SaveSlot:
         data_for_instances_search = slot_data[instances_range[0]:
                                               instances_range[1]]
         separator = self.inventory_and_chest_separator()
-        separator_pos = data_for_instances_search.find(separator)
+        separator_pos = data_for_instances_search.rfind(separator)
 
         inventory_list = []
         for equipment in all_equipment_having:

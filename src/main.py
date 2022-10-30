@@ -200,7 +200,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.hotkey_alt = False
         macro.settings['diy']['macro'] = \
             'roll\n' \
-            'pause5\n' \
+            'pause0\n' \
             'move_down\n' \
             '\n' \
             '# Good for mixups and acting cool in PvP. Be like your favourite YouTube player without practicing this finger breaking shit since DS3 beta.\n' \
@@ -320,7 +320,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         HOTKEYS.clear()
-        print('Hotkeys are cleared.')
+        self.savefile.make_journal_entry('Hotkeys were cleared.')
 
         # If we're in 'off' mode, then not hooking anything.
         if self.turn_off:
@@ -365,7 +365,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                reverse=True):
             HOTKEYS[frozenset(vk)] = func
 
-        print('Hotkeys are hooked.')
+        self.savefile.make_journal_entry(f'{str(len(HOTKEYS))} hotkeys were hooked.')
 
     def refresh_currents(self):
         """
@@ -379,8 +379,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Magic.
         self.savefile.current_saveslot.current_spell = 0
 
-        print('=' * 40)
-        print('Current positions were refreshed.')
+        self.savefile.make_journal_entry('Current positions were refreshed.')
+        self.Pages_Refresh_Journal()
 
     def ControlsReload(self) -> None:
         """
@@ -399,7 +399,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setFixedSize(1150, 700)
         self.setWindowTitle('ER - Melina\'s Fingers')
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
-        self.button_Settings.clicked.connect(self.Settings_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
 
         self.lineEdit_MacroName.editingFinished.connect(self.MacroName_OnChange)
@@ -418,7 +417,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_Macros.setEditTriggers(QTableWidget.NoEditTriggers)
         self.tableWidget_Macros.setColumnHidden(0, True)  # Hide ID column
         header = self.tableWidget_Macros.horizontalHeader()
-        header = self.tableWidget_Macros.horizontalHeader()
         header.setSectionResizeMode(1, QHeaderView.Stretch)
         header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
         self.button_AddMacros.clicked.connect(self.AddMacro_Click)
@@ -427,6 +425,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Upper panel.
         self.button_TurnOnOff.clicked.connect(self.TurnOnOff_Click)
+        self.button_Settings.clicked.connect(self.Settings_Click)
+        self.button_Journal.clicked.connect(self.Journal_Click)
+        self.button_Save.clicked.connect(self.Save_Click)
+        self.button_Load.clicked.connect(self.Load_Click)
 
         # Page "Equipment"
         self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
@@ -485,6 +487,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Page "DIY"
         self.textEdit_DIY.textChanged.connect(self.textEdit_DIY_OnChange)
+
+        # Page "Journal"
+        header = self.table_Journal.horizontalHeader()
+        header.setSectionResizeMode(1, QHeaderView.Stretch)
+        header.setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        self.button_RefreshJournal.clicked.connect(self.RefreshJournal_Click)
 
         # Page "Settings"
         self.comboBox_RecoveryHotkey.activated.connect(self.RecoveryKey_OnChange)
@@ -612,7 +620,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.savefile.recovery_hotkey = '~'
 
         if self.savefile.standard_pause_time == 0:
-            self.savefile.standard_pause_time = 50
+            self.savefile.standard_pause_time = 40
 
     def SaveSlotsComboBox_Refresh(self):
         """
@@ -795,16 +803,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Refresh_Settings()
         self.hook_hotkeys()
 
-    def Settings_Click(self):
+    def Settings_Click(self) -> None:
         """
 
-        :return:
         """
 
         if self.stackedWidget_Pages.currentIndex() != 6:
             self.stackedWidget_Pages.setCurrentIndex(6)
         else:
             self.Pages_SetPage()
+
+    def Journal_Click(self) -> None:
+        """
+
+
+        """
+
+        self.Pages_Refresh_Journal()
+
+        if self.stackedWidget_Pages.currentIndex() != 7:
+            self.stackedWidget_Pages.setCurrentIndex(7)
+        else:
+            self.Pages_SetPage()
+
+    def Save_Click(self) -> None:
+        """
+
+        """
+
+        self.save_settings_to_file()
+
+    def Load_Click(self) -> None:
+        """
+
+        """
+
+        self.read_settings_from_file()
+
+        self.refresh_all()
+        self.refresh_currents()
 
     def AddMacro_Click(self):
         """
@@ -1478,98 +1515,98 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def Equipment_MouseClicked_WeaponRight_1(self, event) -> None:
 
-        # self.tableWidget_Equipment.blockSignals(True)
         self.equipment_current_cell = 'weapon_right_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponRight_2(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'weapon_right_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponRight_3(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'weapon_right_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_1(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'weapon_left_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_2(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'weapon_left_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_WeaponLeft_3(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'weapon_left_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Head(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'armor_head'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_chest(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'armor_chest'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Arms(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'armor_arms'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Armor_Legs(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'armor_legs'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_1(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+        # self.tableWidget_Equipment.blockSignals(Tr
+        # e)
         self.equipment_current_cell = 'talisman_1'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_2(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'talisman_2'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_3(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'talisman_3'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
     def Equipment_MouseClicked_Talisman_4(self, event) -> None:
-        # self.tableWidget_Equipment.blockSignals(True)
+
         self.equipment_current_cell = 'talisman_4'
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
@@ -1748,6 +1785,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         pass
+
+    def Pages_Refresh_Journal(self) -> None:
+        """
+        Refreshes elements on "Journal" page.
+        """
+
+        # Clearing table.
+        while self.table_Journal.rowCount():
+            self.table_Journal.removeRow(0)
+
+        for i, date_entry in enumerate(self.savefile.journal):
+            self.table_Journal.insertRow(i)
+            self.table_Journal.setItem(i, 0, QTableWidgetItem(date_entry[0]))
+            self.table_Journal.setItem(i, 1, QTableWidgetItem(date_entry[1]))
+
+    def RefreshJournal_Click(self) -> None:
+        """
+
+        """
+
+        self.Pages_Refresh_Journal()
 
     def BuiltInMacros_OnSelect(self) -> None:
         """

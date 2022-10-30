@@ -1,7 +1,6 @@
 """
 
 """
-import sys
 import traceback
 import time
 from win32gui import GetWindowText, GetForegroundWindow
@@ -209,6 +208,10 @@ class Macro:
             }
         }
 
+    def __str__(self):
+
+        return f'{self.name} ({self.hotkey_string()})'
+
     @staticmethod
     def standard_name():
         return '< hotkey name >'
@@ -252,16 +255,11 @@ class Macro:
 
         """
 
-        current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        if 'elden ring' not in current_window_text.lower():
-            print('Hotkey not started because Elden Ring is not open.')
-            return
-
         self.interrupted = False
         time_start = time.time()
-        print('=' * 40)
-        print('Macro:   ', f'#{self.id} ({self.type}) ({self.hotkey_string()}) {self.name}')
-        print('Start:   ', time.ctime(time_start))
+
+        self.savefile.make_journal_entry('='*40)
+        self.savefile.make_journal_entry(f'Start: {self}')
 
         # Nobody knows what can happen inside keylines mechanism
         # (especially with DIYs), so we need exceptions catch.
@@ -269,12 +267,14 @@ class Macro:
             self.form_keyline()
             self.execute_keyline()
         except Exception as e:
-            print('Exception: ', e)
-            print(traceback.format_exc())
+            self.savefile.make_journal_entry('Exception: ', e)
+            self.savefile.make_journal_entry(traceback.format_exc())
 
         time_end = time.time()
-        print('End:     ', time.ctime(time_end))
-        print('Duration:', round(time_end - time_start, 5))
+
+        self.savefile.make_journal_entry(f'End: {self}')
+        self.savefile.make_journal_entry(f'Duration: {round(time_end - time_start, 5)}')
+        self.savefile.make_journal_entry('-'*40)
 
     def form_keyline(self):
         """
@@ -551,10 +551,10 @@ class Macro:
         cur_spell = self.saveslot.current_spell
         goal_spell = settings['spell_number']
         total_spells = len(self.saveslot.spells)
-        print('Search mode -', search_mode)
-        print('Total spells -', total_spells)
-        print('Current spell -', cur_spell)
-        print('Goal spell -', goal_spell)
+        self.savefile.make_journal_entry(f'Search mode - {search_mode}\n'
+                                         f'Total spells - {total_spells})\n'
+                                         f'Current spell - {cur_spell})\n'
+                                         f'Goal spell - {goal_spell})')
 
         # If current spell is spell we need, then we just need to
         # check "instant cast" afterwards.
@@ -586,7 +586,7 @@ class Macro:
 
         # Set current number for next macro uses.
         self.saveslot.current_spell = settings['spell_number']
-        print('Current spell now -', self.saveslot.current_spell)
+        self.savefile.make_journal_entry(f'Current spell now - {self.saveslot.current_spell}')
 
     def form_keyline_builtin(self):
         built_in_macro_name = self.settings['built-in']['macro_name']
@@ -683,11 +683,15 @@ class Macro:
         Additional press time can be made with 'pressN'.
         """
 
+        keyline = self.macro_keyline
+        self.savefile.make_journal_entry(f'Keyline: {keyline}')
+        key_presses = keyline.split('|')
+
         window_title_before_executing = GetWindowText(GetForegroundWindow())
 
-        keyline = self.macro_keyline
-        print('Keyline: ', keyline)
-        key_presses = keyline.split('|')
+        if 'elden ring' not in window_title_before_executing.lower():
+            self.savefile.make_journal_entry(f'Hotkey "{self}" not started because Elden Ring is not open.')
+            return
 
         # Execution.
         for i, key_press in enumerate(key_presses):
@@ -699,7 +703,7 @@ class Macro:
             if i % 4:
                 window_title = GetWindowText(GetForegroundWindow())
                 if window_title_before_executing != window_title:
-                    print('Window changed. Macro execution was broken.')
+                    self.savefile.make_journal_entry(f'Window changed. Hotkey "{self}" execution was broken.')
                     break
 
             if self.interrupted:
@@ -729,7 +733,7 @@ class Macro:
                 key_for_message = key_press
                 key_press = self.savefile.game_controls[key_press].lower()
                 if key_for_message and not key_press:
-                    print(f'Key "{key_for_message}" was not found in ER controls. Check Melina\'s Fingers settings.')
+                    self.savefile.make_journal_entry(f'Key "{key_for_message}" was not found in ER controls. Check Melina\'s Fingers settings.')
                     break
 
             # We'll just skip empty keys to not get to exception.
