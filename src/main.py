@@ -131,9 +131,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.save_settings_to_file()
 
-    def toJSON(self):
-        return json.dumps(self.current_macro, default=lambda o: o.__dict__,
-                          sort_keys=True, indent=4)
 
     def fill_builtin_macros(self) -> None:
         """
@@ -141,6 +138,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         # Clearing table.
+        self.tableWidget_BuiltInMacros.blockSignals(True)
         while self.tableWidget_BuiltInMacros.rowCount():
             self.tableWidget_BuiltInMacros.removeRow(0)
 
@@ -148,6 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_BuiltInMacros.insertRow(i)
             self.tableWidget_BuiltInMacros.setItem(i, 0, QTableWidgetItem(
                 builtin_macro['name']))
+        self.tableWidget_BuiltInMacros.blockSignals(False)
 
     def add_introductory_macros(self) -> None:
         """
@@ -157,6 +156,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         macros = self.savefile.current_saveslot.macros
         macros.clear()
+
+        # Place for user's macros.
+        for i in range(1, 9):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = macro.standard_name()
+            macro.type = ''
+            macro.hotkey = 'F' + str(i)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macros.append(macro)
+
+        # Invasion attempts.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Six invasion attempts (wide)'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F10'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
+        macros.append(macro)
 
         # Sort all: Asc. Acquisition.
         macro = Macro(self.savefile.current_saveslot)
@@ -172,12 +193,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Reverse backstep.
         macro = Macro(self.savefile.current_saveslot)
         macro.name = 'Reverse backstep'
-        macro.type = 'Built-in'
+        macro.type = 'DIY'
         macro.hotkey = self.savefile.game_controls['roll']
         macro.hotkey_ctrl = False
         macro.hotkey_shift = True
         macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Reverse backstep'
+        macro.settings['diy']['macro'] = \
+            'roll\n' \
+            'pause5\n' \
+            'move_down\n' \
+            '\n' \
+            '# Good for mixups and acting cool in PvP. Be like your favourite YouTube player without practicing this finger breaking shit since DS3 beta.\n' \
+            '# \n' \
+            '# As timing window is strict, maybe you\'ll need to adjust "pauseN" line considering "Standard pause time" setting. ' \
+            'Total pause time should not exceed 40 ms.'
+
         macros.append(macro)
 
         # Crouch attack.
@@ -189,17 +219,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.hotkey_shift = True
         macro.hotkey_alt = False
         macro.settings['built-in']['macro_name'] = 'Crouch attack'
-        macros.append(macro)
-
-        # Invasion attempts.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Six invasion attempts (wide)'
-        macro.type = 'Built-in'
-        macro.hotkey = 'F10'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
         macros.append(macro)
 
         # Weeeeeeeeeeee.
@@ -218,17 +237,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                          'pause20\n' * 6
         macros.append(macro)
 
-        # MLG Katana 360 no scope.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'MLG Katana 360 no scope'
-        macro.type = 'DIY'
-        macro.hotkey = 'F1'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = False
-        macro.settings['diy']['macro'] = ''
-        macros.append(macro)
-
         # Teabagging.
         macro = Macro(self.savefile.current_saveslot)
         macro.name = 'Teabagging'
@@ -241,12 +249,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macros.append(macro)
 
         # Items.
-        for i in range(1,11):
+        for i in range(1, 11):
             macro = Macro(self.savefile.current_saveslot)
             macro.name = f'Switch to quick item {str(i)}'
             macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = True
+            macro.hotkey = 'Num' + str(i % 10)
+            macro.hotkey_ctrl = False
             macro.hotkey_shift = False
             macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
@@ -259,7 +267,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             macro.type = 'Built-in'
             macro.hotkey = str(i % 10)
             macro.hotkey_ctrl = False
-            macro.hotkey_shift = True
+            macro.hotkey_shift = False
             macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
             macros.append(macro)
@@ -469,7 +477,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_AvaiableMagic.setEditTriggers(QTableWidget.NoEditTriggers)
         self.checkBox_MagicInstantUseLeftHand.clicked.connect(self.MagicInstantUseLeftHandCheck_OnChange)
         self.checkBox_MagicInstantUseRightHand.clicked.connect(self.MagicInstantUseRightHandCheck_OnChange)
-
+        self.button_MagicReload.clicked.connect(self.Magic_Reload)
+        
         # Page "Built-in"
         self.tableWidget_BuiltInMacros.itemSelectionChanged.connect(self.BuiltInMacros_OnSelect)
         self.tableWidget_BuiltInMacros.setEditTriggers(QTableWidget.NoEditTriggers)
@@ -984,7 +993,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.hook_hotkeys()
         self.set_macros_settings_from_window()
 
-
         # Selecting first macro.
         self.tableWidget_Macros.clearSelection()
         self.tableWidget_Macros.blockSignals(True)
@@ -992,9 +1000,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if model.rowCount() and self.savefile.current_saveslot.macros:
             self.tableWidget_Macros.selectRow(0)
             self.current_macro = self.savefile.current_saveslot.macros[0]
+        self.MacrosTable_Refresh()
         self.tableWidget_Macros.blockSignals(False)
 
         self.Pages_RefreshAll()
+        self.Pages_SetPage()
 
     def refresh_all(self) -> None:
         """
@@ -1073,6 +1083,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes elements on "Equipment" page.
         """
 
+        self.equipment_current_cell = ''
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -1634,6 +1645,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_AvaiableMagic.setItem(i, 0, QTableWidgetItem(
                 spell['name']))
 
+    def Magic_Reload(self) -> None:
+        """
+
+        """
+
+        self.savefile.current_saveslot.get_equipment()
+        self.refresh_all()
+
     def Pages_Refresh_Builtin(self) -> None:
         """
         Refreshes elements on "Built-in" page.
@@ -1664,7 +1683,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.tableWidget_BuiltInMacros.selectRow(i)
                     break
         self.tableWidget_BuiltInMacros.blockSignals(False)
-
 
     def Pages_Refresh_DIY(self) -> None:
         """
@@ -1804,7 +1822,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             spell_name = items[0].text()
             if self.current_macro.name != spell_name and \
                     (self.current_macro.name == self.current_macro.standard_name()
-                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
+                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)
+                    or not self.current_macro.name):
                 self.current_macro.name = spell_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
@@ -1819,7 +1838,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             built_in_macro_name = items[0].text()
             if self.current_macro.name != built_in_macro_name \
                     and (self.current_macro.name == self.current_macro.standard_name()
-                         or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)):
+                         or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)
+                            or not self.current_macro.name):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()

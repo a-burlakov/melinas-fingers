@@ -211,7 +211,7 @@ class Macro:
 
     @staticmethod
     def standard_name():
-        return '< name >'
+        return '< hotkey name >'
 
     def set_id(self):
         """
@@ -252,10 +252,10 @@ class Macro:
 
         """
 
-        # current_window_text: str = (GetWindowText(GetForegroundWindow()))
-        # if 'elden' not in current_window_text.lower():
-        #     print('Hotkey not started because Elden Ring is not open.')
-        #     return
+        current_window_text: str = (GetWindowText(GetForegroundWindow()))
+        if 'elden ring' not in current_window_text.lower():
+            print('Hotkey not started because Elden Ring is not open.')
+            return
 
         self.interrupted = False
         time_start = time.time()
@@ -322,7 +322,7 @@ class Macro:
         #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
         #   3. if we have instant action - performing it.
 
-        keys_list.append('esc|e')  # Open inventory.
+        keys_list.append('esc|e|pause50')  # Open inventory.
 
         # 0. Preliminary clearing if "Auto" search mode.
         if search_mode == 'auto':
@@ -334,7 +334,7 @@ class Macro:
             keys_list.append(self.keyline_for_cells(cells))
 
             # Re-enter to inventory.
-            keys_list.append('esc|esc|e')
+            keys_list.append('esc|esc|e|pause50')
 
         # 0.1. If we're in manual mode, but have some cells to 'equip' having
         # no current position, that means we need to clear them to put to
@@ -349,7 +349,11 @@ class Macro:
 
             if are_there_cells_to_clear:
                 keys_list.append(self.keyline_for_cells(cells))
-                keys_list.append('esc|esc|e')  # Re-enter to inventory.
+                keys_list.append('esc|esc|e|pause50')  # Re-enter to inventory.
+
+        # Clearing keylines.
+        for name in cells.keys():
+            cells[name]['keyline'] = ''
 
         # 1. Performing actions for cells.
         self.assign_keylines_to_cells(cells, search_mode, currents)
@@ -466,14 +470,25 @@ class Macro:
             # Handling 'equip' action.
             keys_list = []
 
-            current_position = 1 # Standard position for "auto" mode.
+            current_position = 0
+
+            # Standard position for "auto" mode is 1.
+            if search_mode == 'auto':
+                current_position = 1
 
             # If we're in "semi-manual" mode, we don't need to change items
             # if we already have it in our cell slots.
-            if search_mode != 'auto':
-                if currents[key]:
+            if search_mode == 'semi-manual':
+                goal_position = value['position']
+                something_chosen_already = (currents[key] > 0)
+
+                if something_chosen_already:
                     current_position = currents[key]
-                if current_position == value['position']:
+                else:
+                    current_position = 1
+
+                if something_chosen_already \
+                        and current_position == goal_position:
                     continue
 
             goal_position = value['position']
@@ -508,7 +523,7 @@ class Macro:
                 path_list.append(key_1)
 
             # Entering cell.
-            keys_list.append('e')
+            keys_list.append('e|pause50')
 
             # Going to goal cell.
             keys_list.append('|'.join(path_list))
@@ -516,7 +531,7 @@ class Macro:
             # Choosing equip.
             keys_list.append('e')
             if value['not_enough_stats']:
-                keys_list.append('pause50|e|pause50')
+                keys_list.append('pause50|e|pause200')
 
             # Quiting cell.
             keys_list.append('q|pause200')
@@ -524,7 +539,7 @@ class Macro:
             cells[key]['keyline'] = '|'.join(keys_list)
 
             # Remembering current position in "semi-manual" mode.
-            if search_mode != 'auto':
+            if search_mode == 'semi-manual':
                 currents[key] = goal_position
 
     def form_keyline_magic(self):
@@ -588,6 +603,10 @@ class Macro:
             command = command.strip().lower()
 
             if not command:
+                continue
+
+            # Commentary.
+            if command.startswith('#'):
                 continue
 
             mult = 0
@@ -770,37 +789,25 @@ def built_in_macros() -> list:
          'keyline': 'skill|strong_attack',
          'comment': 'Goes to stance, then immediately perform a strong attack.'},
         {'name': 'Fast katana stance attacks',
-         'keyline': 'skill_press300|attack_pause1250|crouch_press20|crouch',
-         'comment': 'Performs a skill attack and crouch to cancel a recovery\n'
+         'keyline': 'skill_press300|attack|pause500|crouch_press20|crouch',
+         'comment': 'Performs a stance attack and crouch to cancel a recovery\n'
                     'animation. It makes consecutive stance attacks much faster\n'
                     'and dangerous.\n'
                     '\n'
-                    'How to use:\n'
-                    '   - press a hotkey;\n'
-                    '   - after stance attack is performed, press hotkey two times;\n'
-                    '   - next stance attack will start as fast as possible.\n'
+                    'To continue attack wait for a beginning of crouch and press button again. You\'ll stay in crouch position after attack.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
                     'you actually deserve this.'},
         {'name': 'Fast katana stance attacks (strong)',
-         'keyline': 'skill_press300|strong_attack_pause1250|crouch_press20|crouch',
-         'comment': 'Performs a strong skill attack and crouch to cancel a recovery\n'
+         'keyline': 'skill_press300|strong_attack|pause500|crouch_press20|crouch',
+         'comment': 'Performs a strong stance attack and crouch to cancel a recovery\n'
                     'animation. It makes consecutive stance attacks much faster\n'
                     'and dangerous.\n'
                     '\n'
-                    'How to use:\n'
-                    '   - press a hotkey;\n'
-                    '   - after stance attack is performed, press hotkey two times;\n'
-                    '   - next stance attack will start as fast as possible.\n'
+                    'To continue attack wait for a beginning of crouch and press button again. You\'ll stay in crouch position after attack.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
                     'you actually deserve this.'},
-        {'name': 'Reverse backstep',
-         'keyline': 'roll|pause15|move_down',
-         'comment': 'Performs reverse backstep. Good for mixups and acting cool in PvP.\n'
-                    '\n'
-                    'Be like your favourite YouTube player without\n'
-                    'practicing this finger breaking shit since DS3 beta.'},
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
          'comment': 'Chooses next weapon in list for right hand.\n'
@@ -825,9 +832,8 @@ def built_in_macros() -> list:
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
-        # TODO: Can I decrease pause4000?
         {'name': 'Six invasion attempts (wide)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3,
+         'keyline': (f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
@@ -836,7 +842,7 @@ def built_in_macros() -> list:
                     '\n'
                     'Cannot be interrupted. Invades over all map.'},
         {'name': 'Six invasion attempts (local)',
-         'keyline': f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3,
+         'keyline': (f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
@@ -848,7 +854,15 @@ def built_in_macros() -> list:
          'keyline': 'esc|up|e|z|e|left|e',
          'comment': 'Quits to main menu very fast.\n'
                     '\n'
-                    'Useful if you lost to gravity but still want to cheat death.'}
+                    'Useful if you lost to gravity but still want to cheat death.'},
+        {'name': 'Use Duelist\'s Furled Finger',
+         'keyline': 'esc|up|up|e|down|down|e',
+         'comment': 'Uses Duelist\'s Furled Finger to get back to battle after\n'
+                    'loosing as fast as possible.'},
+        {'name': 'Use Tarnished\'s Furled Finger',
+         'keyline': 'esc|up|up|e|down|e',
+         'comment': 'Uses Tarnished\'s Furled Finger to help other Tarnished\n'
+                    'as fast as possible.'}
     ]
 
     # Use item macros.

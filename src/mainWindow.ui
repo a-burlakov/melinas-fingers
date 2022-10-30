@@ -513,7 +513,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -2590,7 +2590,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <rect>
         <x>310</x>
         <y>30</y>
-        <width>331</width>
+        <width>381</width>
         <height>31</height>
        </rect>
       </property>
@@ -2679,8 +2679,8 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>310</x>
-        <y>240</y>
-        <width>341</width>
+        <y>120</y>
+        <width>381</width>
         <height>151</height>
        </rect>
       </property>
@@ -2710,7 +2710,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>210</y>
+        <y>90</y>
         <width>361</width>
         <height>25</height>
        </rect>
@@ -2737,6 +2737,28 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
+     <widget class="QPushButton" name="button_MagicReload">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>230</y>
+        <width>161</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>Reload from save file</string>
+      </property>
+     </widget>
      <zorder>tableWidget_AvaiableMagic</zorder>
      <zorder>label_5</zorder>
      <zorder>label_10</zorder>
@@ -2745,6 +2767,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>label_41</zorder>
      <zorder>checkBox_MagicInstantUseLeftHand</zorder>
      <zorder>checkBox_MagicInstantUseRightHand</zorder>
+     <zorder>button_MagicReload</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_BuiltIn">
      <widget class="QTableWidget" name="tableWidget_BuiltInMacros">
@@ -3138,7 +3161,7 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;One line - one command.&lt;/p&gt;&lt;p&gt;You can use these:&lt;/p&gt;&lt;p&gt;1) &lt;span style=&quot; color:#b4a68a;&quot;&gt;keyboard buttons&lt;/span&gt;, like &amp;quot;W&amp;quot;, &amp;quot;Esc&amp;quot;, &amp;quot;Home&amp;quot;, &amp;quot;F7&amp;quot; etc.&lt;/p&gt;&lt;p&gt;2) &lt;span style=&quot; color:#b4a68a;&quot;&gt;game commands&lt;/span&gt; from the list:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;One line - one command. You can use these:&lt;/p&gt;&lt;p&gt;1) &lt;span style=&quot; color:#b4a68a;&quot;&gt;keyboard buttons&lt;/span&gt;, like &amp;quot;W&amp;quot;, &amp;quot;Esc&amp;quot;, &amp;quot;Home&amp;quot;, &amp;quot;F7&amp;quot; etc.&lt;/p&gt;&lt;p&gt;2) &lt;span style=&quot; color:#b4a68a;&quot;&gt;game commands&lt;/span&gt; from the list:&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -3182,7 +3205,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>350</x>
-        <y>140</y>
+        <y>120</y>
         <width>341</width>
         <height>81</height>
        </rect>
@@ -3213,9 +3236,9 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>210</y>
+        <y>200</y>
         <width>381</width>
-        <height>281</height>
+        <height>301</height>
        </rect>
       </property>
       <property name="font">
@@ -3228,7 +3251,7 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;p&gt;8) &lt;span style=&quot; color:#b4a68a;&quot;&gt;#&lt;/span&gt; - commentary. E.g. &amp;quot;# please please work&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -3325,7 +3348,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ms. (1/1000 sec)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ms. (1/1000 sec.)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -4433,7 +4456,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pause between virtual key presses. The less stable your framerate is, the bigger value is needed here. 20 ms is good for stable 60 FPS.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Pause between virtual key presses. The less stable your framerate is, the bigger value is needed here. 30-40 ms is good for stable 60 FPS; 60-80 ms is for stable 30 FPS.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
