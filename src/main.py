@@ -800,6 +800,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.savefile.current_saveslot.get_equipment()
             else:
                 self.savefile.current_saveslot = SaveSlot()
+
+            if self.savefile.location and not self.savefile.current_saveslot.macros:
+                self.add_introductory_macros()
+
             self.current_macro = Macro(self.savefile.current_saveslot)
             self.hook_hotkeys()
             self.set_macros_settings_from_window()
@@ -1687,14 +1691,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Refills spells on "Magic" page.
         """
+        self.tableWidget_AvaiableMagic.blockSignals(True)
 
         while self.tableWidget_AvaiableMagic.rowCount():
             self.tableWidget_AvaiableMagic.removeRow(0)
 
         for i, spell in enumerate(self.savefile.current_saveslot.spells):
+            spell_name = f'{i+1}. {spell["name"]}'
             self.tableWidget_AvaiableMagic.insertRow(i)
             self.tableWidget_AvaiableMagic.setItem(i, 0, QTableWidgetItem(
-                spell['name']))
+                spell_name))
+
+        self.tableWidget_AvaiableMagic.blockSignals(False)
 
     def Magic_Reload(self) -> None:
         """
@@ -1753,12 +1761,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refills spells on "Magic" page.
         """
 
+        self.tableWidget_Items.blockSignals(True)
+
         while self.tableWidget_Items.rowCount():
             self.tableWidget_Items.removeRow(0)
 
         for i, item in enumerate(self.savefile.current_saveslot.items):
+            if not item['name']:
+                item = "< empty >"
+            else:
+                item = item['name']
+            item_name = f'{i+1}. {item}'
             self.tableWidget_Items.insertRow(i)
-            self.tableWidget_Items.setItem(i, 0, QTableWidgetItem(item['name']))
+            self.tableWidget_Items.setItem(i, 0, QTableWidgetItem(item_name))
+
+        self.tableWidget_Items.blockSignals(False)
 
     def Items_Reload(self) -> None:
         """
@@ -1963,10 +1980,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             spell_name = items[0].text()
             if self.current_macro.name != spell_name and \
-                    (self.current_macro.name == self.current_macro.standard_name()
-                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)
+                    (self.current_macro.name in [self.current_macro.standard_name(), '< empty >']
+                     or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells + self.savefile.current_saveslot.items)
                     or not self.current_macro.name):
                 self.current_macro.name = spell_name
+                if '. ' in spell_name:
+                    self.current_macro.name = spell_name.partition('. ')[2]
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
 
@@ -1979,14 +1998,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             built_in_macro_name = items[0].text()
             if self.current_macro.name != built_in_macro_name \
-                    and (self.current_macro.name == self.current_macro.standard_name()
-                         or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells)
+                    and (self.current_macro.name in [self.current_macro.standard_name(), '< empty >']
+                         or any(x['name'] == self.current_macro.name for x in built_in_macros() + self.savefile.current_saveslot.spells + self.savefile.current_saveslot.items)
                             or not self.current_macro.name):
                 self.current_macro.name = built_in_macro_name
                 self.MacroArea_Refresh()
                 self.MacrosTable_Refresh()
 
-        # TODO: сделать выбор имени из предметов
+        if self.current_macro.type == 'Items':
+
+            items = self.tableWidget_Items.selectedItems()
+            if not len(items):
+                self.tableWidget_Macros.blockSignals(False)
+                return
+
+            item_name = items[0].text()
+            if self.current_macro.name != item_name and \
+                    (self.current_macro.name in [self.current_macro.standard_name(), '< empty >']
+                     or any(x['name'] == self.current_macro.name for x in
+                        built_in_macros() + self.savefile.current_saveslot.spells + self.savefile.current_saveslot.items)
+                     or not self.current_macro.name):
+                self.current_macro.name = item_name
+                if '. ' in item_name:
+                    self.current_macro.name = item_name.partition('. ')[2]
+                self.MacroArea_Refresh()
+                self.MacrosTable_Refresh()
 
         self.tableWidget_Macros.blockSignals(False)
 
