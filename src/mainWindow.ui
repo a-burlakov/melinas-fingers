@@ -518,7 +518,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -2811,7 +2811,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <rect>
         <x>310</x>
         <y>60</y>
-        <width>91</width>
+        <width>161</width>
         <height>20</height>
        </rect>
       </property>

@@ -378,6 +378,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Magic.
         self.savefile.current_saveslot.current_spell = 0
 
+        # Items.
+        self.savefile.current_saveslot.current_item = 0
+
         self.savefile.make_journal_entry('Current positions were refreshed.')
         self.Pages_Refresh_Journal()
 
@@ -507,6 +510,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.comboBox_EquipmentSearchMode.activated.connect(self.SearchMode_OnChange)
         self.comboBox_MagicSearchMode.activated.connect(self.SearchMode_OnChange)
+        self.comboBox_ItemsSearchMode.activated.connect(self.SearchMode_OnChange)
 
         self.comboBox_ControlKeyMove_Up.activated.connect(self.ControlKeys_OnChange)
         self.comboBox_ControlKeyMove_Down.activated.connect(self.ControlKeys_OnChange)
@@ -678,6 +682,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.tableWidget_Macros.blockSignals(True)
         self.tableWidget_AvaiableMagic.blockSignals(True)
+        self.tableWidget_Items.blockSignals(True)
 
         self.MacroArea_Refresh()
         self.Pages_SetPage()
@@ -685,6 +690,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.tableWidget_Macros.blockSignals(False)
         self.tableWidget_AvaiableMagic.blockSignals(False)
+        self.tableWidget_Items.blockSignals(False)
 
     def MacrosTable_Refresh(self):
         """
@@ -1023,6 +1029,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.savefile.current_saveslot.search_mode_equipment = self.comboBox_EquipmentSearchMode.currentText().lower()
         self.savefile.current_saveslot.search_mode_magic = self.comboBox_MagicSearchMode.currentText().lower()
+        self.savefile.current_saveslot.search_mode_items = self.comboBox_ItemsSearchMode.currentText().lower()
 
     def DeleteMacros_Click(self):
         """
@@ -1824,10 +1831,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_EquipmentSearchMode.setCurrentText('Semi-manual')
         else:
             self.comboBox_EquipmentSearchMode.setCurrentText('Auto')
+
         if self.savefile.current_saveslot.search_mode_magic == 'semi-manual':
             self.comboBox_MagicSearchMode.setCurrentText('Semi-manual')
         else:
             self.comboBox_MagicSearchMode.setCurrentText('Auto')
+
         if self.savefile.current_saveslot.search_mode_items == 'semi-manual':
             self.comboBox_ItemsSearchMode.setCurrentText('Semi-manual')
         else:
