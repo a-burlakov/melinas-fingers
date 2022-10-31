@@ -1377,6 +1377,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.label_Choosing_Cell.setText(cell_name_accordance[current_cell])
 
+        # Picture changing on select.
+        cell_picture_name_accordance = {
+            self.picture_equip_weaponright_1: ('weapon_right_1', 'weapon_right'),
+            self.picture_equip_weaponright_2: ('weapon_right_2', 'weapon_right'),
+            self.picture_equip_weaponright_3: ('weapon_right_3', 'weapon_right'),
+            self.picture_equip_weaponleft_1: ('weapon_left_1', 'weapon_left'),
+            self.picture_equip_weaponleft_2: ('weapon_left_2', 'weapon_left'),
+            self.picture_equip_weaponleft_3: ('weapon_left_3', 'weapon_left'),
+            self.picture_equip_armor_head: ('armor_head', 'armor_head'),
+            self.picture_equip_armor_chest: ('armor_chest', 'armor_torso'),
+            self.picture_equip_armor_arms: ('armor_arms', 'armor_hands'),
+            self.picture_equip_armor_legs: ('armor_legs', 'armor_legs'),
+            self.picture_equip_talisman_1: ('talisman_1', 'talisman'),
+            self.picture_equip_talisman_2: ('talisman_2', 'talisman'),
+            self.picture_equip_talisman_3: ('talisman_3', 'talisman'),
+            self.picture_equip_talisman_4: ('talisman_4', 'talisman')
+        }
+
+        for picture, picture_names in cell_picture_name_accordance.items():
+            name_as_current = picture_names[0]
+            picture_name = picture_names[1]
+            if is_choosing_now:
+                if name_as_current == current_cell:
+                    picture.setStyleSheet('QGraphicsView{border-image: url(:/newPrefix/images/' + picture_name + '_active.png);}')
+                else:
+                    picture.setStyleSheet('QGraphicsView{border-image: url(:/newPrefix/images/' + picture_name + '.png);}')
+            else:
+                picture.setStyleSheet('QGraphicsView{border-image: url(:/newPrefix/images/' + picture_name + '.png);}'
+                                     'QGraphicsView:hover{border-image: url(:/newPrefix/images/' + picture_name + '_active.png);}')
+
         # Cell buttons.
         self.button_Equip_Cancel.setEnabled(is_choosing_now)
         self.button_Equip_Skip.setEnabled(is_choosing_now)
