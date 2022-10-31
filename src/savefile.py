@@ -72,6 +72,7 @@ class SaveFile:
         self.recovery_hotkey_shift: bool = False
         self.recovery_hotkey_alt: bool = False
         self.journal: list = []
+        self.window_scale: float = 1.3
 
         self.game_controls: dict = {'': ''}
         for key in self.control_keys_ranges().keys():

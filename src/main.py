@@ -555,6 +555,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_ControlsReload.clicked.connect(self.ControlsReload)
 
         self.spinBox_StandardPauseTime.valueChanged.connect(self.StandardPauseTime_OnChange)
+        self.spinBox_WindowScale.valueChanged.connect(self.WindowScale_OnChange)
         self.button_FontSizeUp.clicked.connect(lambda x: self.adjust_font_size(1))
         self.button_FontSizeDown.clicked.connect(lambda x: self.adjust_font_size(-1))
 
@@ -578,6 +579,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     or isinstance(obj, QCheckBox) \
                     or isinstance(obj, QTableWidget) \
                     or isinstance(obj, QSpinBox) \
+                    or isinstance(obj, QDoubleSpinBox) \
                     or isinstance(obj, QTextEdit) \
                     or isinstance(obj, QLineEdit) \
                     or isinstance(obj, QPushButton):
@@ -604,6 +606,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     or isinstance(obj, QCheckBox) \
                     or isinstance(obj, QTableWidget) \
                     or isinstance(obj, QSpinBox) \
+                    or isinstance(obj, QDoubleSpinBox) \
                     or isinstance(obj, QTextEdit) \
                     or isinstance(obj, QLineEdit) \
                     or isinstance(obj, QPushButton):
@@ -641,6 +644,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if self.savefile.standard_pause_time == 0:
             self.savefile.standard_pause_time = 40
+
+        if self.savefile.window_scale == 0:
+            self.savefile.window_scale = 1.3
 
     def SaveSlotsComboBox_Refresh(self):
         """
@@ -711,7 +717,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_Macros.blockSignals(True)
 
         self.button_AddMacros.setEnabled(self.savefile.current_saveslot.number > 0)
-        self.button_DeleteMacros.setEnabled(self.savefile.current_saveslot.number > 0)
+        self.button_UpMacros.setEnabled(len(self.savefile.current_saveslot.macros) > 0)
+        self.button_DownMacros.setEnabled(len(self.savefile.current_saveslot.macros)  > 0)
+        self.button_DeleteMacros.setEnabled(len(self.savefile.current_saveslot.macros)  > 0)
 
         # Remembering current id for case of changing table.
         current_macro_id = self.current_macro.id
@@ -1110,7 +1118,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.MacrosTable_Refresh()
         self.tableWidget_Macros.blockSignals(False)
 
-        self.Pages_RefreshAll()
+        self.refresh_all()
         self.Pages_SetPage()
 
     def refresh_all(self) -> None:
@@ -2005,6 +2013,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Standard pause time.
         self.spinBox_StandardPauseTime.setValue(self.savefile.standard_pause_time)
 
+        # Window scale
+        self.spinBox_WindowScale.setValue(self.savefile.window_scale)
+
     def Pages_Refresh_Multiplayer(self) -> None:
         """
         Refreshes elements on "Multiplayer" page.
@@ -2087,6 +2098,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.savefile.standard_pause_time = self.spinBox_StandardPauseTime.value()
         self.set_macros_settings_from_window()
 
+    def WindowScale_OnChange(self) -> None:
+        """
+
+        """
+
+        self.savefile.window_scale = self.spinBox_WindowScale.value()
+
     def textEdit_DIY_OnChange(self):
         """
 
@@ -2164,6 +2182,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # qr.moveCenter(cp)
         # self.move(qr.topLeft())
 
+def set_qt_scale_factor() -> None:
+    """
+    Tries to read 'mf_settings.cfg' file and set scale factor to window
+    if this setting is found in file.
+    """
+
+    scale_factor = 1.3
+
+    if os.path.exists('mf_settings.cfg'):
+        with open('mf_settings.cfg', "rb") as settings_file:
+            savefile = pickle.load(settings_file)
+            if savefile.window_scale:
+                scale_factor = savefile.window_scale
+
+    os.environ["QT_SCALE_FACTOR"] = str(scale_factor)
+
 
 def start_application():
 
@@ -2174,7 +2208,7 @@ def start_application():
     #  To compensate my mistake without rebuild all elements I just put a scale
     #  factor on application.
 
-    os.environ["QT_SCALE_FACTOR"] = "1.3"
+    set_qt_scale_factor()
 
     app = QApplication(sys.argv)
     window = MainWindow()

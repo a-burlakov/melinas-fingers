@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1149</width>
-    <height>700</height>
+    <width>1155</width>
+    <height>716</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -159,7 +159,17 @@ QPushButton:hover
 QSpinBox
 {
     border: 10px;
-border-color: rgb(150, 150, 150);
+    border-color: rgb(150, 150, 150);
+    color: rgb(200, 200, 200);
+    background-color: rgb(31, 32, 27);
+    selection-background-color:rgb(65, 61, 51);
+	selection-color:rgb(220, 220, 220);
+}
+
+QDoubleSpinBox
+{
+    border: 10px;
+    border-color: rgb(150, 150, 150);
     color: rgb(200, 200, 200);
     background-color: rgb(31, 32, 27);
     selection-background-color:rgb(65, 61, 51);
@@ -518,7 +528,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -1802,7 +1812,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>110</y>
+        <y>130</y>
         <width>71</width>
         <height>71</height>
        </rect>
@@ -5130,6 +5140,62 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
+     <widget class="QLabel" name="label_74">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>434</y>
+        <width>101</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Window scale (need to restart):&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="spinBox_WindowScale">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>440</y>
+        <width>62</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+      <property name="decimals">
+       <number>1</number>
+      </property>
+      <property name="minimum">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="maximum">
+       <double>3.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+     </widget>
      <zorder>label_56</zorder>
      <zorder>comboBox_ControlKeyRoll</zorder>
      <zorder>comboBox_ControlKeyJump</zorder>
@@ -5189,6 +5255,8 @@ p, li { white-space: pre-wrap; }
      <zorder>button_Save</zorder>
      <zorder>comboBox_ItemsSearchMode</zorder>
      <zorder>label_62</zorder>
+     <zorder>label_74</zorder>
+     <zorder>spinBox_WindowScale</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Journal">
      <widget class="QLabel" name="label_38">

@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1149, 700)
+        MainWindow.resize(1155, 716)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -156,7 +156,17 @@ class Ui_MainWindow(object):
 "QSpinBox\n"
 "{\n"
 "    border: 10px;\n"
-"border-color: rgb(150, 150, 150);\n"
+"    border-color: rgb(150, 150, 150);\n"
+"    color: rgb(200, 200, 200);\n"
+"    background-color: rgb(31, 32, 27);\n"
+"    selection-background-color:rgb(65, 61, 51);\n"
+"    selection-color:rgb(220, 220, 220);\n"
+"}\n"
+"\n"
+"QDoubleSpinBox\n"
+"{\n"
+"    border: 10px;\n"
+"    border-color: rgb(150, 150, 150);\n"
 "    color: rgb(200, 200, 200);\n"
 "    background-color: rgb(31, 32, 27);\n"
 "    selection-background-color:rgb(65, 61, 51);\n"
@@ -880,7 +890,7 @@ class Ui_MainWindow(object):
         self.label_Weapon_Right_3.setWordWrap(True)
         self.label_Weapon_Right_3.setObjectName("label_Weapon_Right_3")
         self.label_Weapon_Left_1 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
-        self.label_Weapon_Left_1.setGeometry(QtCore.QRect(20, 110, 71, 71))
+        self.label_Weapon_Left_1.setGeometry(QtCore.QRect(20, 130, 71, 71))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -2265,6 +2275,27 @@ class Ui_MainWindow(object):
         self.label_62.setFont(font)
         self.label_62.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_62.setObjectName("label_62")
+        self.label_74 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
+        self.label_74.setGeometry(QtCore.QRect(380, 434, 101, 41))
+        font = QtGui.QFont()
+        font.setFamily("Garamond")
+        font.setPointSize(10)
+        self.label_74.setFont(font)
+        self.label_74.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_74.setWordWrap(True)
+        self.label_74.setObjectName("label_74")
+        self.spinBox_WindowScale = QtWidgets.QDoubleSpinBox(self.stackedWidget_Pages_Settings)
+        self.spinBox_WindowScale.setGeometry(QtCore.QRect(490, 440, 62, 22))
+        font = QtGui.QFont()
+        font.setFamily("Garamond")
+        font.setPointSize(10)
+        self.spinBox_WindowScale.setFont(font)
+        self.spinBox_WindowScale.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.spinBox_WindowScale.setDecimals(1)
+        self.spinBox_WindowScale.setMinimum(1.0)
+        self.spinBox_WindowScale.setMaximum(3.0)
+        self.spinBox_WindowScale.setSingleStep(0.1)
+        self.spinBox_WindowScale.setObjectName("spinBox_WindowScale")
         self.label_56.raise_()
         self.comboBox_ControlKeyRoll.raise_()
         self.comboBox_ControlKeyJump.raise_()
@@ -2324,6 +2355,8 @@ class Ui_MainWindow(object):
         self.button_Save.raise_()
         self.comboBox_ItemsSearchMode.raise_()
         self.label_62.raise_()
+        self.label_74.raise_()
+        self.spinBox_WindowScale.raise_()
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_Settings)
         self.stackedWidget_Pages_Journal = QtWidgets.QWidget()
         self.stackedWidget_Pages_Journal.setObjectName("stackedWidget_Pages_Journal")
@@ -2861,7 +2894,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget_Pages.setCurrentIndex(5)
+        self.stackedWidget_Pages.setCurrentIndex(7)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -3179,6 +3212,7 @@ class Ui_MainWindow(object):
         self.comboBox_ItemsSearchMode.setItemText(0, _translate("MainWindow", "Auto"))
         self.comboBox_ItemsSearchMode.setItemText(1, _translate("MainWindow", "Semi-manual"))
         self.label_62.setText(_translate("MainWindow", "<html><head/><body><p>Items:</p></body></html>"))
+        self.label_74.setText(_translate("MainWindow", "<html><head/><body><p>Window scale (need to restart):</p></body></html>"))
         self.label_38.setText(_translate("MainWindow", "Journal"))
         item = self.table_Journal.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Column"))
