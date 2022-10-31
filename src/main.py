@@ -718,8 +718,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.button_AddMacros.setEnabled(self.savefile.current_saveslot.number > 0)
         self.button_UpMacros.setEnabled(len(self.savefile.current_saveslot.macros) > 0)
-        self.button_DownMacros.setEnabled(len(self.savefile.current_saveslot.macros)  > 0)
-        self.button_DeleteMacros.setEnabled(len(self.savefile.current_saveslot.macros)  > 0)
+        self.button_DownMacros.setEnabled(len(self.savefile.current_saveslot.macros) > 0)
+        self.button_DeleteMacros.setEnabled(len(self.savefile.current_saveslot.macros) > 0)
 
         # Remembering current id for case of changing table.
         current_macro_id = self.current_macro.id
@@ -2042,6 +2042,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.table_Journal.setItem(i, 0, QTableWidgetItem(date))
             self.table_Journal.setItem(i, 1, QTableWidgetItem(entry))
             last_date = date_entry[0]
+
+        # Scrolling to bottom.
+        self.table_Journal.verticalScrollBar().setValue(self.table_Journal.verticalScrollBar().maximum())
 
     def RefreshJournal_Click(self) -> None:
         """

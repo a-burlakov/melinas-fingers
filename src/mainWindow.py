@@ -2426,10 +2426,10 @@ class Ui_MainWindow(object):
         self.table_Journal.horizontalHeader().setSortIndicatorShown(False)
         self.table_Journal.horizontalHeader().setStretchLastSection(False)
         self.table_Journal.verticalHeader().setVisible(False)
-        self.table_Journal.verticalHeader().setCascadingSectionResizes(False)
-        self.table_Journal.verticalHeader().setDefaultSectionSize(5)
+        self.table_Journal.verticalHeader().setCascadingSectionResizes(True)
+        self.table_Journal.verticalHeader().setDefaultSectionSize(10)
         self.table_Journal.verticalHeader().setHighlightSections(False)
-        self.table_Journal.verticalHeader().setMinimumSectionSize(5)
+        self.table_Journal.verticalHeader().setMinimumSectionSize(2)
         self.button_RefreshJournal = QtWidgets.QPushButton(self.stackedWidget_Pages_Journal)
         self.button_RefreshJournal.setGeometry(QtCore.QRect(590, 465, 151, 25))
         font = QtGui.QFont()
@@ -2894,7 +2894,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget_Pages.setCurrentIndex(7)
+        self.stackedWidget_Pages.setCurrentIndex(8)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
