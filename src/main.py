@@ -252,9 +252,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             macro = Macro(self.savefile.current_saveslot)
             macro.name = f'Switch to quick item {str(i)}'
             macro.type = 'Built-in'
-            macro.hotkey = 'Num' + str(i % 10)
+            macro.hotkey = str(i % 10)
             macro.hotkey_ctrl = False
-            macro.hotkey_shift = False
+            macro.hotkey_shift = True
             macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
             macros.append(macro)
@@ -287,7 +287,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             macro.name = f'Gesture {str(i)}'
             macro.type = 'Built-in'
             macro.hotkey = hotkeys[i]
-            macro.hotkey_ctrl = True
+            macro.hotkey_ctrl = False
             macro.hotkey_shift = False
             macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
@@ -440,6 +440,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_Equipment.cellPressed.connect(self.Equipment_ManualMode_Table_OnChange)
         self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
         self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
+        self.comboBox_Equip_TwoHand.activated.connect(self.Equip_TwoHand_OnChange)
         self.checkBox_Equipment_NotEnoughStats.clicked.connect(self.Equipment_NotEnoughStats_OnChange)
 
         self.picture_equip_weaponright_1.mousePressEvent = self.Equipment_MouseClicked_WeaponRight_1
@@ -1239,6 +1240,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         elif action == 'stance_strong_attack':
             self.comboBox_Equip_InstantAction.setCurrentText('Stance strong attack')
 
+        # Two handing.
+        action = self.current_macro.settings['equipment']['two_handing']
+        if not action:
+            self.comboBox_Equip_TwoHand.setCurrentText('')
+        elif 'left' in action:
+            self.comboBox_Equip_TwoHand.setCurrentText('Left weapon')
+        elif 'right' in action:
+            self.comboBox_Equip_TwoHand.setCurrentText('Right weapon')
+
         # Not enough stats.
         if not is_choosing_now:
             self.checkBox_Equipment_NotEnoughStats.setEnabled(False)
@@ -1445,6 +1455,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             settings['instant_action'] = 'stance_attack'
         elif action == 'Stance strong attack':
             settings['instant_action'] = 'stance_strong_attack'
+
+    def Equip_TwoHand_OnChange(self) -> None:
+        """
+
+        """
+
+        settings = self.current_macro.settings['equipment']
+        action = self.comboBox_Equip_TwoHand.currentText()
+        if not action:
+            settings['two_handing'] = ''
+        elif action == 'Right weapon':
+            settings['two_handing'] = 'right_weapon'
+        elif action == 'Left weapon':
+            settings['two_handing'] = 'left_weapon'
 
     def Equipment_NotEnoughStats_OnChange(self) -> None:
         """

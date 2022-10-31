@@ -669,6 +669,7 @@ class SaveSlot:
             type = equipment['type']
             fields_accordance[type].append(equipment)
 
+        pass
 
     def instances_search_range(self) -> tuple:
         """

@@ -166,6 +166,7 @@ class Macro:
         self.settings = {
             'equipment': {
                 'instant_action': '',
+                'two_handing': '',
                 'weapon_right_1': {'action': 'skip', 'not_enough_stats': False,
                                    'name': '', 'position': 0},
                 'weapon_right_2': {'action': 'skip', 'not_enough_stats': False,
@@ -326,7 +327,7 @@ class Macro:
         #   1. cycle through all cells and if it's 'remove' or 'equip', perform
         #       corresponding action;
         #   2. when 'remove' and 'equip' cells are out, we're pressing "Esc";
-        #   3. if we have instant action - performing it.
+        #   3. if we have two-handing or instant action - performing it.
 
         keys_list.append('esc|e|pause50')  # Open inventory.
 
@@ -374,14 +375,27 @@ class Macro:
         # 2. Quiting menu.
         keys_list.append('esc')
 
-        # 3. Instant action.
+        # 3. Two-handing and instant action.
+        if settings['two_handing'] == 'right_weapon':
+            keys_list.append('event_action+attack')
+        elif settings['two_handing'] == 'left_weapon':
+            keys_list.append('event_action+guard')
+
         if settings['instant_action']:
+            instant_action = ''
             if settings['instant_action'] == 'stance_attack':
-                keys_list.append('skill|attack')
+                instant_action = 'skill|attack'
             elif settings['instant_action'] == 'stance_strong_attack':
-                keys_list.append('skill|strong_attack')
+                instant_action = 'skill|strong_attack'
             else:
-                keys_list.append(settings['instant_action'])
+                instant_action = settings['instant_action']
+
+            if instant_action:
+                # Making a pause after two-handing a weapon to not perform
+                # instant action during two-handing animation.
+                if settings['two_handing']:
+                    keys_list.append('pause200')
+                keys_list.append(instant_action)
 
         self.macro_keyline = '|'.join(keys_list)
 
@@ -442,7 +456,6 @@ class Macro:
             cells['talisman_4']['action_after'] = ''
 
         # Gather keylines from relevant cells and keys to move further.
-        # TODO: дает пустую строку, когда 1 предмет в инвентаре
         for key, value in cells.items():
             if value['keyline']:
                 keys_list.append(value['keyline'])
@@ -687,6 +700,9 @@ class Macro:
                 if digits.isdigit():
                     keyline = command
 
+            if len(command) > 1 and '+' in command:
+                keyline = command
+
             # Searching in plain buttons...
             if command in game_control_keys() \
                     or command in available_buttons_with_codes() \
@@ -711,7 +727,6 @@ class Macro:
                         keyline = macro.macro_keyline
 
             if keyline == '':
-                self.interrupted = True
                 break
 
             if pause_time:
@@ -747,6 +762,8 @@ class Macro:
             self.savefile.make_journal_entry(f'Hotkey "{self}" not started because Elden Ring is not open.')
             return
 
+
+
         # Execution.
         for i, key_press in enumerate(key_presses):
 
@@ -759,9 +776,6 @@ class Macro:
                 if window_title_before_executing != window_title:
                     self.savefile.make_journal_entry(f'Window changed. Hotkey "{self}" execution was broken.')
                     break
-
-            if self.interrupted:
-                break
 
             # Additional pauses.
             if key_press.startswith('pause'):
@@ -782,38 +796,64 @@ class Macro:
                 key_press = parts[0]
                 press_time = int(parts[2]) / 1000
 
-            # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
-            if key_press in self.savefile.game_controls.keys():
-                key_for_message = key_press
-                key_press = self.savefile.game_controls[key_press].lower()
-                if key_for_message and not key_press:
-                    self.savefile.make_journal_entry(f'Key "{key_for_message}" was not found in ER controls. Check Melina\'s Fingers settings.')
-                    break
+            # If we have an expression like 'guard+a+home', that's a command
+            # to press these keys simultaneously. We need to put these keys in
+            # a list and handle them separately.
+            keys_list = []
+            if len(key_press) > 1 and '+' in key_press:
+                keys_list = key_press.split('+')
+            else:
+                keys_list.append(key_press)
 
             # We'll just skip empty keys to not get to exception.
-            if key_press.strip() == '':
-                continue
+            for key_press in keys_list:
+                if key_press.strip() == '':
+                    self.savefile.make_journal_entry('Had an empty key press, so it was skipped.')
+                    continue
+
+            # Turn actions ("guard", "strong_attack" etc.) to actions' keys.
+            for i, key_press in enumerate(keys_list):
+                if key_press in self.savefile.game_controls.keys():
+                    key_for_message = key_press
+                    key_press = self.savefile.game_controls[key_press].lower()
+                    if key_for_message and not key_press:
+                        self.savefile.make_journal_entry(f'Key "{key_for_message}" was not found in ER controls. Check Melina\'s Fingers settings.')
+                        break
+                    else:
+                        keys_list[i] = key_press
 
             # TODO: need to understand, why 'keyboard' can't press arrows
             #  in game but 'pynput' can. Using two separate methods for input
             #  makes me feel silly.
 
             # Key presses execution.
+
             keys_for_pynput = ['up', 'left', 'right', 'down']
-            if key_press in keys_for_pynput:
-                if key_press in non_letter_keys():
-                    key_press = Key[key_press]
-                pynput_in.press(key_press)
-                time.sleep(press_time)
-                pynput_in.release(key_press)
-            else:
-                keyboard.press(key_press)
-                time.sleep(press_time)
-                keyboard.release(key_press)
+            for key_press in keys_list:
+                if key_press in keys_for_pynput:
+                    if key_press in non_letter_keys():
+                        key_press = Key[key_press]
+                    pynput_in.press(key_press)
+                    # time.sleep(press_time)
+                    # pynput_in.release(key_press)
+                else:
+                    keyboard.press(key_press)
+                    # time.sleep(press_time)
+                    # keyboard.release(key_press)
+
+            time.sleep(press_time)
+
+            for key_press in keys_list:
+                if key_press in keys_for_pynput:
+                    if key_press in non_letter_keys():
+                        key_press = Key[key_press]
+                    pynput_in.release(key_press)
+                else:
+                    keyboard.release(key_press)
 
             time.sleep(sleep_time)
 
-        self.interrupted = False
+        time.sleep(sleep_time)
 
 
 def built_in_macros() -> list:
@@ -837,6 +877,9 @@ def built_in_macros() -> list:
                     '   1) that\'s easiest order to be calculated via save file;\n'
                     '   2) it allows to pick up new weapons in PvE as new weapons go to\n'
                     '      the end of the list.'},
+        {'name': 'Crouch attack',
+         'keyline': 'crouch|attack',
+         'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
          'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
@@ -890,6 +933,12 @@ def built_in_macros() -> list:
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
+        {'name': 'Two-handing a right weapon',
+         'keyline': 'event_action+attack',
+         'comment': 'For those who miss the days when it could be done with one button.'},
+        {'name': 'Two-handing a left weapon',
+         'keyline': 'event_action+guard',
+         'comment': 'For those who miss the days when it could be done with one button.'},
         {'name': 'Six invasion attempts (wide)',
          'keyline': (f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
@@ -964,9 +1013,9 @@ def keyline_to_sort_all_lists() -> str:
     # 3. Talismans.
     # 4. Items.
 
-    keyline = 'esc|e|e|t|down|e|pause300|q|pause300|' \
-              'down|down|e|t|down|e|pause300|q|pause300|' \
-              'down|e|t|down|e|pause300|esc'
+    keyline = 'esc|e|pause50|e|t|down|e|pause300|q|pause300|' \
+              'down|down|e|pause50|t|down|e|pause300|q|pause300|' \
+              'down|e|pause50|t|down|e|pause300|esc'
     # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline

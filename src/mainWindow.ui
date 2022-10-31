@@ -518,7 +518,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -1408,7 +1408,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>450</y>
+        <y>460</y>
         <width>151</width>
         <height>25</height>
        </rect>
@@ -1457,7 +1457,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>450</y>
+        <y>460</y>
         <width>161</width>
         <height>25</height>
        </rect>
@@ -1479,7 +1479,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>420</y>
+        <y>405</y>
         <width>241</width>
         <height>25</height>
        </rect>
@@ -1525,7 +1525,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Enter any names you want. The only important thing is order.</string>
+       <string>Enter any names. The only important thing is order.</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -2209,7 +2209,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>390</y>
+        <y>380</y>
         <width>161</width>
         <height>25</height>
        </rect>
@@ -2231,7 +2231,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>180</x>
-        <y>394</y>
+        <y>384</y>
         <width>16</width>
         <height>20</height>
        </rect>
@@ -2315,7 +2315,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>360</y>
+        <y>350</y>
         <width>241</width>
         <height>25</height>
        </rect>
@@ -2367,6 +2367,62 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <enum>QFrame::Plain</enum>
       </property>
      </widget>
+     <widget class="QLabel" name="label_63">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>430</y>
+        <width>161</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Two-hand a weapon:</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBox_Equip_TwoHand">
+      <property name="geometry">
+       <rect>
+        <x>180</x>
+        <y>430</y>
+        <width>151</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <item>
+       <property name="text">
+        <string/>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Right weapon</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Left weapon</string>
+       </property>
+      </item>
+     </widget>
      <zorder>picture_inventory</zorder>
      <zorder>picture_equip_weaponright_1</zorder>
      <zorder>label_9</zorder>
@@ -2387,7 +2443,6 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>button_Equip_Skip</zorder>
      <zorder>button_Equip_Cancel</zorder>
      <zorder>tableWidget_Equipment</zorder>
-     <zorder>comboBox_Equip_InstantAction</zorder>
      <zorder>label_47</zorder>
      <zorder>label_48</zorder>
      <zorder>label_50</zorder>
@@ -2416,6 +2471,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>label_55</zorder>
      <zorder>checkBox_Equipment_NotEnoughStats</zorder>
      <zorder>checkBox_Equipment_ManualMode</zorder>
+     <zorder>comboBox_Equip_InstantAction</zorder>
+     <zorder>label_63</zorder>
+     <zorder>comboBox_Equip_TwoHand</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Magic">
      <widget class="QTableWidget" name="tableWidget_AvaiableMagic">
@@ -3475,7 +3533,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>320</x>
         <y>30</y>
-        <width>381</width>
+        <width>421</width>
         <height>131</height>
        </rect>
       </property>
@@ -3533,8 +3591,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>350</x>
-        <y>120</y>
-        <width>341</width>
+        <y>110</y>
+        <width>391</width>
         <height>81</height>
        </rect>
       </property>
@@ -3564,8 +3622,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>200</y>
-        <width>381</width>
+        <y>190</y>
+        <width>421</width>
         <height>301</height>
        </rect>
       </property>
@@ -3579,7 +3637,7 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;p&gt;8) &lt;span style=&quot; color:#b4a68a;&quot;&gt;#&lt;/span&gt; - commentary. E.g. &amp;quot;# please please work&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;p&gt;8) &lt;span style=&quot; color:#b4a68a;&quot;&gt;simultaneous press (+)&lt;/span&gt;. E.g. &amp;quot;alt+move_up_press5000&amp;quot; will make you walk forward for 5 seconds&lt;/p&gt;&lt;p&gt;9) &lt;span style=&quot; color:#b4a68a;&quot;&gt;#&lt;/span&gt; - commentary. E.g. &amp;quot;# please please just work&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -5040,7 +5098,7 @@ p, li { white-space: pre-wrap; }
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manual work with &amp;quot;mf_settings.cfg&amp;quot;:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
