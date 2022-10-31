@@ -1,6 +1,7 @@
 import inspect
 import sys
 import os
+import webbrowser
 import pickle
 from datetime import datetime
 from pathlib import Path
@@ -90,6 +91,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.add_introductory_macros()
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
+        self.Pages_SetPage()
         self.refresh_all()
         self.refresh_currents()
         self.set_font_size()
@@ -381,7 +383,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Items.
         self.savefile.current_saveslot.current_item = 0
 
-        self.savefile.make_journal_entry('Current positions were refreshed.')
+        self.savefile.make_journal_entry('Current positions for "Semi-manual" modes were refreshed.')
         self.Pages_Refresh_Journal()
 
     def ControlsReload(self) -> None:
@@ -431,6 +433,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_Journal.clicked.connect(self.Journal_Click)
         self.button_Save.clicked.connect(self.Save_Click)
         self.button_Load.clicked.connect(self.Load_Click)
+        self.button_About.clicked.connect(self.About_Click)
+        self.button_GitHub.clicked.connect(self.GitHub_Click)
 
         # Page "Equipment"
         self.checkBox_Equipment_ManualMode.clicked.connect(self.Equipment_ManualMode_OnChange)
@@ -553,6 +557,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.spinBox_StandardPauseTime.valueChanged.connect(self.StandardPauseTime_OnChange)
         self.button_FontSizeUp.clicked.connect(lambda x: self.adjust_font_size(1))
         self.button_FontSizeDown.clicked.connect(lambda x: self.adjust_font_size(-1))
+
+        # Page "About"
+        self.button_Nexus.clicked.connect(self.Nexus_Clicked)
+        self.button_Tutorial.clicked.connect(self.Tutorial_Clicked)
+        self.button_PayPal.clicked.connect(self.PayPal_Clicked)
+        self.button_GitHub2.clicked.connect(self.GitHub_Click)
 
     def set_font_size(self) -> None:
         """
@@ -829,9 +839,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.Pages_SetPage()
 
+        self.Pages_Refresh_Settings()
+
     def Journal_Click(self) -> None:
         """
-
 
         """
 
@@ -841,6 +852,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.stackedWidget_Pages.setCurrentIndex(8)
         else:
             self.Pages_SetPage()
+
+        self.Pages_Refresh_Settings()
+
+    def About_Click(self) -> None:
+        """
+
+        """
+
+        if self.stackedWidget_Pages.currentIndex() != 9:
+            self.stackedWidget_Pages.setCurrentIndex(9)
+        else:
+            self.Pages_SetPage()
+
+        self.Pages_Refresh_Settings()
 
     def Save_Click(self) -> None:
         """
@@ -858,6 +883,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.refresh_all()
         self.refresh_currents()
+
+    def GitHub_Click(self) -> None:
+        """
+
+        """
+
+        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+
+    def Tutorial_Clicked(self) -> None:
+        """
+
+        """
+        # TODO: не забыть
+        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+
+    def PayPal_Clicked(self) -> None:
+        """
+
+        """
+        # TODO: не забыть
+        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+
+    def Nexus_Clicked(self) -> None:
+        """
+
+        """
+
+        webbrowser.open_new('https://www.nexusmods.com/eldenring/mods/2494')
 
     def AddMacro_Click(self):
         """
@@ -1852,7 +1905,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Refreshes elements on "Settings" page and buttons on upper panel.
         """
 
-        # Turn on/off button.
+        # Buttons on upper panel.
         buttonTurnOff = self.button_TurnOnOff
         if self.turn_off:
             buttonTurnOff.setText('Turned off')
@@ -1860,6 +1913,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             buttonTurnOff.setText('Turned on')
             buttonTurnOff.setStyleSheet("background-color: rgb(31,32,27)")
+
+        button_Settings = self.button_Settings
+        if self.stackedWidget_Pages.currentIndex() != 7:
+            button_Settings.setStyleSheet("")
+        else:
+            button_Settings.setStyleSheet("background-color: rgb(60,60,50)")
+
+        button_Journal = self.button_Journal
+        if self.stackedWidget_Pages.currentIndex() != 8:
+            button_Journal.setStyleSheet("")
+        else:
+            button_Journal.setStyleSheet("background-color: rgb(60,60,50)")
+
+        button_About = self.button_About
+        if self.stackedWidget_Pages.currentIndex() != 9:
+            button_About.setStyleSheet("")
+        else:
+            button_About.setStyleSheet("background-color: rgb(60,60,50)")
 
         # Recovery hotkey.
         self.comboBox_RecoveryHotkey.setCurrentText(self.savefile.recovery_hotkey)
@@ -1920,10 +1991,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while self.table_Journal.rowCount():
             self.table_Journal.removeRow(0)
 
+        last_date = ''
         for i, date_entry in enumerate(self.savefile.journal):
+            date = date_entry[0]
+            if date == last_date:
+                date = ''
+            entry = date_entry[1]
             self.table_Journal.insertRow(i)
-            self.table_Journal.setItem(i, 0, QTableWidgetItem(date_entry[0]))
-            self.table_Journal.setItem(i, 1, QTableWidgetItem(date_entry[1]))
+            self.table_Journal.setItem(i, 0, QTableWidgetItem(date))
+            self.table_Journal.setItem(i, 1, QTableWidgetItem(entry))
+            last_date = date_entry[0]
 
     def RefreshJournal_Click(self) -> None:
         """

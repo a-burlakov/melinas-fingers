@@ -279,9 +279,9 @@ QScrollBar {
    <widget class="QPushButton" name="button_DeleteMacros">
     <property name="geometry">
      <rect>
-      <x>960</x>
+      <x>940</x>
       <y>120</y>
-      <width>151</width>
+      <width>171</width>
       <height>25</height>
      </rect>
     </property>
@@ -1500,7 +1500,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <string notr="true">color: rgb(180, 166, 138);</string>
       </property>
       <property name="text">
-       <string>Genetal settings</string>
+       <string>General settings</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -3637,7 +3637,7 @@ p, li { white-space: pre-wrap; }
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;p&gt;8) &lt;span style=&quot; color:#b4a68a;&quot;&gt;simultaneous press (+)&lt;/span&gt;. E.g. &amp;quot;alt+move_up_press5000&amp;quot; will make you walk forward for 5 seconds&lt;/p&gt;&lt;p&gt;9) &lt;span style=&quot; color:#b4a68a;&quot;&gt;#&lt;/span&gt; - commentary. E.g. &amp;quot;# please please just work&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;3) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any built-in hotkey name&lt;/span&gt;, like &amp;quot;Stance attack&amp;quot;&lt;/p&gt;&lt;p&gt;4) &lt;span style=&quot; color:#b4a68a;&quot;&gt;any hotkey name&lt;/span&gt;, like &amp;quot;My lovely hotkey from the table on the left&amp;quot;&lt;/p&gt;&lt;p&gt;5) &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pressN &lt;/span&gt;postfix for pressing a button, where N is ms. E.g. &amp;quot;roll_press5000&amp;quot; will press your &amp;quot;roll&amp;quot; key for 5 seconds.&lt;/p&gt;&lt;p&gt;6) &lt;span style=&quot; color:#b4a68a;&quot;&gt;pauseN &lt;/span&gt;for a pause, where N is ms. &lt;span style=&quot; color:#b4a68a;&quot;&gt;_pauseN &lt;/span&gt;postfix for a pause after pressing a button. E.g. &amp;quot;jump_pause2000&amp;quot; and &amp;quot;Crouch attack&amp;quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.&lt;/p&gt;&lt;p&gt;7) &lt;span style=&quot; color:#b4a68a;&quot;&gt;multiplication (*) &lt;/span&gt;for making actions many times. E.g. &amp;quot;crouch_pause100 * 50&amp;quot; will make you feel very good about yourself.&lt;/p&gt;&lt;p&gt;8) &lt;span style=&quot; color:#b4a68a;&quot;&gt;simultaneous press (+)&lt;/span&gt;. E.g. &amp;quot;alt+move_up_press5000&amp;quot; will make you walk forward for 5 seconds&lt;/p&gt;&lt;p&gt;9) &lt;span style=&quot; color:#b4a68a;&quot;&gt;comment (#)&lt;/span&gt;. E.g. &amp;quot;# please please just work&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textFormat">
        <enum>Qt::RichText</enum>
@@ -5054,31 +5054,6 @@ p, li { white-space: pre-wrap; }
        <string>Save</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_Journal">
-      <property name="geometry">
-       <rect>
-        <x>570</x>
-        <y>460</y>
-        <width>171</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="text">
-       <string>Open journal</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_56">
       <property name="geometry">
        <rect>
@@ -5212,7 +5187,6 @@ p, li { white-space: pre-wrap; }
      <zorder>button_ControlsReload</zorder>
      <zorder>button_Load</zorder>
      <zorder>button_Save</zorder>
-     <zorder>button_Journal</zorder>
      <zorder>comboBox_ItemsSearchMode</zorder>
      <zorder>label_62</zorder>
     </widget>
@@ -5405,12 +5379,245 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_About">
-     <widget class="QLabel" name="label_16">
+     <widget class="QPushButton" name="button_GitHub2">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>120</y>
+        <width>171</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <italic>false</italic>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);
+	border: 2px solid;
+	border-color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Give me a star on GitHub</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_PayPal">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>300</y>
+        <width>171</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>Donate via PayPal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_Nexus">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>300</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>Nexus Page</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="button_Tutorial">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>330</y>
+        <width>171</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>YouTube Tutorial</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_64">
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
-        <width>111</width>
+        <y>10</y>
+        <width>741</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>18</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Meilna's Fingers 0.1 Beta</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_65">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>150</y>
+        <width>291</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Yout star on my GitHub is everthing I need in my life. You know you know you know you know you know you know you know you know you know you know you know you know </string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::RichText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_66">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>330</y>
+        <width>281</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>You know you know you know you know you know you know you know you know you know you know you know you know </string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_67">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>180</y>
+        <width>161</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>E-mail:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_68">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>150</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string>Developer:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_69">
+      <property name="geometry">
+       <rect>
+        <x>390</x>
+        <y>80</y>
+        <width>221</width>
         <height>25</height>
        </rect>
       </property>
@@ -5430,18 +5637,93 @@ p, li { white-space: pre-wrap; }
        <string notr="true">color: rgb(180, 166, 138);</string>
       </property>
       <property name="text">
-       <string>About</string>
+       <string>If you want to help</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_GitHub">
+     <widget class="QLabel" name="label_70">
       <property name="geometry">
        <rect>
-        <x>600</x>
-        <y>280</y>
-        <width>71</width>
+        <x>0</x>
+        <y>80</y>
+        <width>221</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>Author</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_71">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>260</y>
+        <width>341</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(180, 166, 138);</string>
+      </property>
+      <property name="text">
+       <string>If you have questions, wishes or bugreports</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::PlainText</enum>
+      </property>
+     </widget>
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>121</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-image: url(:/newPrefix/images/flower.png);</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_72">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>150</y>
+        <width>141</width>
         <height>25</height>
        </rect>
       </property>
@@ -5449,24 +5731,21 @@ p, li { white-space: pre-wrap; }
        <font>
         <family>Garamond</family>
         <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
        </font>
       </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>GitHub</string>
+       <string>Flower</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_PayPal">
+     <widget class="QLabel" name="label_73">
       <property name="geometry">
        <rect>
-        <x>510</x>
-        <y>280</y>
-        <width>71</width>
+        <x>240</x>
+        <y>180</y>
+        <width>121</width>
         <height>25</height>
        </rect>
       </property>
@@ -5474,43 +5753,30 @@ p, li { white-space: pre-wrap; }
        <font>
         <family>Garamond</family>
         <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
        </font>
       </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <property name="text">
-       <string>PayPal</string>
+       <string>fln@mail.ru</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="button_Nexus">
-      <property name="geometry">
-       <rect>
-        <x>430</x>
-        <y>280</y>
-        <width>71</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="text">
-       <string>Nexus</string>
-      </property>
-     </widget>
+     <zorder>label_68</zorder>
+     <zorder>button_GitHub2</zorder>
+     <zorder>button_PayPal</zorder>
+     <zorder>button_Nexus</zorder>
+     <zorder>button_Tutorial</zorder>
+     <zorder>label_64</zorder>
+     <zorder>label_65</zorder>
+     <zorder>label_66</zorder>
+     <zorder>label_67</zorder>
+     <zorder>label_69</zorder>
+     <zorder>label_70</zorder>
+     <zorder>label_71</zorder>
+     <zorder>graphicsView</zorder>
+     <zorder>label_73</zorder>
+     <zorder>label_72</zorder>
     </widget>
    </widget>
    <widget class="QPushButton" name="button_OpenSaveFile">
@@ -5831,9 +6097,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_Settings">
     <property name="geometry">
      <rect>
-      <x>960</x>
-      <y>30</y>
-      <width>71</width>
+      <x>850</x>
+      <y>60</y>
+      <width>81</width>
       <height>25</height>
      </rect>
     </property>
@@ -5996,9 +6262,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_TurnOnOff">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>850</x>
       <y>30</y>
-      <width>71</width>
+      <width>81</width>
       <height>25</height>
      </rect>
     </property>
@@ -6021,9 +6287,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="button_About">
     <property name="geometry">
      <rect>
-      <x>1040</x>
-      <y>30</y>
-      <width>71</width>
+      <x>1030</x>
+      <y>60</y>
+      <width>81</width>
       <height>25</height>
      </rect>
     </property>
@@ -6041,6 +6307,61 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>About</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_Journal">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>60</y>
+      <width>81</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="text">
+     <string>Journal</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_GitHub">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>30</y>
+      <width>171</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Garamond</family>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(180, 166, 138);
+	border: 2px solid;
+	border-color: rgb(180, 166, 138);</string>
+    </property>
+    <property name="text">
+     <string>Give me a star on GitHub</string>
     </property>
    </widget>
    <zorder>graphicsView_2</zorder>
@@ -6068,6 +6389,8 @@ p, li { white-space: pre-wrap; }
    <zorder>label_8</zorder>
    <zorder>button_TurnOnOff</zorder>
    <zorder>button_About</zorder>
+   <zorder>button_Journal</zorder>
+   <zorder>button_GitHub</zorder>
   </widget>
  </widget>
  <resources>
