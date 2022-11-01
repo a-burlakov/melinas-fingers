@@ -29,6 +29,7 @@ LAST_KEY_COMBINATION = set()
 HOTKEYS = {}
 
 
+
 def pynput_on_press(key):
 
     global LAST_KEY_COMBINATION
@@ -47,8 +48,8 @@ def pynput_on_press(key):
     for combination, func in HOTKEYS.items():
 
         if combination <= CURRENT_KEY_COMBINATION:
-            func()
             CURRENT_KEY_COMBINATION.clear()
+            func()
             break
 
 
@@ -195,9 +196,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro = Macro(self.savefile.current_saveslot)
         macro.name = 'Reverse backstep'
         macro.type = 'DIY'
-        macro.hotkey = self.savefile.game_controls['roll']
+        macro.hotkey = 'Z'
         macro.hotkey_ctrl = False
-        macro.hotkey_shift = True
+        macro.hotkey_shift = False
         macro.hotkey_alt = False
         macro.settings['diy']['macro'] = \
             'roll\n' \
@@ -208,6 +209,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             '# \n' \
             '# As timing window is strict, maybe you\'ll need to adjust "pauseN" line considering "Standard pause time" setting. ' \
             'Total pause time should not exceed 40 ms.'
+        macro.settings['diy']['times_to_repeat'] = 1
 
         macros.append(macro)
 
@@ -234,8 +236,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                          'a_press50\n' \
                                          's_press50\n' \
                                          'd_press50\n' \
-                                         'w_press50\n' \
-                                         'pause20\n' * 6
+                                         'w_press50\n'
+        macro.settings['diy']['times_to_repeat'] = 1
         macros.append(macro)
 
         # Teabagging.
@@ -247,6 +249,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.hotkey_shift = False
         macro.hotkey_alt = True
         macro.settings['diy']['macro'] = 'crouch_pause100 * 50'
+        macro.settings['diy']['times_to_repeat'] = 1
         macros.append(macro)
 
         # Items.
@@ -327,6 +330,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.turn_off:
             return
 
+        # pynput_listener_start()
+
         # We need to gather all possible hotkeys and sort them by hotkey
         # length. It's needed for longer hotkeys (e.g. Ctrl+Shift+Q) would have
         # priority over shorter ones (e.g. Ctrl+Q).
@@ -386,6 +391,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.savefile.make_journal_entry('Current positions for "Semi-manual" modes were refreshed.')
         self.Pages_Refresh_Journal()
 
+        return True
+
     def ControlsReload(self) -> None:
         """
 
@@ -441,6 +448,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_EquipmentAdd.clicked.connect(self.Equipment_ManualMode_Add)
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
         self.button_EquipmentReloadInventory.clicked.connect(self.Equipment_ReloadInventory)
+        self.comboBox_EquipmentInventoryCurrentType.activated.connect(self.EquipmentInventoryType_OnChange)
         self.tableWidget_Equipment.cellPressed.connect(self.Equipment_ManualMode_Table_OnChange)
         self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
         self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
@@ -500,6 +508,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Page "DIY"
         self.textEdit_DIY.textChanged.connect(self.textEdit_DIY_OnChange)
+        self.spinBox_DIYTimes.textChanged.connect(self.DIYTimes_OnChange)
 
         # Page "Journal"
         header = self.table_Journal.horizontalHeader()
@@ -1205,7 +1214,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
-
     def Pages_Equipment_Table_Refresh(self) -> None:
         """
         Refill a table on "Equipment" page with equipment in saveslot settings.
@@ -1213,11 +1221,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.tableWidget_Equipment.blockSignals(True)
 
-        # self.Equipment_ManualMode_Table_OnChange()
+        # TODO: тут поправить какая таблица выходит, когда мы выделяем
 
         table_Equipment = self.tableWidget_Equipment
-        settings = self.current_macro.settings['equipment']
-        manual_mode = self.savefile.current_saveslot.weapons_manual_mode
+
+        equipment_type_manual_mode_accordance = {
+            'Armament': self.savefile.current_saveslot.weapons_manual_mode,
+            'Armor (head)': self.savefile.current_saveslot.armor_head_manual_mode,
+            'Armor (chest)': self.savefile.current_saveslot.armor_chest_manual_mode,
+            'Armor (arms)': self.savefile.current_saveslot.armor_arms_manual_mode,
+            'Armor (legs)': self.savefile.current_saveslot.armor_legs_manual_mode,
+            'Talismans': self.savefile.current_saveslot.talismans_manual_mode
+        }
+
+        current_equipment_type = self.savefile.current_saveslot.current_equipment_type
+        manual_mode = equipment_type_manual_mode_accordance[current_equipment_type]
         choosing_now = (self.equipment_current_cell != '')
 
         # Permission to edit.
@@ -1234,26 +1252,59 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             'armor_chest': self.savefile.current_saveslot.armor_chest,
             'armor_arms': self.savefile.current_saveslot.armor_arms,
             'armor_legs': self.savefile.current_saveslot.armor_legs,
-            'talismans': self.savefile.current_saveslot.talismans
+            'talismans': self.savefile.current_saveslot.talismans,
+            'weapons_manual': self.savefile.current_saveslot.weapons_manual,
+            'armor_head_manual': self.savefile.current_saveslot.armor_head_manual,
+            'armor_chest_manual': self.savefile.current_saveslot.armor_chest_manual,
+            'armor_arms_manual': self.savefile.current_saveslot.armor_arms_manual,
+            'armor_legs_manual': self.savefile.current_saveslot.armor_legs_manual,
+            'talismans_manual': self.savefile.current_saveslot.talismans_manual
         }
 
-        # In manual mode we take separate collection.
+        # Choosing a collection to show in specific situation.
         collection = []
+        type_for_collection = ''
 
         if choosing_now:
-            if manual_mode and 'weapon' in self.equipment_current_cell:
-                collection = self.savefile.current_saveslot.weapons_manual
-            elif 'weapon' in self.equipment_current_cell:
-                collection = collections_from_type['weapons']
+            if 'weapon' in self.equipment_current_cell:
+                type_for_collection = 'weapons'
             elif 'talisman' in self.equipment_current_cell:
-                collection = collections_from_type['talismans']
+                type_for_collection = 'talismans'
             else:
-                # Armor.
-                collection = collections_from_type[self.equipment_current_cell]
-        elif manual_mode:
-            collection = self.savefile.current_saveslot.weapons_manual
+                type_for_collection = self.equipment_current_cell
         else:
-            collection = collections_from_type['weapons']
+            current_equipment_type = current_equipment_type.lower()
+            if 'armament' in current_equipment_type:
+                type_for_collection = 'weapons'
+            elif 'head' in current_equipment_type:
+                type_for_collection = 'armor_head'
+            elif 'chest' in current_equipment_type:
+                type_for_collection = 'armor_chest'
+            elif 'arms' in current_equipment_type:
+                type_for_collection = 'armor_arms'
+            elif 'legs' in current_equipment_type:
+                type_for_collection = 'armor_legs'
+            elif 'talisman' in current_equipment_type:
+                type_for_collection = 'talismans'
+
+        manual_mode_for_current = False
+        if 'weapon' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.weapons_manual_mode
+        elif 'head' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.armor_head_manual_mode
+        elif 'chest' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.armor_chest_manual_mode
+        elif 'arms' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.armor_arms_manual_mode
+        elif 'legs' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.armor_legs_manual_mode
+        elif 'talisman' in self.equipment_current_cell:
+            manual_mode_for_current = self.savefile.current_saveslot.talismans_manual_mode
+
+        if (choosing_now and manual_mode_for_current)\
+                or (not choosing_now and manual_mode):
+            type_for_collection += '_manual'
+        collection = collections_from_type[type_for_collection]
 
         # Clearing table.
         while table_Equipment.rowCount():
@@ -1274,17 +1325,43 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         settings = self.current_macro.settings['equipment']
-        manual_mode = self.savefile.current_saveslot.weapons_manual_mode
 
+        equipment_type_manual_mode_accordance = {
+            'Armament': self.savefile.current_saveslot.weapons_manual_mode,
+            'Armor (head)': self.savefile.current_saveslot.armor_head_manual_mode,
+            'Armor (chest)': self.savefile.current_saveslot.armor_chest_manual_mode,
+            'Armor (arms)': self.savefile.current_saveslot.armor_arms_manual_mode,
+            'Armor (legs)': self.savefile.current_saveslot.armor_legs_manual_mode,
+            'Talismans': self.savefile.current_saveslot.talismans_manual_mode
+        }
+
+        current_equipment_type = self.savefile.current_saveslot.current_equipment_type
+        is_manual_mode = equipment_type_manual_mode_accordance[current_equipment_type]
         current_cell = self.equipment_current_cell
         is_choosing_now = (current_cell != '')
 
-        self.checkBox_Equipment_ManualMode.setChecked(manual_mode)
+        if is_choosing_now:
+            if 'weapon' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.weapons_manual_mode)
+            elif 'head' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.armor_head_manual_mode)
+            elif 'chest' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.armor_chest_manual_mode)
+            elif 'arms' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.armor_arms_manual_mode)
+            elif 'legs' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.armor_legs_manual_mode)
+            elif 'talisman' in current_cell:
+                self.checkBox_Equipment_ManualMode.setChecked(self.savefile.current_saveslot.talismans_manual_mode)
+        else:
+            self.checkBox_Equipment_ManualMode.setChecked(is_manual_mode)
+
         self.checkBox_Equipment_ManualMode.setEnabled(not is_choosing_now)
 
-        show_weapon_manual_buttons = manual_mode and self.equipment_current_cell == ''
-        self.button_EquipmentAdd.setHidden(not show_weapon_manual_buttons)
-        self.button_EquipmentDelete.setHidden(not show_weapon_manual_buttons)
+        self.button_EquipmentAdd.setHidden(not is_manual_mode or is_choosing_now)
+        self.button_EquipmentDelete.setHidden(not is_manual_mode or is_choosing_now)
+        self.button_EquipmentReloadInventory.setHidden(is_manual_mode or is_choosing_now)
+        self.comboBox_EquipmentInventoryCurrentType.setHidden(is_choosing_now)
 
         # Instant action.
         action = self.current_macro.settings['equipment']['instant_action']
@@ -1317,8 +1394,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.checkBox_Equipment_NotEnoughStats.setEnabled(True)
             check = settings[current_cell]['not_enough_stats']
             self.checkBox_Equipment_NotEnoughStats.setChecked(check)
-
-
 
     def Pages_Equipment_Cells_Refresh(self) -> None:
         """
@@ -1461,8 +1536,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
 
-
-
     def button_Equip_Cancel_Clicked(self) -> None:
         """
 
@@ -1481,10 +1554,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Changes things after manual mode is changed on "Equipment" page.
         """
 
-        settings = self.current_macro.settings['equipment']
-        self.savefile.current_saveslot.weapons_manual_mode = self.checkBox_Equipment_ManualMode.isChecked()
+        current_equipment_type = self.savefile.current_saveslot.current_equipment_type
+        is_checked = self.checkBox_Equipment_ManualMode.isChecked()
+        if current_equipment_type == 'Armament':
+            self.savefile.current_saveslot.weapons_manual_mode = is_checked
+        elif current_equipment_type == 'Armor (head)':
+            self.savefile.current_saveslot.armor_head_manual_mode = is_checked
+        elif current_equipment_type == 'Armor (chest)':
+            self.savefile.current_saveslot.armor_chest_manual_mode = is_checked
+        elif current_equipment_type == 'Armor (arms)':
+            self.savefile.current_saveslot.armor_arms_manual_mode = is_checked
+        elif current_equipment_type == 'Armor (legs)':
+            self.savefile.current_saveslot.armor_legs_manual_mode = is_checked
+        elif current_equipment_type == 'Talismans':
+            self.savefile.current_saveslot.talismans_manual_mode = is_checked
 
         self.Pages_Refresh_Equipment()
+
+    def EquipmentInventoryType_OnChange(self) -> None:
+        """
+        Changes things after inventory type is changed on "Equipment" page.
+        """
+
+        self.savefile.current_saveslot.current_equipment_type = self.comboBox_EquipmentInventoryCurrentType.currentText()
+
+        self.Pages_Equipment_Buttons_Refresh()
+        self.Pages_Equipment_Table_Refresh()
 
     def Equipment_ManualMode_Add(self) -> None:
         """
@@ -1493,15 +1588,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.Equipment_ManualMode_Table_OnChange()
 
-        self.savefile.current_saveslot.weapons_manual.append({
-            'name': '< weapon >',
+        equipment_type_collections_accordance = {
+            'Armament': ('weapon', self.savefile.current_saveslot.weapons_manual),
+            'Armor (head)': ('head', self.savefile.current_saveslot.armor_head_manual),
+            'Armor (chest)': ('chest', self.savefile.current_saveslot.armor_chest_manual),
+            'Armor (arms)': ('arms', self.savefile.current_saveslot.armor_arms_manual),
+            'Armor (legs)': ('legs', self.savefile.current_saveslot.armor_legs_manual),
+            'Talismans': ('talisman', self.savefile.current_saveslot.talismans_manual)
+        }
+
+        equipment_type = self.savefile.current_saveslot.current_equipment_type
+        standard_name = equipment_type_collections_accordance[equipment_type][0]
+        collection = equipment_type_collections_accordance[equipment_type][1]
+        collection.append({
+            'name': f'< {standard_name} >',
             'position': len(self.savefile.current_saveslot.weapons_manual) + 1
         })
 
         self.Pages_Equipment_Table_Refresh()
 
         # Selecting last cell.
-        row, column = self.inventory_row_column_from_position(len(self.savefile.current_saveslot.weapons_manual))
+        row, column = self.inventory_row_column_from_position(len(collection))
         index = self.tableWidget_Equipment.model().index(row, column)
         self.tableWidget_Equipment.selectionModel().select(
             index, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
@@ -1512,7 +1619,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         Deletes a selected item in the list.
         """
 
-        manual_list = self.savefile.current_saveslot.weapons_manual
+        equipment_type_collections_accordance = {
+            'Armament': self.savefile.current_saveslot.weapons_manual,
+            'Armor (head)': self.savefile.current_saveslot.armor_head_manual,
+            'Armor (chest)': self.savefile.current_saveslot.armor_chest_manual,
+            'Armor (arms)': self.savefile.current_saveslot.armor_arms_manual,
+            'Armor (legs)': self.savefile.current_saveslot.armor_legs_manual,
+            'Talismans': self.savefile.current_saveslot.talismans_manual
+        }
+
+        equipment_type = self.savefile.current_saveslot.current_equipment_type
+
+        manual_list = equipment_type_collections_accordance[equipment_type]
 
         items = self.tableWidget_Equipment.selectedItems()
         if not len(items):
@@ -1593,7 +1711,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if choosing_now:
             return
 
-        manual_list = self.savefile.current_saveslot.weapons_manual
+        equipment_type_collections_accordance = {
+            'Armament': self.savefile.current_saveslot.weapons_manual,
+            'Armor (head)': self.savefile.current_saveslot.armor_head_manual,
+            'Armor (chest)': self.savefile.current_saveslot.armor_chest_manual,
+            'Armor (arms)': self.savefile.current_saveslot.armor_arms_manual,
+            'Armor (legs)': self.savefile.current_saveslot.armor_legs_manual,
+            'Talismans': self.savefile.current_saveslot.talismans_manual
+        }
+
+        equipment_type = self.savefile.current_saveslot.current_equipment_type
+
+        manual_list = equipment_type_collections_accordance[equipment_type]
         manual_list.clear()
 
         # Getting a collection from table.
@@ -1824,6 +1953,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
+        self.savefile.current_saveslot.spells.clear()
+
         self.savefile.current_saveslot.get_equipment()
         self.refresh_all()
 
@@ -1897,6 +2028,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
+        self.savefile.current_saveslot.items.clear()
+
         self.savefile.current_saveslot.get_equipment()
         self.refresh_all()
 
@@ -1937,6 +2070,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         self.textEdit_DIY.setText(self.current_macro.settings['diy']['macro'])
+        self.spinBox_DIYTimes.setValue(self.current_macro.settings['diy']['times_to_repeat'])
 
     def Pages_Refresh_Settings(self) -> None:
         """
@@ -2115,6 +2249,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.current_macro.settings['diy']['macro'] = self.textEdit_DIY.toPlainText()
 
+    def DIYTimes_OnChange(self) -> None:
+        """
+
+        """
+
+        self.current_macro.settings['diy']['times_to_repeat'] = self.spinBox_DIYTimes.value()
+
     def set_macro_name_from_settings(self):
         """
         Sets macro name to something from page
@@ -2217,13 +2358,22 @@ def start_application():
     window = MainWindow()
     sys.exit(app.exec_())
 
+def pynput_listener_start() -> None:
+    """
 
-if __name__ == '__main__':
+    :return:
+    """
 
-    # Startin 'pyntut' listener to read player's keypresses
+    # Startin 'pynput' listener to read player's keypresses
     listener = keyboard.Listener(
         on_press=pynput_on_press,
         on_release=pynput_on_release)
     listener.start()
+
+
+if __name__ == '__main__':
+
+    # Startin 'pyntut' listener to read player's keypresses
+    pynput_listener_start()
 
     start_application()

@@ -209,7 +209,8 @@ class Macro:
                 'macro_name': built_in_macros()[0]['name']
             },
             'diy': {
-                'macro': ''
+                'macro': '',
+                'times_to_repeat': 1
             }
         }
 
@@ -271,14 +272,13 @@ class Macro:
         try:
             self.form_keyline()
             self.execute_keyline()
-        except Exception as e:
-            self.savefile.make_journal_entry('Exception: ', e)
-            self.savefile.make_journal_entry(traceback.format_exc())
+        except Exception:
+            self.savefile.make_journal_entry(str(traceback.format_exc()))
 
         time_end = time.time()
 
         self.savefile.make_journal_entry(f'End: {self}')
-        self.savefile.make_journal_entry(f'Duration: {round(time_end - time_start, 5)}')
+        self.savefile.make_journal_entry(f'Duration: {str(round(time_end - time_start, 5))}')
         self.savefile.make_journal_entry('-'*40)
 
     def form_keyline(self):
@@ -484,6 +484,8 @@ class Macro:
                 continue
             elif value['action'] == 'remove':
                 cells[key]['keyline'] = 'r'
+                if search_mode == 'semi-manual':
+                    currents[key] = 0
                 continue
 
             # Handling 'equip' action.
@@ -593,6 +595,7 @@ class Macro:
                 if cur_spell > goal_spell:
                     needed_switches = total_spells - cur_spell + goal_spell
                 self.macro_keyline = '|switch_spell|pause10' * needed_switches
+                self.macro_keyline = self.macro_keyline[1:]
             else:
                 # In auto mode we find first spell by pressing a button for
                 # little bit and not bother.
@@ -662,6 +665,7 @@ class Macro:
         self.macro_keyline = built_in_macro['keyline']
 
     def form_keyline_diy(self):
+
         commands_list = self.settings['diy']['macro'].strip().split('\n')
         keyline_list = []
         for command in commands_list:
@@ -743,6 +747,9 @@ class Macro:
 
             keyline_list.append(keyline)
 
+        if self.settings['diy']['times_to_repeat']:
+            keyline_list = keyline_list * self.settings['diy']['times_to_repeat']
+
         self.macro_keyline = '|'.join(keyline_list)
 
     def execute_keyline(self) -> None:
@@ -755,14 +762,15 @@ class Macro:
         keyline = self.macro_keyline
         self.savefile.make_journal_entry(f'Keyline: {keyline}')
         key_presses = keyline.split('|')
-
+        key_presses = filter(lambda x: x.strip() != '', key_presses)
         window_title_before_executing = GetWindowText(GetForegroundWindow())
 
-        if 'elden ring' not in window_title_before_executing.lower():
-            self.savefile.make_journal_entry(f'Hotkey "{self}" not started because Elden Ring is not open.')
+        if 'elden ring' not in window_title_before_executing.lower()\
+                and 'dark souls' not in window_title_before_executing.lower():
+            self.savefile.make_journal_entry(f'Hotkey "{self}" not started because game is not open.')
             return
 
-
+        sleep_time = self.pause_time / 1000
 
         # Execution.
         for i, key_press in enumerate(key_presses):

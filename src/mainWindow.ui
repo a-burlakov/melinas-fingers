@@ -528,7 +528,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -1569,7 +1569,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        <string notr="true">color: rgb(180, 166, 138);</string>
       </property>
       <property name="text">
-       <string>Manual weapon mode</string>
+       <string>Manual mode</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -1812,7 +1812,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>130</y>
+        <y>110</y>
         <width>71</width>
         <height>71</height>
        </rect>
@@ -2265,9 +2265,9 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <widget class="QPushButton" name="button_EquipmentReloadInventory">
       <property name="geometry">
        <rect>
-        <x>580</x>
+        <x>380</x>
         <y>30</y>
-        <width>161</width>
+        <width>131</width>
         <height>25</height>
        </rect>
       </property>
@@ -2433,6 +2433,67 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
        </property>
       </item>
      </widget>
+     <widget class="QComboBox" name="comboBox_EquipmentInventoryCurrentType">
+      <property name="geometry">
+       <rect>
+        <x>590</x>
+        <y>30</y>
+        <width>141</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+      <property name="acceptDrops">
+       <bool>false</bool>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>12</width>
+        <height>12</height>
+       </size>
+      </property>
+      <property name="frame">
+       <bool>true</bool>
+      </property>
+      <item>
+       <property name="text">
+        <string>Armament</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Armor (head)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Armor (chest)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Armor (arms)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Armor (legs)</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Talismans</string>
+       </property>
+      </item>
+     </widget>
      <zorder>picture_inventory</zorder>
      <zorder>picture_equip_weaponright_1</zorder>
      <zorder>label_9</zorder>
@@ -2484,6 +2545,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
      <zorder>comboBox_Equip_InstantAction</zorder>
      <zorder>label_63</zorder>
      <zorder>comboBox_Equip_TwoHand</zorder>
+     <zorder>comboBox_EquipmentInventoryCurrentType</zorder>
     </widget>
     <widget class="QWidget" name="stackedWidget_Pages_Magic">
      <widget class="QTableWidget" name="tableWidget_AvaiableMagic">
@@ -3512,7 +3574,7 @@ border-image: url(:/newPrefix/images/talisman_active.png);}</string>
         <x>20</x>
         <y>30</y>
         <width>281</width>
-        <height>461</height>
+        <height>421</height>
        </rect>
       </property>
       <property name="font">
@@ -3657,6 +3719,62 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="wordWrap">
        <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_DIYTimes">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>460</y>
+        <width>71</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>1000</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>1</number>
+      </property>
+      <property name="displayIntegerBase">
+       <number>10</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_16">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>460</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Times to repeat:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </widget>
@@ -5401,7 +5519,7 @@ p, li { white-space: pre-wrap; }
        <bool>false</bool>
       </attribute>
       <attribute name="verticalHeaderMinimumSectionSize">
-       <number>2</number>
+       <number>10</number>
       </attribute>
       <column>
        <property name="text">
@@ -5460,9 +5578,9 @@ p, li { white-space: pre-wrap; }
        <font>
         <family>Garamond</family>
         <pointsize>10</pointsize>
-        <weight>75</weight>
+        <weight>50</weight>
         <italic>false</italic>
-        <bold>true</bold>
+        <bold>false</bold>
        </font>
       </property>
       <property name="focusPolicy">
@@ -5474,7 +5592,7 @@ p, li { white-space: pre-wrap; }
 	border-color: rgb(180, 166, 138);</string>
       </property>
       <property name="text">
-       <string>Give me a star on GitHub</string>
+       <string>Give a star on GitHub</string>
       </property>
      </widget>
      <widget class="QPushButton" name="button_PayPal">
@@ -6415,9 +6533,9 @@ p, li { white-space: pre-wrap; }
      <font>
       <family>Garamond</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
+      <weight>50</weight>
       <italic>false</italic>
-      <bold>true</bold>
+      <bold>false</bold>
      </font>
     </property>
     <property name="focusPolicy">
@@ -6429,7 +6547,7 @@ p, li { white-space: pre-wrap; }
 	border-color: rgb(180, 166, 138);</string>
     </property>
     <property name="text">
-     <string>Give me a star on GitHub</string>
+     <string>Give a star on GitHub</string>
     </property>
    </widget>
    <zorder>graphicsView_2</zorder>

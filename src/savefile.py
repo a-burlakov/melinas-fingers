@@ -374,13 +374,23 @@ class SaveSlot:
         self.savefile = SaveFile('')
         self.macros: list = []
         self.weapons: list = []
-        self.armor_head: list = []
-        self.armor_chest: list = []
-        self.armor_arms: list = []
-        self.armor_legs: list = []
-        self.talismans: list = []
         self.weapons_manual: list = []
         self.weapons_manual_mode: bool = False
+        self.armor_head: list = []
+        self.armor_head_manual: list = []
+        self.armor_head_manual_mode: bool = False
+        self.armor_chest: list = []
+        self.armor_chest_manual: list = []
+        self.armor_chest_manual_mode: bool = False
+        self.armor_arms: list = []
+        self.armor_arms_manual: list = []
+        self.armor_arms_manual_mode: bool = False
+        self.armor_legs: list = []
+        self.armor_legs_manual: list = []
+        self.armor_legs_manual_mode: bool = False
+        self.talismans: list = []
+        self.talismans_manual: list = []
+        self.talismans_manual_mode: bool = False
         self.spells: list = []
         self.items: list = []
         self.current_spell: int = 0
@@ -388,6 +398,7 @@ class SaveSlot:
         self.search_mode_magic: str = 'auto'
         self.search_mode_equipment: str = 'auto'
         self.search_mode_items: str = 'auto'
+        self.current_equipment_type = 'Armament'
         self.current_equipment = {'weapon_right_1': 0,
                                   'weapon_right_2': 0,
                                   'weapon_right_3': 0,
@@ -426,6 +437,7 @@ class SaveSlot:
         self.armor_legs = []
         self.talismans = []
         self.spells = []
+        self.items = []
 
         savefile_path = self.savefile.location
 
