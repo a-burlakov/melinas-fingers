@@ -888,15 +888,22 @@ def built_in_macros() -> list:
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
          'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
-        {'name': 'Crouch attack',
-         'keyline': 'crouch|attack',
-         'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
         {'name': 'Stance attack',
          'keyline': 'skill|attack',
          'comment': 'Goes to stance, then immediately perform an attack.'},
         {'name': 'Stance strong attack',
          'keyline': 'skill|strong_attack',
          'comment': 'Goes to stance, then immediately perform a strong attack.'},
+        {'name': 'Two-handing a right weapon',
+         'keyline': 'event_action+attack',
+         'comment': 'For those who miss the days when it could be done with one button.'},
+        {'name': 'Two-handing a left weapon',
+         'keyline': 'event_action+guard',
+         'comment': 'For those who miss the days when it could be done with one button.'},
+        {'name': 'Left weapon skill',
+         'keyline': 'event_action+guard|pause200|skill',
+         'comment': 'Takes weapons from left hand to both hands and performs\n'
+                    'it\'s skill immediately.'},
         {'name': 'Fast katana stance attacks',
          'keyline': 'skill_press300|attack|pause500|crouch_press20|crouch',
          'comment': 'Performs a stance attack and crouch to cancel a recovery\n'
@@ -941,12 +948,6 @@ def built_in_macros() -> list:
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
-        {'name': 'Two-handing a right weapon',
-         'keyline': 'event_action+attack',
-         'comment': 'For those who miss the days when it could be done with one button.'},
-        {'name': 'Two-handing a left weapon',
-         'keyline': 'event_action+guard',
-         'comment': 'For those who miss the days when it could be done with one button.'},
         {'name': 'Six invasion attempts (wide)',
          'keyline': (f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'

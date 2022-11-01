@@ -25,9 +25,9 @@ LAST_KEY_COMBINATION = set()
 
 # This dict is filled in 'hook_hotkeys()' and keep frozen sets of hotkey
 # keyboard presses keys and functions to call as values. If hotkey keyboard
-# presses are in current CURRENT_KEY_COMBINATION, then corresponding function is called.
+# presses are in current CURRENT_KEY_COMBINATION, then corresponding function
+# is called.
 HOTKEYS = {}
-
 
 
 def pynput_on_press(key):
@@ -75,7 +75,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.read_settings_from_file()
         self.set_standard_settings()
 
-        # TODO: too complicated
         if not self.savefile.location:
             self.savefile.calculate_savefile_location()
             if self.savefile.location:
@@ -90,6 +89,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if self.savefile.location and not self.savefile.current_saveslot.macros:
             self.add_introductory_macros()
+
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
         self.Pages_SetPage()
@@ -2317,13 +2317,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.MacrosTable_Refresh()
 
         self.tableWidget_Macros.blockSignals(False)
-
-    def center_window(self):
-        pass
-        # qr = self.frameGeometry()
-        # cp = QDesktopWidget().availableGeometry().center()
-        # qr.moveCenter(cp)
-        # self.move(qr.topLeft())
 
 def set_qt_scale_factor() -> None:
     """

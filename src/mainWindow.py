@@ -3285,7 +3285,7 @@ class Ui_MainWindow(object):
         self.label_72.setText(_translate("MainWindow", "Flower"))
         self.label_73.setText(_translate("MainWindow", "fln@mail.ru"))
         self.label_65.setText(_translate("MainWindow", "<html><head/><body><p>I live in Russia, and I want to get a job as Python developer. And it\'s going to be really diffucult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.</p><p>Therefore if you gave Melina\'s Fingers a star on GitHub, you have my gratitude, hugs and polite bow.</p></body></html>"))
-        self.label_66.setText(_translate("MainWindow", "<html><head/><body><p>With your donations, I will buy a bouquet of beautiful flowers for my wife and daughters, whom I heartlessly ignored for a month while I was busy with Melina\'s Fingers.</p><p>Actually, I\'d buy them flowers in any case, but... Anyway, here\'s the link.</p></body></html>"))
+        self.label_66.setText(_translate("MainWindow", "<html><head/><body><p>With your donations, I will buy a bouquet of beautiful flowers for my wife and daughters who faithfully waited for me while I was incessantly occupied with Melina\'s Fingers.</p><p>Actually, I\'d buy them flowers in any case, but... Anyway, here\'s the link.</p></body></html>"))
         self.label_75.setText(_translate("MainWindow", "<html><head/><body><p>If you had problems and bugs with Melina\'s Fingers, please share. Togethaaaa, we\'ll to reach a stable version before the upcoming DLC.</p></body></html>"))
         self.button_OpenSaveFile.setText(_translate("MainWindow", "Open save file"))
         item = self.tableWidget_Macros.verticalHeaderItem(0)
