@@ -919,6 +919,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         """
+
         # TODO: не забыть
         webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
 

@@ -528,7 +528,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -5599,7 +5599,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>470</x>
-        <y>300</y>
+        <y>320</y>
         <width>171</width>
         <height>25</height>
        </rect>
@@ -5623,8 +5623,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="button_Nexus">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>300</y>
+        <x>90</x>
+        <y>420</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -5648,8 +5648,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="button_Tutorial">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>330</y>
+        <x>90</x>
+        <y>450</y>
         <width>171</width>
         <height>25</height>
        </rect>
@@ -5695,70 +5695,11 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="label_65">
-      <property name="geometry">
-       <rect>
-        <x>410</x>
-        <y>150</y>
-        <width>291</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>Yout star on my GitHub is everthing I need in my life. You know you know you know you know you know you know you know you know you know you know you know you know </string>
-      </property>
-      <property name="textFormat">
-       <enum>Qt::RichText</enum>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_66">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>330</y>
-        <width>281</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="text">
-       <string>You know you know you know you know you know you know you know you know you know you know you know you know </string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_67">
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>180</y>
+        <y>190</y>
         <width>161</width>
         <height>25</height>
        </rect>
@@ -5780,7 +5721,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>150</y>
+        <y>160</y>
         <width>101</width>
         <height>25</height>
        </rect>
@@ -5801,7 +5742,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_69">
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>350</x>
         <y>80</y>
         <width>221</width>
         <height>25</height>
@@ -5864,7 +5805,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>260</y>
+        <y>320</y>
         <width>341</width>
         <height>25</height>
        </rect>
@@ -5895,7 +5836,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>120</y>
+        <y>130</y>
         <width>121</width>
         <height>121</height>
        </rect>
@@ -5908,8 +5849,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>150</y>
-        <width>141</width>
+        <y>160</y>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>
@@ -5930,8 +5871,8 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>240</x>
-        <y>180</y>
-        <width>121</width>
+        <y>190</y>
+        <width>111</width>
         <height>25</height>
        </rect>
       </property>
@@ -5948,14 +5889,88 @@ p, li { white-space: pre-wrap; }
        <string>fln@mail.ru</string>
       </property>
      </widget>
+     <widget class="QLabel" name="label_65">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>150</y>
+        <width>361</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I live in Russia, and I want to get a job as Python developer. And it's going to be really diffucult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.&lt;/p&gt;&lt;p&gt;Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_66">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>350</y>
+        <width>361</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With your donations, I will buy a bouquet of beautiful flowers for my wife and daughters, whom I heartlessly ignored for a month while I was busy with Melina's Fingers.&lt;/p&gt;&lt;p&gt;Actually, I'd buy them flowers in any case, but... Anyway, here's the link.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_75">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>350</y>
+        <width>321</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you had problems and bugs with Melina's Fingers, please share. Togethaaaa, we'll to reach a stable version before the upcoming DLC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <zorder>label_75</zorder>
      <zorder>label_68</zorder>
      <zorder>button_GitHub2</zorder>
      <zorder>button_PayPal</zorder>
      <zorder>button_Nexus</zorder>
      <zorder>button_Tutorial</zorder>
      <zorder>label_64</zorder>
-     <zorder>label_65</zorder>
-     <zorder>label_66</zorder>
      <zorder>label_67</zorder>
      <zorder>label_69</zorder>
      <zorder>label_70</zorder>
@@ -5963,6 +5978,8 @@ p, li { white-space: pre-wrap; }
      <zorder>graphicsView</zorder>
      <zorder>label_73</zorder>
      <zorder>label_72</zorder>
+     <zorder>label_65</zorder>
+     <zorder>label_66</zorder>
     </widget>
    </widget>
    <widget class="QPushButton" name="button_OpenSaveFile">
