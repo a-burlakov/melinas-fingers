@@ -1,6 +1,5 @@
 """
-TODO: need to describe a save-file map
-    не забыть написать, что активная броня находится неподалеку от имени слота
+
 """
 
 import os
@@ -96,7 +95,6 @@ class SaveFile:
         between_slots = 16
         saveslot_width = 2621456
 
-        # TODO: Переделать на железные
         intervals = [(SaveFile.range_before_saveslots(), 0x0280310)]  # First save file.
         for _ in range(9):
             last_interval = intervals[-1]

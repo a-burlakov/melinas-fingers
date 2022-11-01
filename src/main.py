@@ -1221,8 +1221,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.tableWidget_Equipment.blockSignals(True)
 
-        # TODO: тут поправить какая таблица выходит, когда мы выделяем
-
         table_Equipment = self.tableWidget_Equipment
 
         equipment_type_manual_mode_accordance = {
