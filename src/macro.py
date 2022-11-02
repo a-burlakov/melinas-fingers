@@ -347,7 +347,7 @@ class Macro:
         # no current position, that means we need to clear them to put to
         # position 1.
         currents = self.saveslot.current_equipment
-        if search_mode != 'auto':
+        if search_mode == 'semi-manual':
             are_there_cells_to_clear = False
             for name, value in cells.items():
                 if value['action'] == 'equip' and not currents[name]:
@@ -424,22 +424,22 @@ class Macro:
         # But here is important crutch.
 
         # Ignoring 2 and 3 weapon slots if they're not to equip.
-        if cells['weapon_right_2']['keyline'] == '' \
-                and cells['weapon_right_3']['keyline'] == '':
+        if cells['weapon_right_2']['action'] == 'skip' \
+                and cells['weapon_right_3']['action'] == 'skip':
             cells['weapon_right_1']['action_after'] = 'down'
             cells['weapon_right_2']['action_after'] = ''
             cells['weapon_right_3']['action_after'] = ''
 
-        if cells['weapon_left_2']['keyline'] == '' \
-                and cells['weapon_left_3']['keyline'] == '':
+        if cells['weapon_left_2']['action'] == 'skip' \
+                and cells['weapon_left_3']['action'] == 'skip':
             cells['weapon_left_1']['action_after'] = 'down'
             cells['weapon_left_2']['action_after'] = ''
             cells['weapon_left_3']['action_after'] = ''
 
         # Ignoring 2, 3 and 4 armor slots if they're not to equip.
-        if cells['armor_chest']['keyline'] == '' \
-                and cells['armor_arms']['keyline'] == '' \
-                and cells['armor_legs']['keyline'] == '':
+        if cells['armor_chest']['action'] == 'skip'\
+                and cells['armor_arms']['action'] == 'skip' \
+                and cells['armor_legs']['action'] == 'skip':
             cells['armor_head']['action_after'] = 'down'
             cells['armor_chest']['action_after'] = ''
             cells['armor_arms']['action_after'] = ''
@@ -762,11 +762,19 @@ class Macro:
         self.savefile.make_journal_entry(f'Keyline: {keyline}')
         key_presses = keyline.split('|')
         key_presses = filter(lambda x: x.strip() != '', key_presses)
-        window_title_before_executing = GetWindowText(GetForegroundWindow())
+        window_title_before_executing = GetWindowText(GetForegroundWindow()).lower()
 
-        if 'elden ring' not in window_title_before_executing.lower()\
-                and 'dark souls' not in window_title_before_executing.lower():
-            self.savefile.make_journal_entry(f'Hotkey "{self}" not started because game is not open.')
+        game_is_open = False
+
+        if 'elden' in window_title_before_executing and 'ring' in window_title_before_executing \
+                and len(window_title_before_executing) < 15:
+            game_is_open = True
+        elif 'dark' in window_title_before_executing and 'souls' in window_title_before_executing \
+                and len(window_title_before_executing) < 15:
+            game_is_open = True
+
+        if not game_is_open:
+            self.savefile.make_journal_entry(f'Hotkey "{self}" not started because game is not open. ("{GetWindowText(GetForegroundWindow())}" is open.)')
             return
 
         sleep_time = self.pause_time / 1000
@@ -779,9 +787,9 @@ class Macro:
             # Checking every several keypress was window changed or not.
             # If changed: it's better to stop executing.
             if i % 4:
-                window_title = GetWindowText(GetForegroundWindow())
+                window_title = GetWindowText(GetForegroundWindow()).lower()
                 if window_title_before_executing != window_title:
-                    self.savefile.make_journal_entry(f'Window changed. Hotkey "{self}" execution was broken.')
+                    self.savefile.make_journal_entry(f'Window changed to "{GetWindowText(GetForegroundWindow())}". Hotkey "{self}" execution was broken.')
                     break
 
             # Additional pauses.

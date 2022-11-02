@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">Melina's Fingers</h3>
-<p align="center">Hotkey tool to improve your Elden Ring experience. Melina's Fingers aims to bring you joy by freeing you from the UI limitations that we had endure since Demon’s Souls (2009)..</p>
+<p align="center">Hotkey tool to improve your Elden Ring experience. Melina's Fingers aims to bring you joy by freeing you from UI limitations that we had to endure since Demon’s Souls (2009).</p>
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2494">Nexus page</a></p>
 
 <p align="center">
