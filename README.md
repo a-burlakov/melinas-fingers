@@ -2,6 +2,7 @@
   <a target="blank"><img src="src/images/icon.jpg" width="100" alt="MF Logo"/></a>
 </p>
 
+<h3 align="center">Melina's Fingers</h3>
 <p align="center">Hotkey tool to improve your Elden Ring experience.</p>
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2494">Nexus page</a></p>
 <p align="center">
