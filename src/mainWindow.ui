@@ -5905,7 +5905,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I live in Russia, and I want to get a job as Python developer. And it's going to be really diffucult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.&lt;/p&gt;&lt;p&gt;Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.&lt;/p&gt;&lt;p&gt;Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
