@@ -25,10 +25,7 @@ Melina's Fingers has several types of hotkeys to customize:
 - **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
 
 
-
-
-
-
+<br/><br/>
 With Melina's Fingers help you can bind to hotkey different game actions, such as:
 - **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
 - **armor equipment;**  
@@ -46,11 +43,13 @@ With Melina's Fingers help you can bind to hotkey different game actions, such a
 and many more.
 
 
+<br/><br/>
 For "Equipment", "Magic" and "Item" types of hotkeys there are two search modes:
 - **Auto:** slower but more stable;
 - **Semi-manual:** faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 
 
+<br/><br/>
 And of course, Melina's Fingers is **totally safe online** as it doesn't change anything in your game. It just reads your safe file once to give you information about your controls, equipment, magic and items.  
 
 ## Getting Started
@@ -59,8 +58,9 @@ And of course, Melina's Fingers is **totally safe online** as it doesn't change 
 3. As you launch Melina's Fingers, it will try to get your save file from standard path. But if something went wrong, choose save file manually with "Open save file" button; 
 4. Go to "Settings" and make sure that all your Elden Ring controls are filled. If it's not, then go to Elden Ring and assign every action to any keyboard button, then press "Reload from save file" button or fill controls manually;
 5. Adjust font size and window scale, so it would be comfortable;
-6. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys;
-7. If you use "Equipment" hotkey, make sure that your list is sorted by "Order of Acquisition", ascended. There's a special "Built-in" hotkey to sort all your lists by that rule.
+6. Set "Standard pause time" according to your FPS in Elden Ring;
+7. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys;
+8. If you use "Equipment" hotkey, make sure that your list is sorted by "Order of Acquisition", ascended. There's a special "Built-in" hotkey to sort all your lists by that rule.
 
 Anyway, I recommend to watch the tutorial:
 
