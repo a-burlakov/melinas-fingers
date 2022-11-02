@@ -78,6 +78,6 @@ Some bindings would call OS commands so be careful with bindings with specific k
 There are can be problems to collect your equipment information from save file if your character in named "F", "a", '.' and so on.
 
 ### I would really appreciate if you'll give this repo a star
-Your star to Melina's Fingers repo is everything I need in my life. 
+I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search. 
 
-I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.
+Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.
