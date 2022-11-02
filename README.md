@@ -24,6 +24,7 @@ Melina's Fingers has several types of hotkeys to customize:
 - **Built-in:** some useful hardcoded hotkeys;
 - **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
 
+
 With Melina's Fingers help you can bind to hotkey different game actions, such as:
 - **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
 - **armor equipment;**  
@@ -40,9 +41,11 @@ With Melina's Fingers help you can bind to hotkey different game actions, such a
 
 and many more.
 
+
 For "Equipment", "Magic" and "Item" types of hotkeys there are two search modes:
 - **Auto:** slower but more stable;
 - **Semi-manual:** faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
+
 
 And of course, Melina's Fingers is **totally safe online** as it doesn't change anything in your game. It just reads your safe file once to give you information about your controls, equipment, magic and items.  
 
@@ -61,10 +64,10 @@ Anyway, I recommend to watch the tutorial:
 
 ## Some little important things
 
-### Put everything you don't need in a chest.
+### Put everything you don't need in the chest
 If you have a big inventory, then virtual key press sequences will be long and unstable. Melina's Fingers works great on lists with less than 50 items. I actually don't think you need more. 
 
-### There's still problems with collecting weapons and armor from save file.
+### There's still problems with collecting weapons and armor from save file
 Unfortunately, it's very likely that you'll have to use "Manual mode" in "Equipment" hotkeys as weapons and armor can be stored in save file according to very complex rules. 
 Sometimes Melina's Fingers can read it from save file. But sometimes not, especially if you have many items.
 
