@@ -41,7 +41,7 @@ With Melina's Fingers help you can bind to hotkey different game actions, such a
 
 and many more.
 <br/><br/>
-For "Equipment", "Magic" and "Item" types of hotkeys there are two search modes:
+For "Equipment", "Magic" and "Item" types of hotkeys there are also two search modes:
 - **Auto:** slower but more stable;
 - **Semi-manual:** faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 <br/><br/>
