@@ -25,6 +25,10 @@ Melina's Fingers has several types of hotkeys to customize:
 - **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
 
 
+
+
+
+
 With Melina's Fingers help you can bind to hotkey different game actions, such as:
 - **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
 - **armor equipment;**  
@@ -77,7 +81,7 @@ Some bindings would call OS commands so be careful with bindings with specific k
 ### Don't use too short profile name
 There are can be problems to collect your equipment information from save file if your character in named "F", "a", '.' and so on.
 
-### I would really appreciate if you'll give this repo a star
+## I would really appreciate if you'll give this repo a star
 I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search. 
 
-Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.
+Therefore, if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.
