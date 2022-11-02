@@ -45,6 +45,7 @@ For "Equipment", "Magic" and "Item" types of hotkeys there are two search modes:
 - **Auto:** slower but more stable;
 - **Semi-manual:** faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 <br/><br/>
+
 And of course, Melina's Fingers is **totally safe online** as it doesn't change anything in your game. It just reads your safe file once to give you information about your controls, equipment, magic and items.  
 
 ## Getting Started
