@@ -102,305 +102,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.show()
         self.activateWindow()
 
-    @staticmethod
-    def available_game_control_buttons() -> tuple:
-        """
-        List of keyboard buttons that can be used to assign in Elden Ring
-        and are used on control panel on "Settings" page.
-        """
-
-        return (
-            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Num0", "Num1",
-            "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "A",
-            "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
-            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Tab",
-            "Space", "Backspace", "Enter", "Home", "PageUp", "End", "PageDown",
-            "Insert", "Delete", "Ctrl", "Shift", "Alt"
-        )
-
-    @staticmethod
-    def inventory_row_column_from_position(position: int) -> tuple:
-        """
-        Gets row and column indexes for position in table with 5 columns.
-        """
-
-        row = (position - 1) // 5
-        column = (position - 1) % 5
-
-        return row, column
-
-    def closeEvent(self, a0: PyQt5.QtGui.QCloseEvent) -> None:
-
-        self.save_settings_to_file()
-
-
-    def fill_builtin_macros(self) -> None:
-        """
-        Fills a table on 'Built-in' page.
-        """
-
-        # Clearing table.
-        self.tableWidget_BuiltInMacros.blockSignals(True)
-        while self.tableWidget_BuiltInMacros.rowCount():
-            self.tableWidget_BuiltInMacros.removeRow(0)
-
-        for i, builtin_macro in enumerate(built_in_macros()):
-            self.tableWidget_BuiltInMacros.insertRow(i)
-            self.tableWidget_BuiltInMacros.setItem(i, 0, QTableWidgetItem(
-                builtin_macro['name']))
-        self.tableWidget_BuiltInMacros.blockSignals(False)
-
-    def add_introductory_macros(self) -> None:
-        """
-        Adds some macros for introducing to Melina's Fingers if there's no
-        settings file yet.
-        """
-
-        macros = self.savefile.current_saveslot.macros
-        macros.clear()
-
-        # Place for user's macros.
-        for i in range(1, 10):
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = macro.standard_name()
-            macro.type = ''
-            macro.hotkey = 'F' + str(i)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = False
-            macro.hotkey_alt = False
-            macros.append(macro)
-
-        # Invasion attempts.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Six invasion attempts (wide)'
-        macro.type = 'Built-in'
-        macro.hotkey = 'F10'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
-        macros.append(macro)
-
-        # Sort all: Asc. Acquisition.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Sort all: Asc. Acquisition'
-        macro.type = 'Built-in'
-        macro.hotkey = 'F11'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Sort all: Asc. Acquisition'
-        macros.append(macro)
-
-        # Reverse backstep.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Reverse backstep'
-        macro.type = 'DIY'
-        macro.hotkey = 'Z'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = False
-        macro.settings['diy']['macro'] = \
-            'roll\n' \
-            'pause0\n' \
-            'move_down\n' \
-            '\n' \
-            '# Good for mixups and acting cool in PvP. Be like your favourite YouTube player without practicing this finger breaking shit since DS3 beta.\n' \
-            '# \n' \
-            '# As timing window is strict, maybe you\'ll need to adjust "pauseN" line considering "Standard pause time" setting. ' \
-            'Total pause time should not exceed 40 ms.'
-        macro.settings['diy']['times_to_repeat'] = 1
-
-        macros.append(macro)
-
-        # Crouch attack.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Crouch attack'
-        macro.type = 'Built-in'
-        macro.hotkey = self.savefile.game_controls['crouch']
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = True
-        macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Crouch attack'
-        macros.append(macro)
-
-        # Weeeeeeeeeeee.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Weeeeeeeeeeee'
-        macro.type = 'DIY'
-        macro.hotkey = 'Home'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = True
-        macro.settings['diy']['macro'] = 'w_press50\n' \
-                                         'a_press50\n' \
-                                         's_press50\n' \
-                                         'd_press50\n' \
-                                         'w_press50\n'
-        macro.settings['diy']['times_to_repeat'] = 5
-        macros.append(macro)
-
-        # Teabagging.
-        macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Teabagging'
-        macro.type = 'DIY'
-        macro.hotkey = 'F4'
-        macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
-        macro.hotkey_alt = True
-        macro.settings['diy']['macro'] = 'crouch_pause100 * 50'
-        macro.settings['diy']['times_to_repeat'] = 1
-        macros.append(macro)
-
-        # Items.
-        for i in range(1, 11):
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Switch to quick item {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = True
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
-            macros.append(macro)
-
-        # Magic.
-        for i in range(1, 11):
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Switch to spell {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = False
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
-            macros.append(macro)
-
-        # Gestures.
-        for i in range(1, 7):
-
-            hotkeys = {
-                1: 'Num7',
-                2: 'Num8',
-                3: 'Num4',
-                4: 'Num5',
-                5: 'Num1',
-                6: 'Num2'
-            }
-
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Gesture {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = hotkeys[i]
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = False
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
-            macros.append(macro)
-
-
-    def set_macros_settings_from_window(self) -> None:
-        """
-        Sets macros settings with values from the window to all macros.
-        """
-
-        recovery_hotkey = self.savefile.recovery_hotkey
-        if self.savefile.recovery_hotkey_alt:
-            recovery_hotkey = 'alt+' + recovery_hotkey
-        if self.savefile.recovery_hotkey_shift:
-            recovery_hotkey = 'shift+' + recovery_hotkey
-        if self.savefile.recovery_hotkey_ctrl:
-            recovery_hotkey = 'ctrl+' + recovery_hotkey
-
-        for macro in self.savefile.current_saveslot.macros:
-            macro.pause_time = self.savefile.standard_pause_time
-            macro.recovered = False
-            macro.recovery_hotkey = recovery_hotkey
-            macro.saveslot = self.savefile.current_saveslot
-
-    def hook_hotkeys(self):
-        """
-
-        """
-
-        HOTKEYS.clear()
-        self.savefile.make_journal_entry('Hotkeys were cleared.')
-
-        # If we're in 'off' mode, then not hooking anything.
-        if self.turn_off:
-            return
-
-        # pynput_listener_start()
-
-        # We need to gather all possible hotkeys and sort them by hotkey
-        # length. It's needed for longer hotkeys (e.g. Ctrl+Shift+Q) would have
-        # priority over shorter ones (e.g. Ctrl+Q).
-        list_to_hotkeys = []
-
-        if self.savefile.recovery_hotkey:
-            dict_vk = []
-            recovery_hotkey = self.savefile.recovery_hotkey
-            if self.savefile.recovery_hotkey_shift:
-                dict_vk.append(160)
-            if self.savefile.recovery_hotkey_ctrl:
-                dict_vk.append(162)
-            if self.savefile.recovery_hotkey_alt:
-                dict_vk.append(164)
-            dict_vk.append(available_buttons_with_codes()[recovery_hotkey])
-            list_to_hotkeys.append((dict_vk, self.refresh_currents,))
-
-        for macro in self.savefile.current_saveslot.macros:
-
-            if not macro.hotkey or not macro.type:
-                continue
-
-            hotkey = macro.hotkey
-            dict_vk = []
-            dict_vk.append(available_buttons_with_codes()[hotkey])
-            if macro.hotkey_shift:
-                dict_vk.append(160)
-            if macro.hotkey_ctrl:
-                dict_vk.append(162)
-            if macro.hotkey_alt:
-                dict_vk.append(164)
-            list_to_hotkeys.append((dict_vk, macro.execute,))
-
-        # Hooking gathered hotkeys.
-        for vk, func in sorted(list_to_hotkeys,
-                               key=lambda x: len(x[0]),
-                               reverse=True):
-            HOTKEYS[frozenset(vk)] = func
-
-        self.savefile.make_journal_entry(f'{str(len(HOTKEYS))} hotkeys were hooked.')
-
-    def refresh_currents(self):
-        """
-        Refreshes current spells, weapons and equipment to 0.
-        """
-
-        # Equipment.
-        for k in self.savefile.current_saveslot.current_equipment.keys():
-            self.savefile.current_saveslot.current_equipment[k] = 0
-
-        # Magic.
-        self.savefile.current_saveslot.current_spell = 0
-
-        # Items.
-        self.savefile.current_saveslot.current_item = 0
-
-        self.savefile.make_journal_entry('Current positions for "Semi-manual" modes were refreshed.')
-        self.Pages_Refresh_Journal()
-
-        return True
-
-    def ControlsReload(self) -> None:
-        """
-
-        """
-
-        self.savefile.read_game_controls()
-        self.Pages_Refresh_Settings()
-
     def init_ui(self):
         """
 
@@ -561,7 +262,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_ControlKeyUseItem.addItem(key)
             self.comboBox_ControlKeyUse.addItem(key)
 
-        self.button_ControlsReload.clicked.connect(self.ControlsReload)
+        self.button_ControlsReload.clicked.connect(self.reload_controls)
 
         self.spinBox_StandardPauseTime.valueChanged.connect(self.StandardPauseTime_OnChange)
         self.spinBox_WindowScale.valueChanged.connect(self.WindowScale_OnChange)
@@ -573,6 +274,288 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_Tutorial.clicked.connect(self.Tutorial_Clicked)
         self.button_PayPal.clicked.connect(self.PayPal_Clicked)
         self.button_GitHub2.clicked.connect(self.GitHub_Click)
+
+    def closeEvent(self, a0: PyQt5.QtGui.QCloseEvent) -> None:
+
+        self.save_settings_to_file()
+
+    @staticmethod
+    def available_game_control_buttons() -> tuple:
+        """
+        List of keyboard buttons that can be used to assign in Elden Ring
+        and are used on control panel on "Settings" page.
+        """
+
+        return (
+            "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "Num0", "Num1",
+            "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "A",
+            "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Tab",
+            "Space", "Backspace", "Enter", "Home", "PageUp", "End", "PageDown",
+            "Insert", "Delete", "Ctrl", "Shift", "Alt"
+        )
+
+    @staticmethod
+    def inventory_row_column_from_position(position: int) -> tuple:
+        """
+        Gets row and column indexes for position in table with 5 columns.
+        """
+
+        row = (position - 1) // 5
+        column = (position - 1) % 5
+
+        return row, column
+
+
+    def add_introductory_macros(self) -> None:
+        """
+        Adds some macros for introducing to Melina's Fingers if there's no
+        settings file yet.
+        """
+
+        macros = self.savefile.current_saveslot.macros
+        macros.clear()
+
+        # Place for user's macros.
+        for i in range(1, 10):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = macro.standard_name()
+            macro.type = ''
+            macro.hotkey = 'F' + str(i)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macros.append(macro)
+
+        # Invasion attempts.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Six invasion attempts (wide)'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F10'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
+        macros.append(macro)
+
+        # Sort all: Asc. Acquisition.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Sort all: Asc. Acquisition'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F11'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Sort all: Asc. Acquisition'
+        macros.append(macro)
+
+        # Reverse backstep.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Reverse backstep'
+        macro.type = 'DIY'
+        macro.hotkey = 'Z'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['diy']['macro'] = \
+            'roll\n' \
+            'pause0\n' \
+            'move_down\n' \
+            '\n' \
+            '# Good for mixups and acting cool in PvP. Be like your favourite YouTube player without practicing this finger breaking shit since DS3 beta.\n' \
+            '# \n' \
+            '# As timing window is strict, maybe you\'ll need to adjust "pauseN" line considering "Standard pause time" setting. ' \
+            'Total pause time should not exceed 40 ms.'
+        macro.settings['diy']['times_to_repeat'] = 1
+
+        macros.append(macro)
+
+        # Crouch attack.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Crouch attack'
+        macro.type = 'Built-in'
+        macro.hotkey = self.savefile.game_controls['crouch']
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = True
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Crouch attack'
+        macros.append(macro)
+
+        # Weeeeeeeeeeee.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Weeeeeeeeeeee'
+        macro.type = 'DIY'
+        macro.hotkey = 'Home'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = True
+        macro.settings['diy']['macro'] = 'w_press50\n' \
+                                         'a_press50\n' \
+                                         's_press50\n' \
+                                         'd_press50\n' \
+                                         'w_press50\n'
+        macro.settings['diy']['times_to_repeat'] = 5
+        macros.append(macro)
+
+        # Teabagging.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Teabagging'
+        macro.type = 'DIY'
+        macro.hotkey = 'F4'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = True
+        macro.settings['diy']['macro'] = 'crouch_pause100 * 50'
+        macro.settings['diy']['times_to_repeat'] = 1
+        macros.append(macro)
+
+        # Items.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to quick item {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
+            macros.append(macro)
+
+        # Magic.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to spell {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
+            macros.append(macro)
+
+        # Gestures.
+        for i in range(1, 7):
+
+            hotkeys = {
+                1: 'Num7',
+                2: 'Num8',
+                3: 'Num4',
+                4: 'Num5',
+                5: 'Num1',
+                6: 'Num2'
+            }
+
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Gesture {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = hotkeys[i]
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
+            macros.append(macro)
+
+    def set_macros_settings_from_window(self) -> None:
+        """
+        Sets macros settings with values from the window to all macros.
+        """
+
+        recovery_hotkey = self.savefile.recovery_hotkey
+        if self.savefile.recovery_hotkey_alt:
+            recovery_hotkey = 'alt+' + recovery_hotkey
+        if self.savefile.recovery_hotkey_shift:
+            recovery_hotkey = 'shift+' + recovery_hotkey
+        if self.savefile.recovery_hotkey_ctrl:
+            recovery_hotkey = 'ctrl+' + recovery_hotkey
+
+        for macro in self.savefile.current_saveslot.macros:
+            macro.pause_time = self.savefile.standard_pause_time
+            macro.recovered = False
+            macro.recovery_hotkey = recovery_hotkey
+            macro.saveslot = self.savefile.current_saveslot
+
+    def hook_hotkeys(self):
+        """
+
+        """
+
+        HOTKEYS.clear()
+        self.savefile.make_journal_entry('Hotkeys were cleared.')
+
+        # If we're in 'off' mode, then not hooking anything.
+        if self.turn_off:
+            return
+
+        # pynput_listener_start()
+
+        # We need to gather all possible hotkeys and sort them by hotkey
+        # length. It's needed for longer hotkeys (e.g. Ctrl+Shift+Q) would have
+        # priority over shorter ones (e.g. Ctrl+Q).
+        list_to_hotkeys = []
+
+        if self.savefile.recovery_hotkey:
+            dict_vk = []
+            recovery_hotkey = self.savefile.recovery_hotkey
+            if self.savefile.recovery_hotkey_shift:
+                dict_vk.append(160)
+            if self.savefile.recovery_hotkey_ctrl:
+                dict_vk.append(162)
+            if self.savefile.recovery_hotkey_alt:
+                dict_vk.append(164)
+            dict_vk.append(available_buttons_with_codes()[recovery_hotkey])
+            list_to_hotkeys.append((dict_vk, self.refresh_currents,))
+
+        for macro in self.savefile.current_saveslot.macros:
+
+            if not macro.hotkey or not macro.type:
+                continue
+
+            hotkey = macro.hotkey
+            dict_vk = []
+            dict_vk.append(available_buttons_with_codes()[hotkey])
+            if macro.hotkey_shift:
+                dict_vk.append(160)
+            if macro.hotkey_ctrl:
+                dict_vk.append(162)
+            if macro.hotkey_alt:
+                dict_vk.append(164)
+            list_to_hotkeys.append((dict_vk, macro.execute,))
+
+        # Hooking gathered hotkeys.
+        for vk, func in sorted(list_to_hotkeys,
+                               key=lambda x: len(x[0]),
+                               reverse=True):
+            HOTKEYS[frozenset(vk)] = func
+
+        self.savefile.make_journal_entry(f'{str(len(HOTKEYS))} hotkeys were hooked.')
+
+    def refresh_currents(self):
+        """
+        Refreshes current spells, weapons and equipment to 0.
+        """
+
+        # Equipment.
+        for k in self.savefile.current_saveslot.current_equipment.keys():
+            self.savefile.current_saveslot.current_equipment[k] = 0
+
+        # Magic.
+        self.savefile.current_saveslot.current_spell = 0
+
+        # Items.
+        self.savefile.current_saveslot.current_item = 0
+
+        self.savefile.make_journal_entry('Current positions for "Semi-manual" modes were refreshed.')
+        self.Pages_Refresh_Journal()
+
+        return True
+
+    def reload_controls(self) -> None:
+        """
+
+        """
+
+        self.savefile.read_game_controls()
+        self.Pages_Refresh_Settings()
 
     def set_font_size(self) -> None:
         """
@@ -675,9 +658,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_SaveSlots.setEnabled(False)
 
     def SaveSlots_OnChange(self):
-        """
-        Makes actions after choosing a saveslot in combobox.
-        """
+
         current_text = self.comboBox_SaveSlots.currentText()
         slot_number = int(current_text.split('.')[0])
         new_saveslot = next((x for x in self.savefile.saveslots if x.number == slot_number), None)
@@ -694,10 +675,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.refresh_all()
 
     def tableWidget_Macros_OnSelect(self):
-        """
 
-        :return:
-        """
         items = self.tableWidget_Macros.selectedItems()
         if len(items):
             macro_id = int(self.tableWidget_Macros.item(items[0].row() , 0).text())
@@ -772,16 +750,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_Macros.blockSignals(False)
 
     def MacroName_OnChange(self):
-        """
 
-        """
         self.current_macro.name = self.lineEdit_MacroName.text()
         self.MacrosTable_Refresh()
 
     def MacroType_OnChange(self):
-        """
-
-        """
 
         self.current_macro.type = self.comboBox_MacroType.currentText()
 
@@ -2201,6 +2174,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.set_macro_name_from_settings()
 
         self.Pages_Refresh_Builtin()
+
+
+    def fill_builtin_macros(self) -> None:
+        """
+        Fills a table on 'Built-in' page.
+        """
+
+        # Clearing table.
+        self.tableWidget_BuiltInMacros.blockSignals(True)
+        while self.tableWidget_BuiltInMacros.rowCount():
+            self.tableWidget_BuiltInMacros.removeRow(0)
+
+        for i, builtin_macro in enumerate(built_in_macros()):
+            self.tableWidget_BuiltInMacros.insertRow(i)
+            self.tableWidget_BuiltInMacros.setItem(i, 0, QTableWidgetItem(
+                builtin_macro['name']))
+        self.tableWidget_BuiltInMacros.blockSignals(False)
 
     def ControlKeys_OnChange(self):
         """

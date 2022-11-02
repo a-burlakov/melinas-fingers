@@ -3,7 +3,7 @@
 </p>
 
 <h3 align="center">Melina's Fingers</h3>
-<p align="center">Hotkey tool to improve your Elden Ring experience.</p>
+<p align="center">Hotkey tool to improve your Elden Ring experience. Melina's Fingers aims to bring you joy by freeing you from the UI limitations that we had endure since Demon’s Souls (2009)..</p>
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2494">Nexus page</a></p>
 
 <p align="center">
@@ -22,7 +22,7 @@ Melina's Fingers has several types of hotkeys to customize:
 - **Magic:** hotkeys for current magic list;
 - **Items:** hotkeys for items in your quick items list;
 - **Built-in:** some useful hardcoded hotkeys;
-- **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
+- **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name in future versions.
 <br/><br/>
 
 With Melina's Fingers help you can bind to hotkey different game actions, such as:

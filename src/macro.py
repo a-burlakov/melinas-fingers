@@ -382,7 +382,6 @@ class Macro:
             keys_list.append('event_action+guard')
 
         if settings['instant_action']:
-            instant_action = ''
             if settings['instant_action'] == 'stance_attack':
                 instant_action = 'skill|attack'
             elif settings['instant_action'] == 'stance_strong_attack':

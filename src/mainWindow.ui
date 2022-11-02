@@ -4995,7 +4995,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Auto &lt;/span&gt;mode current item is removed and new one is being searched form the start of list. Slow but stable. &lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Semi-manual &lt;/span&gt;mode Melina's Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you''ll have to clear Melina's Fingers memory using &lt;span style=&quot; color:#b4a68a;&quot;&gt;Recovery &lt;/span&gt;key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Auto &lt;/span&gt;mode current item is removed and new one is being searched from the start of list. Slow but stable. &lt;/p&gt;&lt;p&gt;In &lt;span style=&quot; color:#b4a68a;&quot;&gt;Semi-manual &lt;/span&gt;mode Melina's Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you''ll have to clear Melina's Fingers memory using &lt;span style=&quot; color:#b4a68a;&quot;&gt;Recovery &lt;/span&gt;key.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -5955,7 +5955,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you had problems and bugs with Melina's Fingers, please share. Togethaaaa, we'll to reach a stable version before the upcoming DLC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you had problems and bugs with Melina's Fingers, please share. Togethaaaa, we'll to reach a stable version even before the upcoming DLC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
