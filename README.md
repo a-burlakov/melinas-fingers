@@ -24,8 +24,7 @@ Melina's Fingers has several types of hotkeys to customize:
 - **Built-in:** some useful hardcoded hotkeys;
 - **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
 
-
-- With Melina's Fingers help you can bind to hotkey different game actions, such as:
+With Melina's Fingers help you can bind to hotkey different game actions, such as:
 - **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
 - **armor equipment;**  
 - **talismans equipment;**  
@@ -73,8 +72,9 @@ Sometimes Melina's Fingers can read it from save file. But sometimes not, especi
 Some bindings would call OS commands so be careful with bindings with specific keys. E.g. don't bind your hotkeys to "Alt+F4" :)
 
 ### Don't use too short profile name
-There are can be problems to collect your equipment information from save file if your character in named "F", "a", '.'...
+There are can be problems to collect your equipment information from save file if your character in named "F", "a", '.' and so on.
 
 ### I would really appreciate if you'll give this repo a star
 Your star to Melina's Fingers repo is everything I need in my life. 
+
 I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.
