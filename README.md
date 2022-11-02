@@ -24,6 +24,7 @@ Melina's Fingers has several types of hotkeys to customize:
 - **Built-in:** some useful hardcoded hotkeys;
 - **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name.
 <br/><br/>
+
 With Melina's Fingers help you can bind to hotkey different game actions, such as:
 - **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
 - **armor equipment;**  
