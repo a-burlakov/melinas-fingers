@@ -5,8 +5,13 @@
 <h3 align="center">Melina's Fingers</h3>
 <p align="center">Hotkey tool to improve your Elden Ring experience.</p>
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2494">Nexus page</a></p>
+
+- скринщот с оружием
 <p align="center">
-  <a target="blank"><img src="src/images/screenshot_1.png" alt="MF Logo" /></a>
+  <a target="blank"><img src="src/images/screenshot_2.png" alt="MF Logo" /></a>
+</p>
+<p align="center">
+  <a target="blank"><img src="src/images/screenshot_3.png" alt="MF Logo" /></a>
 </p>
 
 ## Features

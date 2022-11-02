@@ -237,7 +237,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                          's_press50\n' \
                                          'd_press50\n' \
                                          'w_press50\n'
-        macro.settings['diy']['times_to_repeat'] = 1
+        macro.settings['diy']['times_to_repeat'] = 5
         macros.append(macro)
 
         # Teabagging.
