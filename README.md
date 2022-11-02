@@ -17,23 +17,37 @@
 </p>
 
 ## Features
-тест
+With Melina's Fingers help you can bind to hotkey different game actions, such as:
+- **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
+- **armor equipment;**  
+- **talismans equipment;**  
+- **changing all equipment at once:** change all your current weapons, armor and talismans in 7-10 seconds;
+- **magic select:**: now you don't have to calculate how many times you have to press "Switch spell" button to get to needed spell in a heat of battle;
+- **quick item select:**: now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in a heat of battle;
+- **crouch attack;**
+- **stance attack;**
+- **reverse backstep;**
+- **fast katana stance attacks:** these stance attacks makes recovery animation much shorter;
+- **several invasion attempts in a row:** now you don't have to constantly use Bloody Finger, then Recusant Finger and then again, waiting for invasion to get started; 
+- **gestures**
+and many more.
+
+Also, there's **rich DIY-designer** so you can come up with almost any hotkey you want.
+
+Melina's Fingers is **totally safe online** as it doesn't change anything in your game. It just reads your safe file once to give you information about your equipment, magic and items. 
 
 ## Getting Started
-тут ещё ссылка на туториал
+1. [Download latest Melina's Fingers release](https://github.com/flower-ab/EldenRing-MelinasFingers/releases/latest);
+2. Put .exe file to separate folder (as next to it will be created an additional ".cfg" file);
+3. As you launch Melina's Fingers, it will try to get your save file from standard path. But if something went wrong, choose save file manually with "Open save file" button; 
+4. Go to "Settings" and make sure that all your Elden Ring controls are filled. If it's not, then go to Elden Ring and assign every action to any keyboard button, then press "Reload from save file" button or fill controls manually;
+5. Adjust font size and window scale so it would be comfortable;
+6. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys.
 
 ## Important little things
-
-## FAQ
 
 ### вопрос 1
 ответ
 
 ### вопрос 2
 ответ
-
-
-
-## Thanks
-таблица с id
-мужик с сейвом
