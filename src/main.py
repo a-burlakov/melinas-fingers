@@ -160,7 +160,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macros.clear()
 
         # Place for user's macros.
-        for i in range(1, 9):
+        for i in range(1, 10):
             macro = Macro(self.savefile.current_saveslot)
             macro.name = macro.standard_name()
             macro.type = ''
