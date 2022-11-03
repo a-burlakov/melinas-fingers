@@ -80,3 +80,5 @@ There're no long sequences, but you can make something really long in DIY hotkey
 I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search. 
 
 Therefore, if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.
+
+And also, if you enjoyed Melina's Fingers, you can <a href="https://www.paypal.com/paypalme/eburla">donate via PayPal</a>.
