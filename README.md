@@ -73,6 +73,9 @@ Some bindings would call OS commands so be careful with bindings with specific k
 ### Don't use too short profile name
 There are can be problems to collect your equipment information from save file if your character in named "F", "a", "." and so on.
 
+### The only way to interrupt a sequence is to Alt+Tab to another application
+There're no long sequences, but you can make something really long in DIY hotkey type. If you did so, just Alt+Tab from Elden Ring, it will break the sequence.
+
 ## P.S. I would really appreciate if you'll give this repo a star
 I live in Russia, and I want to get a job as Python developer. And it's going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search. 
 
