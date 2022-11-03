@@ -271,9 +271,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Page "About"
         self.button_Nexus.clicked.connect(self.Nexus_Clicked)
-        self.button_Tutorial.clicked.connect(self.Tutorial_Clicked)
+        # self.button_Tutorial.clicked.connect(self.Tutorial_Clicked)
         self.button_PayPal.clicked.connect(self.PayPal_Clicked)
         self.button_GitHub2.clicked.connect(self.GitHub_Click)
+        self.button_GitHub3.clicked.connect(self.GitHubIssues_Click)
 
     def closeEvent(self, a0: PyQt5.QtGui.QCloseEvent) -> None:
 
@@ -385,15 +386,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro = Macro(self.savefile.current_saveslot)
         macro.name = 'Weeeeeeeeeeee'
         macro.type = 'DIY'
-        macro.hotkey = 'Home'
+        macro.hotkey = '-'
         macro.hotkey_ctrl = False
         macro.hotkey_shift = False
-        macro.hotkey_alt = True
+        macro.hotkey_alt = False
         macro.settings['diy']['macro'] = 'w_press50\n' \
                                          'a_press50\n' \
                                          's_press50\n' \
                                          'd_press50\n' \
-                                         'w_press50\n'
+                                         'w_press50\n' \
+                                         '' \
+                                         '# Will work if your "Standard pause time" is 40 ms.'
         macro.settings['diy']['times_to_repeat'] = 5
         macros.append(macro)
 
@@ -751,7 +754,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def MacroName_OnChange(self):
 
-        print('changes')
         self.current_macro.name = self.lineEdit_MacroName.text()
         self.MacrosTable_Refresh()
 
@@ -876,26 +878,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.refresh_currents()
 
     def GitHub_Click(self) -> None:
-        """
-
-        """
 
         webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
 
-    def Tutorial_Clicked(self) -> None:
-        """
+    def GitHubIssues_Click(self) -> None:
 
-        """
-        # TODO: не забыть
-        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers/issues')
 
     def PayPal_Clicked(self) -> None:
         """
 
         """
 
-        # TODO: не забыть
-        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+        webbrowser.open_new('https://www.paypal.com/paypalme/eburla')
 
     def Nexus_Clicked(self) -> None:
         """
@@ -977,8 +972,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 break
             if macro_id == self.current_macro.id:
                 current_found = True
-        else:
-            # If there'no next macro, we put current macro to beginning.
+
+        # If there're no next macro, we put current macro to beginning.
+        if not next_id:
             first_macro_id = self.savefile.current_saveslot.macros[0].id
             for macro in self.savefile.current_saveslot.macros:
                 macro.id += 1

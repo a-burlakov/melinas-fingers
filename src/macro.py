@@ -972,7 +972,7 @@ def built_in_macros() -> list:
                     'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
-                    'Cannot be interrupted. Invades over all map.'},
+                    'Invades over all map.'},
 
         {'name': 'Six invasion attempts (local)',
          'keyline': (f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3)[:-10],
@@ -982,7 +982,7 @@ def built_in_macros() -> list:
                     'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
-                    'Cannot be interrupted. Invades locally.'},
+                    'Invades locally.'},
 
         {'name': 'Fast quit to main menu',
          'keyline': 'esc|up|e|z|e|left|e',

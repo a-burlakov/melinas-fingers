@@ -55,12 +55,8 @@ And of course, Melina's Fingers is **totally safe online** as it doesn't change 
 4. Go to "Settings" and make sure that all your Elden Ring controls are filled. If it's not, then go to Elden Ring and assign every action to any keyboard button, then press "Reload from save file" button or fill controls manually;
 5. Adjust font size and window scale, so it would be comfortable;
 6. Set "Standard pause time" according to your FPS in Elden Ring;
-7. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys;
+7. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys. By the way, there're 10 item hotkeys and 10 magic introductory hotkeys with "Built-in" type. If you'll turn them to "Magic" and "Item" types and then set "Items search mode" and "Magic search mode" to "Semi-manual", you'll see some nice difference in hotkey speed.;
 8. If you use "Equipment" hotkey, make sure that your list is sorted by "Order of Acquisition", ascended. There's a special "Built-in" hotkey to sort all your lists by that rule.
-
-Anyway, I recommend to watch the tutorial:
-
-ССЫЛКА НА ТУТОРИАЛ
 
 ## Some little important things
 
@@ -72,7 +68,7 @@ Unfortunately, it's very likely that you'll have to use "Manual mode" in "Equipm
 Sometimes Melina's Fingers can read it from save file. But sometimes not, especially if you have many items.
 
 ### Not every hotkey bindings will work
-Some bindings would call OS commands so be careful with bindings with specific keys. E.g. don't bind your hotkeys to "Alt+F4" :)
+Some bindings would call OS commands so be careful with bindings with specific keys. E.g. don't bind your hotkeys to "Ctrl+Alt+Delete" :)
 
 ### Don't use too short profile name
 There are can be problems to collect your equipment information from save file if your character in named "F", "a", "." and so on.

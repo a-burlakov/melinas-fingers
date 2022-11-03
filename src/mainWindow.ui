@@ -528,7 +528,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -5596,6 +5596,9 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
      <widget class="QPushButton" name="button_PayPal">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>470</x>
@@ -5643,31 +5646,6 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Nexus Page</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="button_Tutorial">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>450</y>
-        <width>171</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Garamond</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="text">
-       <string>YouTube Tutorial</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_64">
@@ -5915,6 +5893,9 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
      <widget class="QLabel" name="label_66">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>380</x>
@@ -5930,7 +5911,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With your donations, I will buy a bouquet of beautiful flowers for my wife and daughters who faithfully waited for me while I was incessantly occupied with Melina's Fingers.&lt;/p&gt;&lt;p&gt;Actually, I'd buy them flowers in any case, but... Anyway, here's the link.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With your donations, I will buy a huge bouquet of beautiful flowers for my wife and daughters who faithfully waited for me while I was incessantly occupied with Melina's Fingers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -5964,12 +5945,36 @@ p, li { white-space: pre-wrap; }
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QPushButton" name="button_GitHub3">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>450</y>
+        <width>171</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Garamond</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="text">
+       <string>GitHub Issues</string>
+      </property>
+     </widget>
      <zorder>label_75</zorder>
      <zorder>label_68</zorder>
      <zorder>button_GitHub2</zorder>
      <zorder>button_PayPal</zorder>
      <zorder>button_Nexus</zorder>
-     <zorder>button_Tutorial</zorder>
      <zorder>label_64</zorder>
      <zorder>label_67</zorder>
      <zorder>label_69</zorder>
@@ -5980,6 +5985,7 @@ p, li { white-space: pre-wrap; }
      <zorder>label_72</zorder>
      <zorder>label_65</zorder>
      <zorder>label_66</zorder>
+     <zorder>button_GitHub3</zorder>
     </widget>
    </widget>
    <widget class="QPushButton" name="button_OpenSaveFile">
