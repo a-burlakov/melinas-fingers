@@ -1,19 +1,14 @@
-"""
-
-"""
-
 import os
 import time
 import re
 from pathlib import Path
 import datasheets
 
+
 def endian_turn(hex_string: str) -> str:
     """
-    Turns little-endian hex string to big-endian or visa versa,
+    Turns little-endian hex string to big-endian or visa versa.
     Example: 8097FA01 <-> 01FA9780
-    :param hex_string: hex string
-    :return: None
     """
 
     if len(hex_string) < 2:
@@ -27,9 +22,10 @@ def endian_turn(hex_string: str) -> str:
     return ''.join(reversed(pairs))
 
 
-def item_id_as_hex(item_id: str, max_length: int) -> str:
+def item_id_from_dec_to_hex(item_id: str, max_length: int) -> str:
     """
-
+    Turns decimal item id to hex version that's can be searched in save file.
+    Example: 16000000 -> 0024f400
     """
 
     hex_big_endian = hex(int(item_id))[2:]
@@ -41,11 +37,10 @@ def item_id_as_hex(item_id: str, max_length: int) -> str:
     return hex_little_endian
 
 
-def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
+def add_escaping_symbols_to_byte_reg(reg_expression: bytes) -> bytes:
     """
-
-    :param reg_expression:
-    :return:
+    Adding escaping symbols to regular expression so it can be
+    performed on byte strings.
     """
 
     escaping_characters = [b'\\', b'[', b']', b'(', b')', b'|',
@@ -56,9 +51,7 @@ def add_escaping_character_to_byte_reg(reg_expression: bytes) -> bytes:
     return reg_expression
 
 class SaveFile:
-    """
 
-    """
     def __init__(self , location: str):
 
         self.location = location
@@ -83,13 +76,14 @@ class SaveFile:
         Returns an amount of symbols in HEX-save-file that goes before
         first save-slot information starts.
         """
+
         return 0x0000310
 
     @staticmethod
     def slot_ranges(savenumber: int = 0) -> tuple | list:
         """
         Returns hex interval for the save slot in save file.
-        If savenumber is 0, returns a list of all 10 intervals.
+        If save number is 0, returns a list of all 10 intervals.
         """
 
         between_slots = 16
@@ -106,6 +100,19 @@ class SaveFile:
             return intervals
         else:
             return intervals[savenumber - 1]
+
+    def get_slot_names(self) -> list:
+        """
+        Returns a list of slot names, getting them directly from save flie.
+        """
+        with open(self.location, "rb") as f:
+            data = f.read()
+
+        names_ranges = SaveFile.slot_names_ranges()
+        names = [data[begin:end].decode('utf-16') for begin, end in names_ranges]
+        names = list(map(lambda x: x.strip('\x00'), names))
+
+        return names
 
     @staticmethod
     def slot_names_ranges() -> tuple:
@@ -124,6 +131,44 @@ class SaveFile:
                 (0x1902d22, 0x1902d22 + 32),
                 (0x1902f6e, 0x1902f6e + 32),
                 (0x19031ba, 0x19031ba + 32))
+
+    def fill_saveslots(self):
+        """
+        Fills the saveslots list in savefile, naming and numerating them.
+        """
+
+        self.saveslots.clear()
+        if self.location:
+            names = self.get_slot_names()
+            for i, name in enumerate(names, 1):
+                if name:
+                    saveslot = SaveSlot()
+                    saveslot.number = i
+                    saveslot.name = name
+                    saveslot.savefile = self
+                    self.saveslots.append(saveslot)
+
+    def read_game_controls(self):
+        """
+        Reads game controls from save-file and put it to 'game_controls'
+        attribute to be used by macros.
+        """
+
+        for key in self.game_controls.keys():
+            self.game_controls[key] = ''
+
+        if self.location == '':
+            return
+
+        slot_data = self.get_data()
+
+        control_keys = self.control_keys_ranges()
+        control_keys_values = self.control_keys_values()
+        for key, value in control_keys.items():
+            hex_string = slot_data[value:value + 1]
+            control_keys[key] = int(hex_string.hex(), 16)
+            control_keys[key] = control_keys_values.get(control_keys[key], '')
+            self.game_controls[key] = control_keys[key]
 
     @staticmethod
     def control_keys_ranges() -> dict:
@@ -154,8 +199,8 @@ class SaveFile:
     @staticmethod
     def control_keys_values() -> dict:
         """
-        Returns values for keys that are used in save-file to define what key is
-        used for a control. Values are in decimal.
+        Returns values for keys that are used in save-file to define what key
+        is used for a control. Values are in decimal.
         For example, "Num4" ("144" dec.) would be "90" in HEX-file.
         """
 
@@ -238,7 +283,7 @@ class SaveFile:
 
     def is_empty(self) -> bool:
         """
-        Checks is the savefile has some macros in it.
+        Checks does the savefile has some macros in it.
         """
 
         for saveslot in self.saveslots:
@@ -289,11 +334,11 @@ class SaveFile:
 
     def make_journal_entry(self, entry: str) -> None:
         """
-        Makes an entry to journal that can be seen in "Journal" page.
+        Makes an entry to journal that can be seen on "Journal" page.
         """
 
         # Keeping journal at adequate length.
-        while len(self.journal) > 300:
+        while len(self.journal) > 500:
             self.journal.pop(0)
 
         entry_time = time.strftime('%Y.%m.%d %H:%M:%S')
@@ -304,68 +349,10 @@ class SaveFile:
 
         self.journal.append(entry_as_tuple)
 
-
-    def fill_saveslots(self):
-        """
-
-        """
-        self.saveslots.clear()
-        if self.location:
-            names = self.get_slot_names()
-            for i, name in enumerate(names, 1):
-                if name:
-                    saveslot = SaveSlot()
-                    saveslot.number = i
-                    saveslot.name = name
-                    saveslot.savefile = self
-                    self.saveslots.append(saveslot)
-
-    def read_game_controls(self):
-        """
-        Reads game controls from save-file and put it to 'game_controls'
-        attribute to be used by macros.
-        """
-
-        for key in self.game_controls.keys():
-            self.game_controls[key] = ''
-
-        if self.location == '':
-            return
-
-        slot_data = self.get_data()
-
-        control_keys = self.control_keys_ranges()
-        control_keys_values = self.control_keys_values()
-        for key, value in control_keys.items():
-            hex_string = slot_data[value:value + 1]
-            control_keys[key] = int(hex_string.hex(), 16)
-            control_keys[key] = control_keys_values.get(control_keys[key], '')
-            self.game_controls[key] = control_keys[key]
-
-    def get_slot_names(self) -> list:
-        """
-
-        :return:
-        """
-        # try:
-        with open(self.location, "rb") as fh:
-            data = fh.read()
-
-        # except FileNotFoundError as e:
-        #     return False
-
-        names_ranges = SaveFile.slot_names_ranges()
-        names = [data[begin:end].decode('utf-16') for begin, end in names_ranges]
-        names = list(map(lambda x: x.strip('\x00'), names))
-
-        return names
-
 class SaveSlot:
-    """
-
-    """
 
     def __init__(self):
+
         self.id: int = 0
         self.number: int = 0
         self.name: str = ''
@@ -412,22 +399,60 @@ class SaveSlot:
                                   'talisman_3': 0,
                                   'talisman_4': 0}
 
+    def get_slot_data(self) -> bytes:
+        """
+        Returns hex data of save file related to specific save slot.
+        Returns full data of save file is safe slot is not specified.
+        :return:
+        """
+        with open(self.savefile.location, "rb") as fh:
+            data = fh.read()
+
+            # if not savenumber:
+            #     return data
+
+            slot_interval = SaveFile.slot_ranges(self.number)
+            return data[slot_interval[0]:slot_interval[1]]
+
+
     @staticmethod
     def inventory_and_chest_separator() -> bytes:
         """
         Returns a HEX-string that separates inventory and chest block for
-        weapon searching.
+        equipment searching.
         """
+
         return bytes.fromhex('ffffffff00000000') * 4
 
+    def instances_search_range(self) -> tuple:
+        """
+        Seeks for a range in which can be found instances of equipment in specific
+        save slot data. Minimal range is a position of slot data name.
+        Max range can't be calculated and is taken with a margin.
+        """
+
+        slot_data = self.get_slot_data()
+        slot_name = self.name
+
+        slot_name_hex = bytes(slot_name, 'utf-8')
+        slot_name_hex_bytes = [bytes.fromhex(hex(x)[2:]) for x in slot_name_hex]
+        slot_name_hex_bytes = [x + bytes.fromhex('00') for x in
+                               slot_name_hex_bytes]
+        slot_name_hex = b''.join(slot_name_hex_bytes)
+
+        slot_name_position = slot_data.find(slot_name_hex)
+
+        range_max = 0x00035000
+
+        return slot_name_position, range_max
 
     def get_equipment(self, equipment_type: str = '') -> None:
         """
         Gets lists of weapons, armor, talismans and spell and fills it
         in saveslot's respective attributes.
-        :equipment_type:
         """
 
+        # Lists to refill.
         self.weapons = []
         self.armor_head = []
         self.armor_chest = []
@@ -488,20 +513,11 @@ class SaveSlot:
             #   WW WW WW (WW) - equipment ID. Weapon has 4 pieces, armor has 3.
             # Each line represents an instance of equipment.
             id_for_reg = bytes.fromhex(equipment_mark + equipment_id)
-            id_for_reg = add_escaping_character_to_byte_reg(id_for_reg)
+            id_for_reg = add_escaping_symbols_to_byte_reg(id_for_reg)
 
             reg_expression = b'.{2}(?=' + id_for_reg + b')'
             result = re.finditer(reg_expression,
                                  slot_data[:instances_range[0] + separator_pos])
-
-            def find_all(a_str, sub):
-                start = 0
-                while True:
-                    start = a_str.find(sub, start)
-                    if start == -1: return
-                    yield start
-                    start += len(
-                        sub)  # use start += 1 to find overlapping matches
 
             for match in result:
 
@@ -634,10 +650,11 @@ class SaveSlot:
             inventory_list.append(instance_dict)
 
         # To find items in quick slots we need to find first "46 41 43 45"
-        # sequience in safe-file ("FACE"). End of quick slots will be 88
-        # symbols earlier.
-        # Quick slots are just sequence of 10 "XX XX XX XX"-like words, where
-        # XX XX XX XX - is item ID.
+        # sequience in safe-file ("FACE", don't know what that means).
+        # End of quick slots will be 88 symbols earlier.
+        #
+        # Quick slots are just sequence of ten "XX XX XX XX"-like words, where
+        # XX XX XX XX is item ID.
         #
         # In save-file these lines are in order identical to order in game.
         face_search = bytes.fromhex('46414345')
@@ -660,10 +677,8 @@ class SaveSlot:
                 item_dict.setdefault('order_in_file', str(i))
                 inventory_list.append(item_dict)
 
-        sorted_equipment = sorted(inventory_list,
-                                  key=lambda x: (x['type'],
-                                                 int(x['order_in_file'],
-                                                     16)))
+        sorted_equipment = sorted(inventory_list, key=lambda x: (x['type'],
+                                                  int(x['order_in_file'], 16)))
 
         fields_accordance = {
             'weapons': self.weapons,
@@ -677,44 +692,4 @@ class SaveSlot:
         }
 
         for equipment in sorted_equipment:
-            type = equipment['type']
-            fields_accordance[type].append(equipment)
-
-        pass
-
-    def instances_search_range(self) -> tuple:
-        """
-        Seeks for a range in which can be found instances of equipment in specific
-        save slot data. Minimal range is a position of slot data name.
-        Max range can't be calculated and is taken with a margin.
-        """
-
-        slot_data = self.get_slot_data()
-        slot_name = self.name
-
-        slot_name_hex = bytes(slot_name, 'utf-8')
-        slot_name_hex_bytes = [bytes.fromhex(hex(x)[2:]) for x in slot_name_hex]
-        slot_name_hex_bytes = [x + bytes.fromhex('00') for x in
-                               slot_name_hex_bytes]
-        slot_name_hex = b''.join(slot_name_hex_bytes)
-
-        slot_name_position = slot_data.find(slot_name_hex)
-
-        range_max = 0x00035000
-
-        return slot_name_position, range_max
-
-    def get_slot_data(self) -> bytes:
-        """
-        Returns hex data of save file related to specific save slot.
-        Returns full data of save file is safe slot is not specified.
-        :return:
-        """
-        with open(self.savefile.location, "rb") as fh:
-            data = fh.read()
-
-            # if not savenumber:
-            #     return data
-
-            slot_interval = SaveFile.slot_ranges(self.number)
-            return data[slot_interval[0]:slot_interval[1]]
+            fields_accordance[equipment['type']].append(equipment)

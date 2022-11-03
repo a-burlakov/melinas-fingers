@@ -1,6 +1,4 @@
-"""
 
-"""
 import traceback
 import time
 from win32gui import GetWindowText, GetForegroundWindow
@@ -13,7 +11,8 @@ pynput_in = Controller()
 
 def non_letter_keys() -> tuple:
     """
-
+    Returns keys that are not letters. That distinction is important for
+    key input with "pynput".
     """
     return ('alt', 'alt_l', 'alt_r', 'alt_gr', 'backspace', 'caps_lock', 'cmd',
             'cmd_r', 'ctrl', 'ctrl_l', 'ctrl_r', 'delete', 'down', 'end',
@@ -29,7 +28,7 @@ def non_letter_keys() -> tuple:
 
 def game_control_keys() -> tuple:
     """
-
+    Returns names of Elden Ring commands that are used in macros.
     """
 
     return (
@@ -145,11 +144,9 @@ def available_buttons_with_codes() -> dict:
 
 
 class Macro:
-    """
-
-    """
 
     def __init__(self, saveslot: SaveSlot = SaveSlot()):
+
         self.saveslot: SaveSlot = saveslot
         self.set_id()
         self.name = self.standard_name()
@@ -159,7 +156,6 @@ class Macro:
         self.hotkey_ctrl: bool = False
         self.hotkey_shift: bool = False
         self.hotkey_alt: bool = False
-        self.interrupted: bool = False
         self.recovery_hotkey: str = ''
         self.pause_time: int = 20
         self.macro_keyline: str = ''
@@ -218,28 +214,6 @@ class Macro:
 
         return f'{self.name} ({self.hotkey_string()})'
 
-    @staticmethod
-    def standard_name():
-        return '< hotkey name >'
-
-    def set_id(self):
-        """
-        Sets an id to macro. Format is like '7023', where '7' is saveslot number
-        and 23 - plain macro order number.
-        """
-
-        self.id = 0
-
-        if not self.saveslot.name:
-            return
-
-        saveslot_macros = self.saveslot.macros
-        if saveslot_macros:
-            max_id = max(saveslot_macros, key=lambda macro: macro.id).id
-            self.id = max_id + 1
-        else:
-            self.id = self.saveslot.number * 1000 + 1
-
     def hotkey_string(self):
 
         hotkey_list = []
@@ -256,12 +230,35 @@ class Macro:
 
         return hotkey
 
+    @staticmethod
+    def standard_name():
+        return '< hotkey name >'
+
+    def set_id(self):
+        """
+        Sets an id to macro. Format is like '7023', where '7' is saveslot
+        number and 23 - just macro order number.
+        """
+
+        self.id = 0
+
+        if not self.saveslot.name:
+            return
+
+        saveslot_macros = self.saveslot.macros
+        if saveslot_macros:
+            max_id = max(saveslot_macros, key=lambda macro: macro.id).id
+            self.id = max_id + 1
+        else:
+            self.id = self.saveslot.number * 1000 + 1
+
     def execute(self):
         """
-
+        That's a function that is called when assigned hotkey is pressed.
+        It forms a keyline from macro settings and then turns this keyline
+        to virtual keyboard presses.
         """
 
-        self.interrupted = False
         time_start = time.time()
 
         self.savefile.make_journal_entry('='*40)
@@ -283,8 +280,8 @@ class Macro:
 
     def form_keyline(self):
         """
-        Forms a keyline string from macro settings to be executed to
-        'execute' function.
+        Forms a keyline string from macro settings to be executed in
+        'execute_keyline' function.
         """
 
         if self.type == 'Equipment':
@@ -419,9 +416,10 @@ class Macro:
             if not first_cell_key_to_handle:
                 first_cell_index_to_handle += 1
 
-        # Shrinking a path if we have some big and frequent gaps of not-handling.
+        # Shrinking a path if we have some big and frequent
+        # gaps of not-handling.
         # We call it "костыль" ("crutch") in Russia.
-        # But here is important crutch.
+        # But this crutch is important.
 
         # Ignoring 2 and 3 weapon slots if they're not to equip.
         if cells['weapon_right_2']['action'] == 'skip' \
@@ -468,8 +466,8 @@ class Macro:
     @staticmethod
     def assign_keylines_to_cells(cells: dict, search_mode: str, currents: dict) -> None:
         """
-        Generates a keyline to each cell in dict concidering it's inner
-        settins. Puts a keyline to cell's 'keyline' key.
+        Generates a keyline inside each cell in ordered dict concidering
+        cell's inner settings. Puts a keyline to cell's 'keyline' key.
         """
 
         count = len(cells)
@@ -597,7 +595,7 @@ class Macro:
                 self.macro_keyline = self.macro_keyline[1:]
             else:
                 # In auto mode we find first spell by pressing a button for
-                # little bit and not bother.
+                # little bit and not bother too much.
                 self.macro_keyline = f'switch_spell_press600{"|switch_spell|pause10" * (goal_spell - 1)}'
 
         # Add instant actions.
@@ -609,6 +607,7 @@ class Macro:
         # Set current number for next macro uses.
         if search_mode == 'semi-manual':
             self.saveslot.current_spell = settings['spell_number']
+
         self.savefile.make_journal_entry(f'Current spell now - {self.saveslot.current_spell}')
 
     def form_keyline_items(self):
@@ -645,7 +644,7 @@ class Macro:
                 self.macro_keyline = '|switch_item|pause10' * needed_switches
             else:
                 # In auto mode we find first item by pressing a button for
-                # little bit and not bother.
+                # little bit and not bother too much.
                 self.macro_keyline = f'switch_item_press600{"|switch_item|pause10" * (goal_item - 1)}'
 
         # Add instant actions.
@@ -655,12 +654,14 @@ class Macro:
         # Set current number for next macro uses.
         if search_mode == 'semi-manual':
              self.saveslot.current_item = settings['item_number']
+
         self.savefile.make_journal_entry(f'Current item now - {self.saveslot.current_item}')
 
     def form_keyline_builtin(self):
+
         built_in_macro_name = self.settings['built-in']['macro_name']
-        built_in_macro = next(x for x in built_in_macros() if
-                              x['name'] == built_in_macro_name)
+        built_in_macro = next(x for x in built_in_macros() if x['name'] == built_in_macro_name)
+
         self.macro_keyline = built_in_macro['keyline']
 
     def form_keyline_diy(self):
@@ -754,8 +755,6 @@ class Macro:
     def execute_keyline(self) -> None:
         """
         Parses a line into a keys and simulates key presses.
-        Additional pause can be made with 'pauseN', where N is one thousandth sec.
-        Additional press time can be made with 'pressN'.
         """
 
         keyline = self.macro_keyline
@@ -766,10 +765,12 @@ class Macro:
 
         game_is_open = False
 
-        if 'elden' in window_title_before_executing and 'ring' in window_title_before_executing \
+        if 'elden' in window_title_before_executing \
+                and 'ring' in window_title_before_executing \
                 and len(window_title_before_executing) < 15:
             game_is_open = True
-        elif 'dark' in window_title_before_executing and 'souls' in window_title_before_executing \
+        elif 'dark' in window_title_before_executing \
+                and 'souls' in window_title_before_executing \
                 and len(window_title_before_executing) < 15:
             game_is_open = True
 
@@ -842,19 +843,14 @@ class Macro:
             #  makes me feel silly.
 
             # Key presses execution.
-
             keys_for_pynput = ['up', 'left', 'right', 'down']
             for key_press in keys_list:
                 if key_press in keys_for_pynput:
                     if key_press in non_letter_keys():
                         key_press = Key[key_press]
                     pynput_in.press(key_press)
-                    # time.sleep(press_time)
-                    # pynput_in.release(key_press)
                 else:
                     keyboard.press(key_press)
-                    # time.sleep(press_time)
-                    # keyboard.release(key_press)
 
             time.sleep(press_time)
 
@@ -873,7 +869,7 @@ class Macro:
 
 def built_in_macros() -> list:
     """
-
+    Return a list of hardcoded built-in macros.
     """
 
     macros_list = [
@@ -892,25 +888,32 @@ def built_in_macros() -> list:
                     '   1) that\'s easiest order to be calculated via save file;\n'
                     '   2) it allows to pick up new weapons in PvE as new weapons go to\n'
                     '      the end of the list.'},
+
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
          'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
+
         {'name': 'Stance attack',
          'keyline': 'skill|attack',
          'comment': 'Goes to stance, then immediately perform an attack.'},
+
         {'name': 'Stance strong attack',
          'keyline': 'skill|strong_attack',
          'comment': 'Goes to stance, then immediately perform a strong attack.'},
+
         {'name': 'Two-handing a right weapon',
          'keyline': 'event_action+attack',
          'comment': 'For those who miss the days when it could be done with one button.'},
+
         {'name': 'Two-handing a left weapon',
          'keyline': 'event_action+guard',
          'comment': 'For those who miss the days when it could be done with one button.'},
+
         {'name': 'Left weapon skill',
          'keyline': 'event_action+guard|pause200|skill',
          'comment': 'Takes weapons from left hand to both hands and performs\n'
                     'it\'s skill immediately.'},
+
         {'name': 'Fast katana stance attacks',
          'keyline': 'skill_press300|attack|pause500|crouch_press20|crouch',
          'comment': 'Performs a stance attack and crouch to cancel a recovery\n'
@@ -921,6 +924,7 @@ def built_in_macros() -> list:
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
                     'you actually deserve this.'},
+
         {'name': 'Fast katana stance attacks (strong)',
          'keyline': 'skill_press300|strong_attack|pause500|crouch_press20|crouch',
          'comment': 'Performs a strong stance attack and crouch to cancel a recovery\n'
@@ -931,30 +935,35 @@ def built_in_macros() -> list:
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
                     'you actually deserve this.'},
+
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
          'comment': 'Chooses next weapon in list for right hand.\n'
                     '\n'
                     'You can choose 3 weapons for Right Hand Armament 1 slot\n'
                     'and play like Dante in classic weapon-juggling Devil May Cry style.'},
+
         {'name': 'Previous weapon (right)',
          'keyline': keyline_to_choose_previous_weapon(),
          'comment': 'Chooses previous weapon in list for right hand.\n'
                     '\n'
                     'You can choose 3 weapons for Right Hand Armament 1 slot\n'
                     'and play like Dante in classic weapon-juggling Devil May Cry style.'},
+
         {'name': 'Next weapon (left)',
          'keyline': keyline_to_choose_next_weapon(left_hand=True),
          'comment': 'Chooses next weapon in list for left hand.\n'
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
+
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'Chooses previous weapon in list for left hand.\n'
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
                     'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
+
         {'name': 'Six invasion attempts (wide)',
          'keyline': (f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
@@ -964,6 +973,7 @@ def built_in_macros() -> list:
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades over all map.'},
+
         {'name': 'Six invasion attempts (local)',
          'keyline': (f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
@@ -973,19 +983,23 @@ def built_in_macros() -> list:
                     'and get a snack from kitchen.\n'
                     '\n'
                     'Cannot be interrupted. Invades locally.'},
+
         {'name': 'Fast quit to main menu',
          'keyline': 'esc|up|e|z|e|left|e',
          'comment': 'Quits to main menu very fast.\n'
                     '\n'
                     'Useful if you lost to gravity but still want to cheat death.'},
+
         {'name': 'Use Duelist\'s Furled Finger',
          'keyline': 'esc|up|up|e|down|down|e',
          'comment': 'Uses Duelist\'s Furled Finger to get back to battle after\n'
                     'loosing as fast as possible.'},
+
         {'name': 'Use Tarnished\'s Furled Finger',
          'keyline': 'esc|up|up|e|down|e',
          'comment': 'Uses Tarnished\'s Furled Finger to help other Tarnished\n'
                     'as fast as possible.'}
+
     ]
 
     # Use item macros.
@@ -1004,7 +1018,7 @@ def built_in_macros() -> list:
             'comment': f'Selects spell {i} from spell list.'
         })
 
-    # 6 gestures.
+    # Six gestures.
     for i in range(1, 7):
         downs = (i - 1) // 2
         rights = (i - 1) % 2
@@ -1021,18 +1035,15 @@ def keyline_to_sort_all_lists() -> str:
     """
     Returns a keyline for a macros that sorts all lists to "date get - up".
     Weapons, armor, talismans, items.
-    :return:
     """
 
     # 1. Weapons.
     # 2. Armor.
     # 3. Talismans.
-    # 4. Items.
 
     keyline = 'esc|e|pause50|e|t|down|e|pause300|q|pause300|' \
               'down|down|e|pause50|t|down|e|pause300|q|pause300|' \
               'down|e|pause50|t|down|e|pause300|esc'
-    # 'q|pause300|down|down|e|t|down|e|pause300|esc'
 
     return keyline
 
@@ -1040,7 +1051,6 @@ def keyline_to_sort_all_lists() -> str:
 def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
     """
     Returns a keyline for a macros that uses bloody finger.
-    :return:
     """
 
     keyline = 'esc|up|up|e|up|up|e'
@@ -1056,7 +1066,6 @@ def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
 def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
     """
     Returns a keyline for a macros that uses recusant finger.
-    :return:
     """
 
     keyline = 'esc|up|up|e|up|up|right|e'
@@ -1073,7 +1082,6 @@ def keyline_to_choose_next_weapon(weapons_pass: int = 0,
                                   left_hand=False) -> str:
     """
     Returns a macro keyline that chooses next weapon.
-    :param weapons_pass: how many weapons will be passed before choosing.
     """
 
     right_amount = weapons_pass + 1
@@ -1086,7 +1094,6 @@ def keyline_to_choose_previous_weapon(weapons_pass: int = 0,
                                       left_hand=False) -> str:
     """
     Returns a macro keyline that chooses previous weapon.
-    :param weapons_pass: how many weapons will be passed before choosing.
     """
 
     left_amount = weapons_pass + 1

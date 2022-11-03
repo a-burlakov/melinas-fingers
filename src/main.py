@@ -902,7 +902,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         """
 
-        webbrowser.open_new('https://www.nexusmods.com/eldenring/mods/2494')
+        webbrowser.open_new('https://www.nexusmods.com/eldenring/mods/2504')
 
     def AddMacro_Click(self):
         """
@@ -946,13 +946,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         previous_macro = next((x for x in self.savefile.current_saveslot.macros
                                if x.id == previous_id), None)
-
+        # Changing ids.
         if previous_macro is None:
-            return
-
-        # Changing id's
-        self.current_macro.id, previous_macro.id = \
-            previous_macro.id, self.current_macro.id
+            last_macro = self.savefile.current_saveslot.macros[-1]
+            self.current_macro.id = last_macro.id + 1
+        else:
+            self.current_macro.id, previous_macro.id = \
+                previous_macro.id, self.current_macro.id
 
         self.MacrosTable_Refresh()
 
@@ -965,7 +965,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not self.current_macro.id:
             return
 
-        # Looking for previous macro.
+        # Looking for next macro.
         next_id = 0
         current_found = False
         model = self.tableWidget_Macros.model()
@@ -978,15 +978,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if macro_id == self.current_macro.id:
                 current_found = True
         else:
+            # If there'no next macro, we put current macro to beginning.
+            first_macro_id = self.savefile.current_saveslot.macros[0].id
+            for macro in self.savefile.current_saveslot.macros:
+                macro.id += 1
+            self.current_macro.id = first_macro_id
+            self.MacrosTable_Refresh()
             return
 
         next_macro = next((x for x in self.savefile.current_saveslot.macros
                            if x.id == next_id), None)
 
+        # Changing ids.
         if next_macro is None:
             return
 
-        # Changing id's
         self.current_macro.id, next_macro.id = \
             next_macro.id, self.current_macro.id
 

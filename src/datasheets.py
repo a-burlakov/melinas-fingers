@@ -1,13 +1,12 @@
 def weapons() -> tuple:
     """
-    Tuple of tuples. Each inner tuple has a data of specific weapon:
-    0 - id
-    1 - ID (in little-endian)
-    2 - weapon name
-    :return:
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
     """
 
-    return (  # (110000, "b0ad0100", "Unarmed"),
+    return (  # (110000, "b0ad0100", "Unarmed"), #  don't actually need it
         (1000000, "40420f00", "Dagger"),
         (1000100, "a4420f00", "Heavy Dagger"),
         (1000200, "08430f00", "Keen Dagger"),
@@ -3087,6 +3086,13 @@ def weapons() -> tuple:
 
 
 def ashes_of_war() -> tuple:
+    """
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
+    """
+
     return (
         (10000, "10270000", "Lion's Claw"),
         (10100, "74270000", "Impaling Thrust"),
@@ -3184,8 +3190,10 @@ def ashes_of_war() -> tuple:
 
 def arrows() -> tuple:
     """
-
-    :return:
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
     """
 
     return ((50000000, "80f0fa02", "Arrow"),
@@ -3256,6 +3264,13 @@ def arrows() -> tuple:
 
 
 def armor() -> tuple:
+    """
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
+    """
+
     return (
         (40000, "409c00", "Iron Helmet"),
         (40100, "a49c00", "Scale Armor"),
@@ -3849,8 +3864,10 @@ def armor() -> tuple:
 
 def talismans() -> tuple:
     """
-
-    :return:
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
     """
 
     return (
@@ -3975,8 +3992,10 @@ def talismans() -> tuple:
 
 def spells() -> tuple:
     """
-
-    :return:
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
     """
 
     return (
@@ -4157,7 +4176,10 @@ def spells() -> tuple:
 
 def items() -> tuple:
     """
-
+    Tuple of tuples:
+    0 - ID in decimal.
+    1 - ID in hex, little-endian, that's how it is in save-file.
+    2 - name.
     """
 
     return (
