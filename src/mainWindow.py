@@ -1754,7 +1754,7 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.spinBox_StandardPauseTime.setFont(font)
-        self.spinBox_StandardPauseTime.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.spinBox_StandardPauseTime.setFocusPolicy(QtCore.Qt.NoFocus)
         self.spinBox_StandardPauseTime.setMinimum(5)
         self.spinBox_StandardPauseTime.setMaximum(1000)
         self.spinBox_StandardPauseTime.setSingleStep(5)
@@ -2940,7 +2940,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget_Pages.setCurrentIndex(9)
+        self.stackedWidget_Pages.setCurrentIndex(7)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -3253,7 +3253,7 @@ class Ui_MainWindow(object):
         self.label_40.setText(_translate("MainWindow", "<html><head/><body><p>Assign control keys in game and make sure that controls are filled here. Otherwise some hotkeys will not work.</p></body></html>"))
         self.label_43.setText(_translate("MainWindow", "Standard pause time"))
         self.label_44.setText(_translate("MainWindow", "<html><head/><body><p>Pause between virtual key presses. The less stable your framerate is, the bigger value is needed here. 30-40 ms is good for stable 60 FPS; 60-80 ms is for stable 30 FPS.</p></body></html>"))
-        self.label_46.setText(_translate("MainWindow", "<html><head/><body><p>In <span style=\" color:#b4a68a;\">Auto </span>mode current item is removed and new one is being searched form the start of list. Slow but stable. </p><p>In <span style=\" color:#b4a68a;\">Semi-manual </span>mode Melina\'s Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you\'\'ll have to clear Melina\'s Fingers memory using <span style=\" color:#b4a68a;\">Recovery </span>key.</p></body></html>"))
+        self.label_46.setText(_translate("MainWindow", "<html><head/><body><p>In <span style=\" color:#b4a68a;\">Auto </span>mode current item is removed and new one is being searched from the start of list. Slow but stable. </p><p>In <span style=\" color:#b4a68a;\">Semi-manual </span>mode Melina\'s Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you\'\'ll have to clear Melina\'s Fingers memory using <span style=\" color:#b4a68a;\">Recovery </span>key.</p></body></html>"))
         self.button_FontSizeUp.setText(_translate("MainWindow", "+"))
         self.button_FontSizeDown.setText(_translate("MainWindow", "-"))
         self.label_53.setText(_translate("MainWindow", "<html><head/><body><p>Font size:</p></body></html>"))
@@ -3286,7 +3286,7 @@ class Ui_MainWindow(object):
         self.label_73.setText(_translate("MainWindow", "fln@mail.ru"))
         self.label_65.setText(_translate("MainWindow", "<html><head/><body><p>I live in Russia, and I want to get a job as Python developer. And it\'s going to be really difficult due some recent events in my country, as nobody need juniors in hard times. But a repo with some stars would greatly help me with my first job search.</p><p>Therefore if you gave Melina\'s Fingers a star on GitHub, you have my gratitude, hugs and polite bow.</p></body></html>"))
         self.label_66.setText(_translate("MainWindow", "<html><head/><body><p>With your donations, I will buy a bouquet of beautiful flowers for my wife and daughters who faithfully waited for me while I was incessantly occupied with Melina\'s Fingers.</p><p>Actually, I\'d buy them flowers in any case, but... Anyway, here\'s the link.</p></body></html>"))
-        self.label_75.setText(_translate("MainWindow", "<html><head/><body><p>If you had problems and bugs with Melina\'s Fingers, please share. Togethaaaa, we\'ll to reach a stable version before the upcoming DLC.</p></body></html>"))
+        self.label_75.setText(_translate("MainWindow", "<html><head/><body><p>If you had problems and bugs with Melina\'s Fingers, please share. Togethaaaa, we\'ll reach a stable version even before the upcoming DLC.</p></body></html>"))
         self.button_OpenSaveFile.setText(_translate("MainWindow", "Open save file"))
         item = self.tableWidget_Macros.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Row"))

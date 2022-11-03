@@ -113,7 +113,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_OpenSaveFile.clicked.connect(self.OpenSaveFile_Click)
         self.comboBox_SaveSlots.activated.connect(self.SaveSlots_OnChange)
 
-        self.lineEdit_MacroName.editingFinished.connect(self.MacroName_OnChange)
+        self.lineEdit_MacroName.textEdited.connect(self.MacroName_OnChange)
         self.comboBox_MacroType.activated.connect(self.MacroType_OnChange)
         self.button_DeleteMacros.clicked.connect(self.DeleteMacros_Click)
         self.comboBox_MacroKey.activated.connect(self.MacroKey_OnChange)
@@ -150,7 +150,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.button_EquipmentDelete.clicked.connect(self.Equipment_ManualMode_Delete)
         self.button_EquipmentReloadInventory.clicked.connect(self.Equipment_ReloadInventory)
         self.comboBox_EquipmentInventoryCurrentType.activated.connect(self.EquipmentInventoryType_OnChange)
-        self.tableWidget_Equipment.cellPressed.connect(self.Equipment_ManualMode_Table_OnChange)
+        self.tableWidget_Equipment.itemChanged.connect(self.Equipment_ManualMode_Table_OnChange)
         self.tableWidget_Equipment.doubleClicked.connect(self.Equipment_ManualMode_Table_DoubleClicked)
         self.comboBox_Equip_InstantAction.activated.connect(self.Equip_InstantAction_OnChange)
         self.comboBox_Equip_TwoHand.activated.connect(self.Equip_TwoHand_OnChange)
@@ -409,18 +409,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.settings['diy']['times_to_repeat'] = 1
         macros.append(macro)
 
-        # Items.
-        for i in range(1, 11):
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Switch to quick item {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = True
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
-            macros.append(macro)
-
         # Magic.
         for i in range(1, 11):
             macro = Macro(self.savefile.current_saveslot)
@@ -431,6 +419,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             macro.hotkey_shift = False
             macro.hotkey_alt = False
             macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
+            macros.append(macro)
+
+        # Items.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to quick item {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
             macros.append(macro)
 
         # Gestures.
@@ -751,6 +751,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def MacroName_OnChange(self):
 
+        print('changes')
         self.current_macro.name = self.lineEdit_MacroName.text()
         self.MacrosTable_Refresh()
 
@@ -1615,7 +1616,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.Pages_Equipment_Table_Refresh()
 
         # Clear selection.
-        self.tableWidget_Equipment.selectedItems().clear()
+        # self.tableWidget_Equipment.selectedItems().clear()
+
+        # Selecting last cell.
+        row, column = self.inventory_row_column_from_position(len(manual_list))
+        index = self.tableWidget_Equipment.model().index(row, column)
+        self.tableWidget_Equipment.selectionModel().select(
+            index,
+            QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Current
+        )
 
     def Equip_InstantAction_OnChange(self):
         """
@@ -1967,10 +1976,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         self.current_macro.settings['items']['instant_use'] = \
             self.checkBox_ItemInstantUse.isChecked()
-
-        if self.checkBox_ItemInstantUse.isChecked():
-            self.checkBox_ItemInstantUse.setChecked(False)
-            self.current_macro.settings['items']['instant_use'] = False
 
         self.Pages_Refresh_Items()
 

@@ -528,7 +528,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>9</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -3828,7 +3828,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="minimum">
        <number>5</number>
@@ -5955,7 +5955,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you had problems and bugs with Melina's Fingers, please share. Togethaaaa, we'll to reach a stable version even before the upcoming DLC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If you had problems and bugs with Melina's Fingers, please share. Togethaaaa, we'll reach a stable version even before the upcoming DLC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

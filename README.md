@@ -50,7 +50,7 @@ And of course, Melina's Fingers is **totally safe online** as it doesn't change 
 
 ## Getting Started
 1. [Download latest Melina's Fingers release](https://github.com/flower-ab/EldenRing-MelinasFingers/releases/latest);
-2. Put .exe file to separate folder (as next to it will be created an additional ".cfg" file);
+2. Put .exe file to separate folder (as next to it will be created an additional .cfg file);
 3. As you launch Melina's Fingers, it will try to get your save file from standard path. But if something went wrong, choose save file manually with "Open save file" button; 
 4. Go to "Settings" and make sure that all your Elden Ring controls are filled. If it's not, then go to Elden Ring and assign every action to any keyboard button, then press "Reload from save file" button or fill controls manually;
 5. Adjust font size and window scale, so it would be comfortable;
