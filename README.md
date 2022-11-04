@@ -81,7 +81,7 @@ There're no long sequences, but you can make something really long in DIY hotkey
 ### Melina's Fingers will not make you a PvP champion
 Elden Ring in not a bad game. It's battle system is very complex and if you want to win, you need to learn many things. Winning in Elden Ring consists of: creating a valuable build; spacing; knowing a territory you're fighting in; ability to play agile and adapt to new circumstances; feeling your opponent; knowing your own moveset; knowing many little things about game mechanics; resource management; risk management; constant little mindgames; being patient and not being greedy, etc. Ability to hardswap is only one of thousand things that brings you victory.
 
-I was inspired to make Melina's Fingers after I watched some popular players play the game (like ChaseTheBro, JeeNiNe, Steelovsky) and how easily they can hardswap their weapons. But they don't win just because they hardswap easily, the win because they understand the game.
+I was inspired to make Melina's Fingers after I watched some popular players play the game (like ChaseTheBro, JeeNiNe, Steelovsky) and how easily they can hardswap their weapons. But they don't win just because they hardswap easily, they win because they understand the game.
 
 Thus, Melina's Fingers can help you, but please don't count that it will save you in battle with experienced player or three opponents at once.
 
