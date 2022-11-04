@@ -8,3 +8,4 @@ qtdesigner_to_py.bat
 main.spec
 build
 dist
+assets
