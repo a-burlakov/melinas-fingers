@@ -58,6 +58,8 @@ And of course, Melina's Fingers is **totally safe online** as it doesn't change 
 7. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys. By the way, there're 10 item hotkeys and 10 magic introductory hotkeys with "Built-in" type. If you'll turn them to "Magic" and "Item" types and then set "Items search mode" and "Magic search mode" to "Semi-manual", you'll see some nice difference in hotkey speed.;
 8. If you use "Equipment" hotkey, make sure that your list is sorted by "Order of Acquisition", ascended. There's a special "Built-in" hotkey to sort all your lists by that rule.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLP-fqAeb4k8LEDDPs47tIt8dinttu_v5k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Some little important things
 
 ### Put everything you don't need in the chest
