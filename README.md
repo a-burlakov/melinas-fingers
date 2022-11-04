@@ -30,7 +30,7 @@ With Melina's Fingers help you can bind to hotkey different game actions, such a
 - **armor equipment;**  
 - **talismans equipment;**  
 - **changing all equipment at once:** change all your current weapons, armor and talismans in 7-10 seconds;
-- **magic select:** Melina's Fingers brings a joy of playing the mage no the new level as you can handle your spells much, much easier and faster;
+- **magic select:** Melina's Fingers brings a joy of playing the mage to the new level as you can handle your spells much, much easier and faster;
 - **quick item select:** now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in the heat of battle;
 - **crouch attack;**
 - **stance attack;**
