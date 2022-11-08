@@ -12,6 +12,10 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_buttons_with_codes
 from savefile import SaveFile, SaveSlot
+import win32con
+import win32api
+import win32process
+import psutil
 
 # This set is constantly being filled and cleared with pressed keyboard keys.
 # At the moment when some macro key combination are in this set, macro is
@@ -782,7 +786,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         location, _ = QFileDialog.getOpenFileName(self,
                                                   "Choose your Elden Ring Save File",
                                                   start_folder,
-                                                  "Elden Ring Save File (*.sl2)",
+                                                  "Elden Ring Save File (*.sl2, *.co2)",
                                                   options=options)
 
         if location:
@@ -2348,10 +2352,6 @@ def start_application():
     sys.exit(app.exec_())
 
 def pynput_listener_start() -> None:
-    """
-
-    :return:
-    """
 
     # Startin 'pynput' listener to read player's keypresses
     listener = keyboard.Listener(
