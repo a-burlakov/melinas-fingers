@@ -867,12 +867,21 @@ class Macro:
             # Presses are made sometimes with 'keyboard' and sometimes with
             # 'pynput' as pynput can press more keys but do it less stable
             # stan 'keyboard', according to my feelings.
-            keys_for_pynput = ['up', 'left', 'right', 'down']
+            keys_for_pynput = ['up', 'left', 'right', 'down', 'num0',
+                               'num1', 'num2', 'num3', 'num4', 'num5',
+                               'num6', 'num7', 'num8', 'num9']
 
-            for key_press in keys_list:
+            for i, key_press in enumerate(keys_list):
                 if key_press in keys_for_pynput:
                     if key_press in non_letter_keys():
-                        key_press = pynput_keyboard.Key[key_press]
+                        keys_list[i] = pynput_keyboard.Key[key_press]
+                    elif len(key_press) == 4 and key_press.startswith('num'):
+                        num_number = int(key_press[-1])
+                        keys_list[i] = pynput_keyboard.KeyCode(96 + num_number)
+
+            for key_press in keys_list:
+                if hasattr(key_press, 'vk') \
+                        or (hasattr(key_press, 'value') and hasattr(key_press, 'name')):
                     pynput_in.press(key_press)
                 else:
                     keyboard.press(key_press)
@@ -880,9 +889,8 @@ class Macro:
             time.sleep(press_time)
 
             for key_press in keys_list:
-                if key_press in keys_for_pynput:
-                    if key_press in non_letter_keys():
-                        key_press = pynput_keyboard.Key[key_press]
+                if hasattr(key_press, 'vk') \
+                        or (hasattr(key_press, 'value') and hasattr(key_press, 'name')):
                     pynput_in.release(key_press)
                 else:
                     keyboard.release(key_press)
