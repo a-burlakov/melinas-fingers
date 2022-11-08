@@ -12,10 +12,6 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from macro import Macro, built_in_macros, available_buttons_with_codes
 from savefile import SaveFile, SaveSlot
-import win32con
-import win32api
-import win32process
-import psutil
 
 # This set is constantly being filled and cleared with pressed keyboard keys.
 # At the moment when some macro key combination are in this set, macro is
@@ -94,6 +90,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.savefile.location and not self.savefile.current_saveslot.macros:
             self.add_introductory_macros()
 
+        self.savefile.calculate_online_mode()
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
         self.Pages_SetPage()
@@ -283,6 +280,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def closeEvent(self, a0: PyQt5.QtGui.QCloseEvent) -> None:
 
         self.save_settings_to_file()
+
+    def changeEvent(self, *args, **kwargs):
+
+        self.Pages_Refresh_Journal()
 
     @staticmethod
     def available_game_control_buttons() -> tuple:
