@@ -351,7 +351,11 @@ class SaveFile:
             194: 'End',
             196: 'PageDown',
             197: 'Insert',
-            198: 'Delete'
+            198: 'Delete',
+            190: 'Up',
+            192: 'Left',
+            195: 'Down',
+            193: 'Right'
         }
 
     def is_empty(self) -> bool:

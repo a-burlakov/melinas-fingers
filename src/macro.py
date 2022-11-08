@@ -3,10 +3,10 @@ import traceback
 import time
 from win32gui import GetWindowText, GetForegroundWindow
 import keyboard
-from pynput.keyboard import Key, Controller
+from pynput import keyboard as pynput_keyboard
 from savefile import SaveSlot
 
-pynput_in = Controller()
+pynput_in = pynput_keyboard.Controller()
 
 
 def non_letter_keys() -> tuple:
@@ -863,16 +863,16 @@ class Macro:
                     else:
                         keys_list[i] = key_press
 
-            # TODO: need to understand, why 'keyboard' can't press arrows
-            #  in game but 'pynput' can. Using two separate methods for input
-            #  makes me feel silly.
-
             # Key presses execution.
+            # Presses are made sometimes with 'keyboard' and sometimes with
+            # 'pynput' as pynput can press more keys but do it less stable
+            # stan 'keyboard', according to my feelings.
             keys_for_pynput = ['up', 'left', 'right', 'down']
+
             for key_press in keys_list:
                 if key_press in keys_for_pynput:
                     if key_press in non_letter_keys():
-                        key_press = Key[key_press]
+                        key_press = pynput_keyboard.Key[key_press]
                     pynput_in.press(key_press)
                 else:
                     keyboard.press(key_press)
@@ -882,7 +882,7 @@ class Macro:
             for key_press in keys_list:
                 if key_press in keys_for_pynput:
                     if key_press in non_letter_keys():
-                        key_press = Key[key_press]
+                        key_press = pynput_keyboard.Key[key_press]
                     pynput_in.release(key_press)
                 else:
                     keyboard.release(key_press)

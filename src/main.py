@@ -298,7 +298,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
             "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Tab",
             "Space", "Backspace", "Enter", "Home", "PageUp", "End", "PageDown",
-            "Insert", "Delete", "Ctrl", "Shift", "Alt"
+            "Insert", "Delete", "Ctrl", "Shift", "Alt", "Up", "Left", "Down",
+            "Right"
         )
 
     @staticmethod
