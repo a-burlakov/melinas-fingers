@@ -6295,9 +6295,7 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-image: url(:/newPrefix/images/background_2.png);
-
-</string>
+     <string notr="true">border-image: url(:/newPrefix/images/background.png);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>

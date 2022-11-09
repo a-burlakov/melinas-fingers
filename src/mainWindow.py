@@ -2788,9 +2788,7 @@ class Ui_MainWindow(object):
         self.graphicsView_2.setFont(font)
         self.graphicsView_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.graphicsView_2.setAutoFillBackground(False)
-        self.graphicsView_2.setStyleSheet("border-image: url(:/newPrefix/images/background_2.png);\n"
-"\n"
-"")
+        self.graphicsView_2.setStyleSheet("border-image: url(:/newPrefix/images/background.png);")
         self.graphicsView_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.button_Settings = QtWidgets.QPushButton(self.centralwidget)
