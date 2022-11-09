@@ -181,7 +181,7 @@ class Ui_MainWindow(object):
 "        }\n"
 "\n"
 " QScrollBar::handle:vertical {\n"
-"    border-colour: red;\n"
+"    border-color: red;\n"
 "    gridline-color: rgb(255, 255, 255);\n"
 " }\n"
 "\n"
