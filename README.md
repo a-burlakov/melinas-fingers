@@ -17,36 +17,31 @@
 </p>
 
 ## Features
-Melina's Fingers has several types of hotkeys to customize:
-- **Equipment:** hotkeys for armaments, armor and talismans;
-- **Magic:** hotkeys for current magic list;
-- **Items:** hotkeys for items in your quick items list;
-- **Built-in:** some useful hardcoded hotkeys;
-- **DIY:** rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name in future versions.
-<br/><br/>
+Melina's Fingers lets you bind game actions to hotkeys, making your gameplay much more fluid and pleasant as actions that required pressing >10 buttons now require pressing only one. 
 
-With Melina's Fingers help you can bind to hotkey different game actions, such as:
-- **weapons equipment:** change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;    
-- **armor equipment;**  
-- **talismans equipment;**  
-- **changing all equipment at once:** change all your current weapons, armor and talismans in 7-10 seconds;
-- **magic select:** Melina's Fingers brings a joy of playing the mage to the new level as you can handle your spells much, much easier and faster;
-- **quick item select:** now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in the heat of battle;
-- **crouch attack;**
-- **stance attack;**
-- **reverse backstep;**
-- **fast katana stance attacks:** these stance attacks makes recovery animation much shorter;
-- **several invasion attempts in a row:** now you don't have to constantly use Bloody Finger, then Recusant Finger and then again, waiting for invasion to get started; 
-- **gestures**
+Melina's Fingers have separate functionality depending on if EasyAntiCheat (EAC) is on or off.
 
-and many more.
-<br/><br/>
-For "Equipment", "Magic" and "Item" types of hotkeys there are also two search modes:
-- **Auto:** slower but more stable;
-- **Semi-manual:** faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
-<br/><br/>
+With EAC on you can bind some nice "Built-in" hotkeys that are harmless to use in multiplayer:
+- **gestures**: now you need only 1 button to perform a gesture;
+- **invasion attempts in a row**: you press 1 button, and Meilna's fingers uses Bloody Finger, then Recusant Finger and so several times. It will get you to invasion much - faster than just waiting for invasion or constantly using Bloody and Recusant Finger yourself;
+- **using Duelist's or Tarnished's Furled Fingers**;
+- **two-handing a weapon**: if you still miss good ol' days when it could be done with one button; 
+- **fast quit to main menu**: useful if you lost to gravity but still want to cheat death;
 
-And of course, Melina's Fingers is **totally safe online** as it doesn't change anything in your game. It just reads your safe file once to give you information about your controls, equipment, magic and items.  
+With EAC off you can additionally bind almost anything:
+- **weapons hardswap**: change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;
+- **armor hardswap**;
+- **talismans hardswap**;
+- **changing all equipment at once**: hardswap your whole build in 5-7 seconds, well that's something new;
+- **selecting next/previous weapon**;
+- **magic select**: Melina's Fingers brings a joy of playing the mage to the new level as you can handle your spells much, much easier and faster;
+- **quick item select**: now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in the heat of battle;
+- **crouch attack**;
+- **stance attack**;
+- **reverse backstep**;
+- **fast katana stance attacks**: these stance attacks makes recovery animation much shorter due performing a crouch after each attack;
+
+and any crazy hotkey you made yourself via rich DIY-constructor. You can even make a hotkey for farming mobs being AFK.
 
 ## Getting Started
 1. [Download latest Melina's Fingers release](https://github.com/flower-ab/EldenRing-MelinasFingers/releases/latest);
@@ -58,7 +53,21 @@ And of course, Melina's Fingers is **totally safe online** as it doesn't change 
 7. There's already some introductory hotkeys on the left. You can use these, or add your own hotkeys. By the way, there're 10 item hotkeys and 10 magic introductory hotkeys with "Built-in" type. If you'll turn them to "Magic" and "Item" types and then set "Items search mode" and "Magic search mode" to "Semi-manual", you'll see some nice difference in hotkey speed.;
 8. If you use "Equipment" hotkey, make sure that your list is sorted by "Order of Acquisition", ascended. There's a special "Built-in" hotkey to sort all your lists by that rule.
 
-Also, you can watch some <a href="https://youtube.com/playlist?list=PLP-fqAeb4k8LEDDPs47tIt8dinttu_v5k">tutorial videos</a>.
+Basically what Melina's Fingers does:
+- reads your controls, equipment, magic and items from your safe file;
+- uses this information so it would be easier for you to set your hotkeys via GUI;
+- if you press a hotkey during gameplay, it turns your settings into a sequence of virtual keyboard presses and performs it fast. 
+
+Melina's Fingers has several types of hotkeys to customize:
+- **Equipment**: hotkeys for armaments, armor and talismans;
+- **Magic**: hotkeys for current magic list;
+- **Items**: hotkeys for items in your quick items list;
+- **Built-in**: some useful hardcoded hotkeys;
+- **DIY**: rich hotkey designer, so you can come up with almost any hotkey you want. You can send me your best DIY-scripts, and I'll add them to "Built-in" hotkeys with author's name in future versions.
+
+For "Equipment", "Magic" and "Item" types of hotkeys there are also two search modes:
+- **Auto**: slower but more stable;
+- **Semi-manual**: faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 
 ## Some little important things
 
