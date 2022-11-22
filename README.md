@@ -21,18 +21,18 @@ Melina's Fingers lets you bind game actions to hotkeys, making your gameplay muc
 
 Melina's Fingers have separate functionality depending on if EasyAntiCheat (EAC) is on or off.
 
-With EAC on you can bind some nice "Built-in" hotkeys that are harmless to use in multiplayer:
+With **EAC on** you can bind some nice "Built-in" hotkeys that are harmless to use in multiplayer:
 - **gestures**: now you need only 1 button to perform a gesture;
 - **invasion attempts in a row**: you press 1 button, and Meilna's fingers uses Bloody Finger, then Recusant Finger and so several times. It will get you to invasion much - faster than just waiting for invasion or constantly using Bloody and Recusant Finger yourself;
 - **using Duelist's or Tarnished's Furled Fingers**;
 - **two-handing a weapon**: if you still miss good ol' days when it could be done with one button; 
 - **fast quit to main menu**: useful if you lost to gravity but still want to cheat death;
 
-With EAC off you can additionally bind almost anything:
+With **EAC off** you can additionally bind almost anything:
 - **weapons hardswap**: change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;
 - **armor hardswap**;
 - **talismans hardswap**;
-- **changing all equipment at once**: hardswap your whole build in 5-7 seconds, well that's something new;
+- **changing all equipment at once**: hardswap your whole _build_ in 5-7 seconds, well that's something new;
 - **selecting next/previous weapon**;
 - **magic select**: Melina's Fingers brings a joy of playing the mage to the new level as you can handle your spells much, much easier and faster;
 - **quick item select**: now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in the heat of battle;
