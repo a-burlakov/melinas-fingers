@@ -683,7 +683,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.comboBox_SaveSlots.setEnabled(True)
             self.comboBox_SaveSlots.setCurrentIndex(self.savefile.current_saveslot.number - 1)
         else:
-            self.comboBox_SaveSlots.addItem('<Choose save file!>')
+            self.comboBox_SaveSlots.addItem('Choose save file!')
+            self.comboBox_SaveSlots.setEnabled(False)
+
+        if len(saveslots) == 1 and not saveslots[0].name:
+            self.comboBox_SaveSlots.clear()
+            self.comboBox_SaveSlots.addItem('Choose save file!')
             self.comboBox_SaveSlots.setEnabled(False)
 
     def SaveSlots_OnChange(self):
