@@ -35,7 +35,7 @@ def pynput_on_press(key):
     global LAST_KEY_COMBINATION
     global CURRENT_KEY_COMBINATION
 
-    print(key)
+    # print(key)
     if hasattr(key, 'vk'):
         CURRENT_KEY_COMBINATION.add(key.vk)
     else:
@@ -801,7 +801,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         location, _ = QFileDialog.getOpenFileName(self,
                                                   "Choose your Elden Ring Save File",
                                                   start_folder,
-                                                  "Elden Ring Save File (*.sl2, *.co2)",
+                                                  "Elden Ring Save File (*.sl2 *.co2)",
                                                   options=options)
 
         if location:
