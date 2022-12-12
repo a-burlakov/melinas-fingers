@@ -286,7 +286,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Page "About"
         self.button_Nexus.clicked.connect(self.Nexus_Clicked)
         # self.button_Tutorial.clicked.connect(self.Tutorial_Clicked)
-        self.button_PayPal.clicked.connect(self.PayPal_Clicked)
+        # self.button_PayPal.clicked.connect(self.PayPal_Clicked)
         self.button_GitHub2.clicked.connect(self.GitHub_Click)
         self.button_GitHub3.clicked.connect(self.GitHubIssues_Click)
 
