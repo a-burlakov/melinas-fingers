@@ -259,13 +259,18 @@ class Macro:
         'save_online_mode' is set to True.
         """
 
-        if self.type == 'Built-in':
-            macro_name = self.settings['built-in']['macro_name']
-            macro = next((x for x in built_in_macros() if x['name'] == macro_name), None)
-            if macro is not None:
-                return macro['safe_for_online']
+        # Weapon hardswapping is forbidden if EAC is on.
+        if self.type == 'Equipment':
+            settings = self.settings['equipment']
+            if settings['weapon_right_1']['position'] \
+                    or settings['weapon_right_2']['position'] \
+                    or settings['weapon_right_3']['position'] \
+                    or settings['weapon_left_1']['position'] \
+                    or settings['weapon_left_2']['position'] \
+                    or settings['weapon_left_3']['position']:
+                return False
 
-        return False
+        return True
 
     def execute(self):
         """
@@ -908,72 +913,49 @@ def built_in_macros() -> list:
     macros_list = [
         {'name': 'Two-handing a right weapon',
          'keyline': 'event_action+attack',
-         'comment': 'For those who miss the days when it could be done with one button.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+         'comment': 'For those who miss the days when it could be done with one button.'},
 
         {'name': 'Two-handing a left weapon',
          'keyline': 'event_action+guard',
-         'comment': 'For those who miss the days when it could be done with one button.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+         'comment': 'For those who miss the days when it could be done with one button.'},
 
         {'name': 'Six invasion attempts (wide)',
          'keyline': (
-                                f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[
-                    :-10],
+                    f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
                     'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
-                    'Invades over all map.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+                    'Invades over all map.'},
 
         {'name': 'Six invasion attempts (local)',
          'keyline': (
-                                f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3)[
-                    :-10],
+                    f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000' * 3)[:-10],
          'comment': 'Performs an attempt to invade as bloody finger,\n'
                     'then attempt to invade as recusant, and so three times.\n'
                     '\n'
                     'Usually that\'s enough to invade even with mediocre connection\n'
                     'and get a snack from kitchen.\n'
                     '\n'
-                    'Invades locally.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+                    'Invades locally.'},
 
         {'name': 'Fast quit to main menu',
          'keyline': 'esc|up|e|z|e|left|e',
          'comment': 'Quits to main menu very fast.\n'
                     '\n'
-                    'Useful if you lost to gravity but still want to cheat death.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+                    'Useful if you lost to gravity but still want to cheat death.'},
 
         {'name': 'Use Duelist\'s Furled Finger',
          'keyline': 'esc|up|up|e|down|down|e',
          'comment': 'Uses Duelist\'s Furled Finger to get back to battle after\n'
-                    'loosing as fast as possible.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+                    'loosing as fast as possible.'},
 
         {'name': 'Use Tarnished\'s Furled Finger',
          'keyline': 'esc|up|up|e|down|e',
          'comment': 'Uses Tarnished\'s Furled Finger to help other Tarnished\n'
-                    'as fast as possible.\n'
-                    '\n'
-                    'Safe for online.',
-         'safe_for_online': True},
+                    'as fast as possible.'},
 
         {'name': 'Sort all: Asc. Acquisition',
          'keyline': keyline_to_sort_all_lists(),
@@ -989,29 +971,24 @@ def built_in_macros() -> list:
                     'By the way, "Order of Acquisition", Asc. is chosen due to two reasons:\n'
                     '   1) that\'s easiest order to be calculated via save file;\n'
                     '   2) it allows to pick up new weapons in PvE as new weapons go to\n'
-                    '      the end of the list.',
-         'safe_for_online': False},
+                    '      the end of the list.'},
 
         {'name': 'Crouch attack',
          'keyline': 'crouch|attack',
-         'comment': 'Everyone\'s hated button except UGS players before 1.07.',
-         'safe_for_online': False},
+         'comment': 'Everyone\'s hated button except UGS players before 1.07.'},
 
         {'name': 'Stance attack',
          'keyline': 'skill|attack',
-         'comment': 'Goes to stance, then immediately perform an attack.',
-         'safe_for_online': False},
+         'comment': 'Goes to stance, then immediately perform an attack.'},
 
         {'name': 'Stance strong attack',
          'keyline': 'skill|strong_attack',
-         'comment': 'Goes to stance, then immediately perform a strong attack.',
-         'safe_for_online': False},
+         'comment': 'Goes to stance, then immediately perform a strong attack.'},
 
         {'name': 'Left weapon skill',
          'keyline': 'event_action+guard|pause200|skill',
          'comment': 'Takes weapons from left hand to both hands and performs\n'
-                    'it\'s skill immediately.',
-         'safe_for_online': False},
+                    'it\'s skill immediately.'},
 
         {'name': 'Fast katana stance attacks',
          'keyline': 'skill_press300|attack|pause500|crouch_press20|crouch',
@@ -1022,8 +999,7 @@ def built_in_macros() -> list:
                     'To continue attack wait for a beginning of crouch and press button again. You\'ll stay in crouch position after attack.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
-                    'you actually deserve this.',
-         'safe_for_online': False},
+                    'you actually deserve this.'},
 
         {'name': 'Fast katana stance attacks (strong)',
          'keyline': 'skill_press300|strong_attack|pause500|crouch_press20|crouch',
@@ -1034,40 +1010,35 @@ def built_in_macros() -> list:
                     'To continue attack wait for a beginning of crouch and press button again. You\'ll stay in crouch position after attack.\n'
                     '\n'
                     'They hated you because you\'re Moonveil user, but now\n'
-                    'you actually deserve this.',
-         'safe_for_online': False},
+                    'you actually deserve this.'},
 
         {'name': 'Next weapon (right)',
          'keyline': keyline_to_choose_next_weapon(),
          'comment': 'Chooses next weapon in list for right hand.\n'
                     '\n'
                     'You can choose 3 weapons for Right Hand Armament 1 slot\n'
-                    'and play like Dante in classic weapon-juggling Devil May Cry style.',
-         'safe_for_online': False},
+                    'and play like Dante in classic weapon-juggling Devil May Cry style.'},
 
         {'name': 'Previous weapon (right)',
          'keyline': keyline_to_choose_previous_weapon(),
          'comment': 'Chooses previous weapon in list for right hand.\n'
                     '\n'
                     'You can choose 3 weapons for Right Hand Armament 1 slot\n'
-                    'and play like Dante in classic weapon-juggling Devil May Cry style.',
-         'safe_for_online': False},
+                    'and play like Dante in classic weapon-juggling Devil May Cry style.'},
 
         {'name': 'Next weapon (left)',
          'keyline': keyline_to_choose_next_weapon(left_hand=True),
          'comment': 'Chooses next weapon in list for left hand.\n'
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
-                    'and play like Vergil in classic weapon-juggling Devil May Cry style.',
-         'safe_for_online': False},
+                    'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
 
         {'name': 'Previous weapon (left)',
          'keyline': keyline_to_choose_previous_weapon(left_hand=True),
          'comment': 'Chooses previous weapon in list for left hand.\n'
                     '\n'
                     'You can choose 3 weapons for Left Hand Armament 1 slot\n'
-                    'and play like Vergil in classic weapon-juggling Devil May Cry style.',
-         'safe_for_online': False},
+                    'and play like Vergil in classic weapon-juggling Devil May Cry style.'},
     ]
 
     # Use item macros.
@@ -1075,8 +1046,7 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Switch to quick item {str(i)}',
             'keyline': f'switch_item_press600{"|switch_item|pause10" * (i - 1)}',
-            'comment': f'Selects item {i} from quick item list.',
-            'safe_for_online': False
+            'comment': f'Selects item {i} from quick item list.'
         })
 
     # Switch to spell macros.
@@ -1084,8 +1054,7 @@ def built_in_macros() -> list:
         macros_list.append({
             'name': f'Switch to spell {str(i)}',
             'keyline': f'switch_spell_press600{"|switch_spell|pause10" * (i - 1)}',
-            'comment': f'Selects spell {i} from spell list.',
-            'safe_for_online': False
+            'comment': f'Selects spell {i} from spell list.'
         })
 
     # Six gestures.
@@ -1096,9 +1065,6 @@ def built_in_macros() -> list:
             'name': f'Gesture {str(i)}',
             'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e|esc',
             'comment': f'Performs gesture {i}.'
-                       f'\n'
-                       f'\nSafe for online.',
-            'safe_for_online': True
         })
 
     return macros_list
