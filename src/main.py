@@ -100,6 +100,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.savefile.current_saveslot = SaveSlot()
                 self.current_macro = Macro()
 
+        if not self.savefile.current_saveslot:
+            self.savefile.saveslots.append(SaveSlot())
+            self.savefile.current_saveslot = self.savefile.saveslots[0]
+
         if self.savefile.location and not self.savefile.current_saveslot.macros:
             self.add_introductory_macros()
 
@@ -481,6 +485,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
         Sets macros settings with values from the window to all macros.
         """
+
+        if not self.savefile.current_saveslot:
+            return
 
         recovery_hotkey = self.savefile.recovery_hotkey
         if self.savefile.recovery_hotkey_alt:
