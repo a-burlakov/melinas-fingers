@@ -1518,6 +1518,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.equipment_current_cell = ''
 
+        self.set_macro_name_from_settings()
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -1538,6 +1539,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.equipment_current_cell = ''
 
+        self.set_macro_name_from_settings()
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -1550,6 +1552,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.equipment_current_cell = ''
 
+        self.set_macro_name_from_settings()
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -1785,6 +1788,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.equipment_current_cell = ''
 
+        self.set_macro_name_from_settings()
         self.Pages_Equipment_Table_Refresh()
         self.Pages_Equipment_Buttons_Refresh()
         self.Pages_Equipment_Cells_Refresh()
@@ -2290,6 +2294,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         """
 
         self.tableWidget_Macros.blockSignals(True)
+
+        if self.current_macro.type == 'Equipment':
+            settings = self.current_macro.settings['equipment']
+
+            cells = ['weapon_right_1', 'weapon_right_2', 'weapon_right_3',
+                     'weapon_left_1', 'weapon_left_2', 'weapon_left_3',
+                     'armor_head', 'armor_chest', 'armor_arms', 'armor_legs',
+                     'talisman_1', 'talisman_2', 'talisman_3', 'talisman_4']
+
+            for cell in cells:
+                if settings[cell]['name']:
+                    self.current_macro.name = settings[cell]['name']
+                    self.MacroArea_Refresh()
+                    self.MacrosTable_Refresh()
+                    return
+
+            self.current_macro.name = '< hotkey name >'
+            self.MacroArea_Refresh()
+            self.MacrosTable_Refresh()
+            return
+
 
         if self.current_macro.type == 'Magic':
 
