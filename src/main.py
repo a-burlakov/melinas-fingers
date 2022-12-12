@@ -35,6 +35,7 @@ def pynput_on_press(key):
     global LAST_KEY_COMBINATION
     global CURRENT_KEY_COMBINATION
 
+    print(key)
     if hasattr(key, 'vk'):
         CURRENT_KEY_COMBINATION.add(key.vk)
     else:
@@ -48,8 +49,10 @@ def pynput_on_press(key):
     for combination, func in HOTKEYS.items():
 
         if combination <= CURRENT_KEY_COMBINATION:
+            
             CURRENT_KEY_COMBINATION.clear()
-            func()
+            if combination not in forbidden_key_combinations():
+                func()
             break
 
 
@@ -60,6 +63,16 @@ def pynput_on_release(key):
     except KeyError:
         pass
 
+def forbidden_key_combinations() -> list:
+    """
+    Returns a list of sets that have a combinations of key that should be
+    ignored for some reasons. 
+    """
+    
+    forbidden_combinations = list()
+    forbidden_combinations.append(frozenset((9, 164)))  # Alt + Tab
+
+    return forbidden_combinations
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
