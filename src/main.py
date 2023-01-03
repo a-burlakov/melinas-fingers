@@ -910,11 +910,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def GitHub_Click(self) -> None:
 
-        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers')
+        webbrowser.open_new('https://github.com/aaburlakov/EldenRing-MelinasFingers')
 
     def GitHubIssues_Click(self) -> None:
 
-        webbrowser.open_new('https://github.com/flower-ab/EldenRing-MelinasFingers/issues')
+        webbrowser.open_new('https://github.com/aaburlakov/EldenRing-MelinasFingers/issues')
 
     def PayPal_Clicked(self) -> None:
         """
