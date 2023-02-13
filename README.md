@@ -4,6 +4,7 @@
 
 <h3 align="center">Melina's Fingers</h3>
 <p align="center">Hotkey tool to improve your Elden Ring experience. Melina's Fingers aims to bring you joy by freeing you from UI limitations that we had to endure since Demon’s Souls (2009).</p>
+<p align="center">New version will come right together with new Elden Ring DLC!</p>
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2504">Nexus page</a></p>
 
 <p align="center">
