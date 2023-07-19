@@ -21,9 +21,9 @@ def endian_turn(hex_string: str) -> str:
     if len(hex_string) % 2 == 1:
         return hex_string
 
-    pairs = [hex_string[i : i + 2] for i in range(0, len(hex_string), 2)]
+    pairs = [hex_string[i:i + 2] for i in range(0, len(hex_string), 2)]
 
-    return "".join(reversed(pairs))
+    return ''.join(reversed(pairs))
 
 
 def item_id_from_dec_to_hex(item_id: str, max_length: int) -> str:
@@ -34,9 +34,9 @@ def item_id_from_dec_to_hex(item_id: str, max_length: int) -> str:
 
     hex_big_endian = hex(int(item_id))[2:]
     if len(hex_big_endian) % 2 == 1:
-        hex_big_endian = "0" + hex_big_endian
+        hex_big_endian = '0' + hex_big_endian
     hex_little_endian = endian_turn(hex_big_endian)
-    hex_little_endian += (max_length - len(hex_little_endian)) * "0"
+    hex_little_endian += (max_length - len(hex_little_endian)) * '0'
 
     return hex_little_endian
 
@@ -47,49 +47,38 @@ def add_escaping_symbols_to_byte_reg(reg_expression: bytes) -> bytes:
     performed on byte strings.
     """
 
-    escaping_characters = [
-        b"\\",
-        b"[",
-        b"]",
-        b"(",
-        b")",
-        b"|",
-        b"^",
-        b"$",
-        b".",
-        b"?",
-        b"*",
-        b"+",
-    ]
+    escaping_characters = [b'\\', b'[', b']', b'(', b')', b'|',
+                           b'^', b'$', b'.', b'?', b'*', b'+']
     for ch in escaping_characters:
-        reg_expression = reg_expression.replace(ch, b"\\" + ch)
+        reg_expression = reg_expression.replace(ch, b'\\' + ch)
 
     return reg_expression
 
-
 class SaveFile:
-    def __init__(self, location: str):
+
+    def __init__(self , location: str):
 
         self.location = location
         self.saveslots: list = []
-        self.current_saveslot: SaveSlot = ""
+        self.current_saveslot: SaveSlot = ''
         self.font_size_adjustment: int = -1
         self.standard_pause_time: int = 0
-        self.recovery_hotkey: str = ""
+        self.recovery_hotkey: str = ''
         self.recovery_hotkey_ctrl: bool = False
         self.recovery_hotkey_shift: bool = False
         self.recovery_hotkey_alt: bool = False
         self.journal: list = []
         self.window_scale: float = 1.3
 
-        self.game_controls: dict = {"": ""}
+        self.game_controls: dict = {'': ''}
         for key in self.control_keys_ranges().keys():
-            self.game_controls[key] = ""
+            self.game_controls[key] = ''
 
         # If "online_mode" is on, then Melina's Fingers will stop some macros
         # from performing to not harm balanced PvP.
         self.safe_online_mode: bool = True
         self.safe_online_mode_last_check_time = time.time()
+
 
     @staticmethod
     def range_before_saveslots() -> int:
@@ -146,7 +135,8 @@ class SaveFile:
                 return
 
             is_elden_ring = False
-            if "elden" in class_name and "ring" in class_name and len(class_name) < 15:
+            if 'elden' in class_name and 'ring' in class_name \
+                    and len(class_name) < 15:
                 is_elden_ring = True
 
             if not is_elden_ring:
@@ -162,10 +152,8 @@ class SaveFile:
         # If Elden Ring in not open, set "False" to not restrict testing.
         if not game_pid_list:
             self.safe_online_mode = False
-            self.make_journal_entry(
-                f'"Safe online mode" is calculated '
-                f'and set to "{self.safe_online_mode}".'
-            )
+            self.make_journal_entry(f'"Safe online mode" is calculated '
+                                    f'and set to "{self.safe_online_mode}".')
             return
 
         game_pid = game_pid_list[0]
@@ -177,18 +165,14 @@ class SaveFile:
         try:
             handle = win32api.OpenProcess(
                 win32con.PROCESS_QUERY_INFORMATION | win32con.PROCESS_VM_READ,
-                0,
-                game_pid,
-            )
+                0, game_pid)
             self.safe_online_mode = False
             modlist = win32process.EnumProcessModules(handle)
         except:
             self.safe_online_mode = True
 
-        self.make_journal_entry(
-            f'"Safe online mode" is calculated '
-            f'and set to "{self.safe_online_mode}".'
-        )
+        self.make_journal_entry(f'"Safe online mode" is calculated '
+                                f'and set to "{self.safe_online_mode}".')
 
     def get_slot_names(self) -> list:
         """
@@ -198,8 +182,8 @@ class SaveFile:
             data = f.read()
 
         names_ranges = SaveFile.slot_names_ranges()
-        names = [data[begin:end].decode("utf-16") for begin, end in names_ranges]
-        names = list(map(lambda x: x.strip("\x00"), names))
+        names = [data[begin:end].decode('utf-16') for begin, end in names_ranges]
+        names = list(map(lambda x: x.strip('\x00'), names))
 
         return names
 
@@ -210,18 +194,16 @@ class SaveFile:
         (characters names).
         """
 
-        return (
-            (0x1901D0E, 0x1901D0E + 32),
-            (0x1901F5A, 0x1901F5A + 32),
-            (0x19021A6, 0x19021A6 + 32),
-            (0x19023F2, 0x19023F2 + 32),
-            (0x190263E, 0x190263E + 32),
-            (0x190288A, 0x190288A + 32),
-            (0x1902AD6, 0x1902AD6 + 32),
-            (0x1902D22, 0x1902D22 + 32),
-            (0x1902F6E, 0x1902F6E + 32),
-            (0x19031BA, 0x19031BA + 32),
-        )
+        return ((0x1901d0e, 0x1901d0e + 32),
+                (0x1901f5a, 0x1901f5a + 32),
+                (0x19021a6, 0x19021a6 + 32),
+                (0x19023f2, 0x19023f2 + 32),
+                (0x190263e, 0x190263e + 32),
+                (0x190288a, 0x190288a + 32),
+                (0x1902ad6, 0x1902ad6 + 32),
+                (0x1902d22, 0x1902d22 + 32),
+                (0x1902f6e, 0x1902f6e + 32),
+                (0x19031ba, 0x19031ba + 32))
 
     def fill_saveslots(self):
         """
@@ -246,9 +228,9 @@ class SaveFile:
         """
 
         for key in self.game_controls.keys():
-            self.game_controls[key] = ""
+            self.game_controls[key] = ''
 
-        if self.location == "":
+        if self.location == '':
             return
 
         slot_data = self.get_data()
@@ -256,9 +238,9 @@ class SaveFile:
         control_keys = self.control_keys_ranges()
         control_keys_values = self.control_keys_values()
         for key, value in control_keys.items():
-            hex_string = slot_data[value : value + 1]
+            hex_string = slot_data[value:value + 1]
             control_keys[key] = int(hex_string.hex(), 16)
-            control_keys[key] = control_keys_values.get(control_keys[key], "")
+            control_keys[key] = control_keys_values.get(control_keys[key], '')
             self.game_controls[key] = control_keys[key]
 
     @staticmethod
@@ -269,22 +251,22 @@ class SaveFile:
         """
 
         return {
-            "move_up": 0x019034DD,
-            "move_down": 0x019034F1,
-            "move_left": 0x01903505,
-            "move_right": 0x01903519,
-            "roll": 0x01903541,
-            "jump": 0x01903555,
-            "crouch": 0x0190352D,
-            "reset_camera": 0x019035B9,
-            "switch_spell": 0x019035CD,
-            "switch_item": 0x019035E1,
-            "attack": 0x0190361D,
-            "strong_attack": 0x01903631,
-            "guard": 0x01903645,
-            "skill": 0x01903659,
-            "use_item": 0x0190366D,
-            "event_action": 0x01903681,
+            'move_up': 0x019034dd,
+            'move_down': 0x019034f1,
+            'move_left': 0x01903505,
+            'move_right': 0x01903519,
+            'roll': 0x01903541,
+            'jump': 0x01903555,
+            'crouch': 0x0190352d,
+            'reset_camera': 0x019035b9,
+            'switch_spell': 0x019035cd,
+            'switch_item': 0x019035e1,
+            'attack': 0x0190361d,
+            'strong_attack': 0x01903631,
+            'guard': 0x01903645,
+            'skill': 0x01903659,
+            'use_item': 0x0190366d,
+            'event_action': 0x01903681,
         }
 
     @staticmethod
@@ -296,84 +278,84 @@ class SaveFile:
         """
 
         return {
-            128: "F1",
-            129: "F2",
-            130: "F3",
-            131: "F4",
-            132: "F5",
-            133: "F6",
-            134: "F7",
-            135: "F8",
-            136: "F9",
-            137: "F10",
-            156: "F11",
-            157: "F12",
-            80: "0",
-            71: "1",
-            72: "2",
-            73: "3",
-            74: "4",
-            75: "5",
-            76: "6",
-            77: "7",
-            78: "8",
-            79: "9",
-            151: "Num0",
-            148: "Num1",
-            149: "Num2",
-            150: "Num3",
-            144: "Num4",
-            145: "Num5",
-            146: "Num6",
-            140: "Num7",
-            141: "Num8",
-            142: "Num9",
-            99: "A",
-            117: "B",
-            115: "C",
-            101: "D",
-            87: "E",
-            102: "F",
-            103: "G",
-            104: "H",
-            92: "I",
-            105: "J",
-            106: "K",
-            107: "L",
-            119: "M",
-            118: "N",
-            93: "O",
-            94: "P",
-            85: "Q",
-            88: "R",
-            100: "S",
-            89: "T",
-            91: "U",
-            116: "V",
-            86: "W",
-            114: "X",
-            90: "Y",
-            113: "Z",
-            84: "Tab",
-            111: "Shift",
-            123: "Shift",
-            98: "Ctrl",
-            226: "Ctrl",
-            83: "Backspace",
-            126: "Space",
-            97: "Enter",
-            225: "Enter",
-            125: "Alt",
-            268: "Home",
-            188: "PageUp",
-            194: "End",
-            196: "PageDown",
-            197: "Insert",
-            198: "Delete",
-            190: "Up",
-            192: "Left",
-            195: "Down",
-            193: "Right",
+            128: 'F1',
+            129: 'F2',
+            130: 'F3',
+            131: 'F4',
+            132: 'F5',
+            133: 'F6',
+            134: 'F7',
+            135: 'F8',
+            136: 'F9',
+            137: 'F10',
+            156: 'F11',
+            157: 'F12',
+            80: '0',
+            71: '1',
+            72: '2',
+            73: '3',
+            74: '4',
+            75: '5',
+            76: '6',
+            77: '7',
+            78: '8',
+            79: '9',
+            151: 'Num0',
+            148: 'Num1',
+            149: 'Num2',
+            150: 'Num3',
+            144: 'Num4',
+            145: 'Num5',
+            146: 'Num6',
+            140: 'Num7',
+            141: 'Num8',
+            142: 'Num9',
+            99: 'A',
+            117: 'B',
+            115: 'C',
+            101: 'D',
+            87: 'E',
+            102: 'F',
+            103: 'G',
+            104: 'H',
+            92: 'I',
+            105: 'J',
+            106: 'K',
+            107: 'L',
+            119: 'M',
+            118: 'N',
+            93: 'O',
+            94: 'P',
+            85: 'Q',
+            88: 'R',
+            100: 'S',
+            89: 'T',
+            91: 'U',
+            116: 'V',
+            86: 'W',
+            114: 'X',
+            90: 'Y',
+            113: 'Z',
+            84: 'Tab',
+            111: 'Shift',
+            123: 'Shift',
+            98: 'Ctrl',
+            226: 'Ctrl',
+            83: 'Backspace',
+            126: 'Space',
+            97: 'Enter',
+            225: 'Enter',
+            125: 'Alt',
+            268: 'Home',
+            188: 'PageUp',
+            194: 'End',
+            196: 'PageDown',
+            197: 'Insert',
+            198: 'Delete',
+            190: 'Up',
+            192: 'Left',
+            195: 'Down',
+            193: 'Right'
         }
 
     def is_empty(self) -> bool:
@@ -394,27 +376,24 @@ class SaveFile:
         C:\Users\{Username}\AppData\Roaming\EldenRing\{SteamID}\ER0000.sl2
         """
 
-        elden_ring_files_path = str(Path.home()) + "\\AppData\\Roaming\\EldenRing"
+        elden_ring_files_path = str(Path.home()) + '\\AppData\\Roaming\\EldenRing'
 
         if not os.path.exists(elden_ring_files_path):
             return
 
         # Looking for a folder with a name like "7xxxxxxxxxxxxxxxx"
-        steam_id_folder = ""
+        steam_id_folder = ''
         file_names = os.listdir(elden_ring_files_path)
         for file_name in file_names:
-            if (
-                len(file_name) > 10
-                and file_name.startswith("7")
-                and file_name.isdigit()
-            ):
+            if len(file_name) > 10 and file_name.startswith('7') \
+                    and file_name.isdigit():
                 steam_id_folder = file_name
                 break
 
         if not steam_id_folder:
             return
 
-        savefile_location = f"{elden_ring_files_path}\\{steam_id_folder}\\ER0000.sl2"
+        savefile_location = f'{elden_ring_files_path}\\{steam_id_folder}\\ER0000.sl2'
 
         if not os.path.exists(savefile_location):
             return
@@ -439,7 +418,7 @@ class SaveFile:
         while len(self.journal) > 500:
             self.journal.pop(0)
 
-        entry_time = time.strftime("%Y.%m.%d %H:%M:%S")
+        entry_time = time.strftime('%Y.%m.%d %H:%M:%S')
         entry_as_tuple = entry_time, entry
 
         # For developer.
@@ -447,14 +426,14 @@ class SaveFile:
 
         self.journal.append(entry_as_tuple)
 
-
 class SaveSlot:
+
     def __init__(self):
 
         self.id: int = 0
         self.number: int = 0
-        self.name: str = ""
-        self.savefile = SaveFile("")
+        self.name: str = ''
+        self.savefile = SaveFile('')
         self.macros: list = []
         self.weapons: list = []
         self.weapons_manual: list = []
@@ -478,26 +457,24 @@ class SaveSlot:
         self.items: list = []
         self.current_spell: int = 0
         self.current_item: int = 0
-        self.search_mode_magic: str = "auto"
-        self.search_mode_equipment: str = "auto"
-        self.search_mode_items: str = "auto"
-        self.current_equipment_type = "Armament"
-        self.current_equipment = {
-            "weapon_right_1": 0,
-            "weapon_right_2": 0,
-            "weapon_right_3": 0,
-            "weapon_left_1": 0,
-            "weapon_left_2": 0,
-            "weapon_left_3": 0,
-            "armor_head": 0,
-            "armor_chest": 0,
-            "armor_arms": 0,
-            "armor_legs": 0,
-            "talisman_1": 0,
-            "talisman_2": 0,
-            "talisman_3": 0,
-            "talisman_4": 0,
-        }
+        self.search_mode_magic: str = 'auto'
+        self.search_mode_equipment: str = 'auto'
+        self.search_mode_items: str = 'auto'
+        self.current_equipment_type = 'Armament'
+        self.current_equipment = {'weapon_right_1': 0,
+                                  'weapon_right_2': 0,
+                                  'weapon_right_3': 0,
+                                  'weapon_left_1': 0,
+                                  'weapon_left_2': 0,
+                                  'weapon_left_3': 0,
+                                  'armor_head': 0,
+                                  'armor_chest': 0,
+                                  'armor_arms': 0,
+                                  'armor_legs': 0,
+                                  'talisman_1': 0,
+                                  'talisman_2': 0,
+                                  'talisman_3': 0,
+                                  'talisman_4': 0}
 
     def get_slot_data(self) -> bytes:
         """
@@ -512,7 +489,8 @@ class SaveSlot:
             #     return data
 
             slot_interval = SaveFile.slot_ranges(self.number)
-            return data[slot_interval[0] : slot_interval[1]]
+            return data[slot_interval[0]:slot_interval[1]]
+
 
     @staticmethod
     def inventory_and_chest_separator() -> bytes:
@@ -521,7 +499,7 @@ class SaveSlot:
         equipment searching.
         """
 
-        return bytes.fromhex("ffffffff00000000") * 4
+        return bytes.fromhex('ffffffff00000000') * 4
 
     def instances_search_range(self) -> tuple:
         """
@@ -533,10 +511,11 @@ class SaveSlot:
         slot_data = self.get_slot_data()
         slot_name = self.name
 
-        slot_name_hex = bytes(slot_name, "utf-8")
+        slot_name_hex = bytes(slot_name, 'utf-8')
         slot_name_hex_bytes = [bytes.fromhex(hex(x)[2:]) for x in slot_name_hex]
-        slot_name_hex_bytes = [x + bytes.fromhex("00") for x in slot_name_hex_bytes]
-        slot_name_hex = b"".join(slot_name_hex_bytes)
+        slot_name_hex_bytes = [x + bytes.fromhex('00') for x in
+                               slot_name_hex_bytes]
+        slot_name_hex = b''.join(slot_name_hex_bytes)
 
         slot_name_position = slot_data.find(slot_name_hex)
 
@@ -544,7 +523,7 @@ class SaveSlot:
 
         return slot_name_position, range_max
 
-    def get_equipment(self, equipment_type: str = "") -> None:
+    def get_equipment(self, equipment_type: str = '') -> None:
         """
         Gets lists of weapons, armor, talismans and spell and fills it
         in saveslot's respective attributes.
@@ -576,20 +555,21 @@ class SaveSlot:
             weapon_name = weapon[2]
 
             if bytes.fromhex(weapon_id) in slot_data_for_equipment_search:
-                all_equipment_having.append([weapon_name, weapon_id, "weapons"])
+                all_equipment_having.append([weapon_name, weapon_id, 'weapons'])
 
         for armor in datasheets.armor():
             armor_id = armor[1]
             armor_name = armor[2]
             if bytes.fromhex(armor_id) in slot_data_for_equipment_search:
-                all_equipment_having.append([armor_name, armor_id, "armor"])
+                all_equipment_having.append([armor_name, armor_id, 'armor'])
 
         # Looking for many instances of each equipment. In save-file structure
         # is like this: [inventory instances]-[separator]-[chest instances]
         # We need only inventory instances, so first we need to find the separator.
 
         instances_range = self.instances_search_range()
-        data_for_instances_search = slot_data[instances_range[0] : instances_range[1]]
+        data_for_instances_search = slot_data[instances_range[0]:
+                                              instances_range[1]]
         separator = self.inventory_and_chest_separator()
         separator_pos = data_for_instances_search.rfind(separator)
 
@@ -599,9 +579,9 @@ class SaveSlot:
             equipment_name = equipment[0]
             equipment_id = equipment[1]
             equipment_type = equipment[2]
-            equipment_mark = "8080"
-            if equipment_type == "armor":
-                equipment_mark = "8090"
+            equipment_mark = '8080'
+            if equipment_type == 'armor':
+                equipment_mark = '8090'
 
             # In save-file we're looking for lines like: ID ID 80 MM WW WW WW (WW)
             # Where:
@@ -612,10 +592,9 @@ class SaveSlot:
             id_for_reg = bytes.fromhex(equipment_mark + equipment_id)
             id_for_reg = add_escaping_symbols_to_byte_reg(id_for_reg)
 
-            reg_expression = b".{2}(?=" + id_for_reg + b")"
-            result = re.finditer(
-                reg_expression, slot_data[: instances_range[0] + separator_pos]
-            )
+            reg_expression = b'.{2}(?=' + id_for_reg + b')'
+            result = re.finditer(reg_expression,
+                                 slot_data[:instances_range[0] + separator_pos])
 
             for match in result:
 
@@ -629,12 +608,10 @@ class SaveSlot:
                 if instance_position > separator_pos:
                     continue
 
-                instance_id = instance_id.hex(" ").replace(" ", "")
-                position_in_file = hex(
-                    instances_range[0]
-                    + instance_position
-                    + SaveFile.range_before_saveslots()
-                )
+                instance_id = instance_id.hex(' ').replace(' ', '')
+                position_in_file = hex(instances_range[0]
+                                       + instance_position
+                                       + SaveFile.range_before_saveslots())
 
                 # We have to learn in what order equipment is placed in inventory
                 # if inventory is sorted as "Ascending Order of Acquisition".
@@ -647,33 +624,34 @@ class SaveSlot:
                 #           inventory this instance has if inventory is sorted as
                 #           "Ascending Order of Acquisition".
                 inventory_order_id = data_for_instances_search[
-                    instance_position + 8 : instance_position + 10
-                ]
-                inventory_order_id = inventory_order_id.hex(" ").replace(" ", "")
+                                     instance_position + 8:
+                                     instance_position + 10]
+                inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
 
                 # Order ID has two HEX numbers ("f1 21") but actual order goes
                 # on mirrored numbers ("21 f1", "21 f2", "21 f3" etc.)
-                inventory_order_id = inventory_order_id[2:4] + inventory_order_id[:2]
+                inventory_order_id = inventory_order_id[2:4] + \
+                                     inventory_order_id[:2]
 
                 # We need to check what type of armor an instance has.
-                if equipment_type == "armor":
+                if equipment_type == 'armor':
                     equipment_id_decimal = str(int(endian_turn(equipment_id), 16))
-                    if equipment_id_decimal.endswith("000"):
-                        equipment_type += "_head"
-                    elif equipment_id_decimal.endswith("100"):
-                        equipment_type += "_chest"
-                    elif equipment_id_decimal.endswith("200"):
-                        equipment_type += "_arms"
-                    elif equipment_id_decimal.endswith("300"):
-                        equipment_type += "_legs"
+                    if equipment_id_decimal.endswith('000'):
+                        equipment_type += '_head'
+                    elif equipment_id_decimal.endswith('100'):
+                        equipment_type += '_chest'
+                    elif equipment_id_decimal.endswith('200'):
+                        equipment_type += '_arms'
+                    elif equipment_id_decimal.endswith('300'):
+                        equipment_type += '_legs'
 
                 instance_dict = {}
-                instance_dict.setdefault("type", equipment_type)
-                instance_dict.setdefault("name", equipment_name)
-                instance_dict.setdefault("id", equipment_id)
-                instance_dict.setdefault("instance_id", instance_id)
-                instance_dict.setdefault("order_in_file", inventory_order_id)
-                instance_dict.setdefault("position_in_file", position_in_file)
+                instance_dict.setdefault('type', equipment_type)
+                instance_dict.setdefault('name', equipment_name)
+                instance_dict.setdefault('id', equipment_id)
+                instance_dict.setdefault('instance_id', instance_id)
+                instance_dict.setdefault('order_in_file', inventory_order_id)
+                instance_dict.setdefault('position_in_file', position_in_file)
                 inventory_list.append(instance_dict)
 
         # Talismans are located in save-file simmilar to armor and weapons, but
@@ -685,7 +663,7 @@ class SaveSlot:
         #
         # Inventory/Chest search is identical to weapons and armor.
         # Talismans don't have instances, you can only have one.
-        talisman_mark = "00A001000000"
+        talisman_mark = '00A001000000'
         for talisman in datasheets.talismans():
             talisman_id = talisman[1]
             talisman_name = talisman[2]
@@ -698,25 +676,23 @@ class SaveSlot:
             if talisman_position > separator_pos:
                 continue
 
-            position_in_file = hex(
-                instances_range[0]
-                + talisman_position
-                + SaveFile.range_before_saveslots()
-            )
+            position_in_file = hex(instances_range[0]
+                                   + talisman_position
+                                   + SaveFile.range_before_saveslots())
 
             inventory_order_id = data_for_instances_search[
-                talisman_position + 8 : talisman_position + 10
-            ]
-            inventory_order_id = inventory_order_id.hex(" ").replace(" ", "")
+                                 talisman_position + 8:
+                                 talisman_position + 10]
+            inventory_order_id = inventory_order_id.hex(' ').replace(' ', '')
             inventory_order_id = inventory_order_id[2:4] + inventory_order_id[:2]
 
             instance_dict = {}
-            instance_dict.setdefault("type", "talismans")
-            instance_dict.setdefault("name", talisman_name)
-            instance_dict.setdefault("id", talisman_id)
-            instance_dict.setdefault("instance_id", "")
-            instance_dict.setdefault("order_in_file", inventory_order_id)
-            instance_dict.setdefault("position_in_file", position_in_file)
+            instance_dict.setdefault('type', 'talismans')
+            instance_dict.setdefault('name', talisman_name)
+            instance_dict.setdefault('id', talisman_id)
+            instance_dict.setdefault('instance_id', '')
+            instance_dict.setdefault('order_in_file', inventory_order_id)
+            instance_dict.setdefault('position_in_file', position_in_file)
             inventory_list.append(instance_dict)
 
         # Chosen spells can be found pretty easily.
@@ -728,26 +704,26 @@ class SaveSlot:
         for spell in datasheets.spells():
             spell_id = spell[1]
             spell_name = spell[2]
-            spell_mark = "0000FFFF"
+            spell_mark = '0000FFFF'
             spell_search = bytes.fromhex(spell_id + spell_mark)
 
             spell_position = data_for_instances_search.find(spell_search)
             if spell_position < 0:
                 continue
 
-            position_in_file = hex(
-                instances_range[0] + spell_position + SaveFile.range_before_saveslots()
-            )
+            position_in_file = hex(instances_range[0]
+                                   + spell_position
+                                   + SaveFile.range_before_saveslots())
 
             inventory_order_id = position_in_file[2:]
 
             instance_dict = {}
-            instance_dict.setdefault("type", "spells")
-            instance_dict.setdefault("name", spell_name)
-            instance_dict.setdefault("id", spell_id)
-            instance_dict.setdefault("instance_id", "")
-            instance_dict.setdefault("order_in_file", inventory_order_id)
-            instance_dict.setdefault("position_in_file", position_in_file)
+            instance_dict.setdefault('type', 'spells')
+            instance_dict.setdefault('name', spell_name)
+            instance_dict.setdefault('id', spell_id)
+            instance_dict.setdefault('instance_id', '')
+            instance_dict.setdefault('order_in_file', inventory_order_id)
+            instance_dict.setdefault('position_in_file', position_in_file)
             inventory_list.append(instance_dict)
 
         # To find items in quick slots we need to find first "46 41 43 45"
@@ -758,44 +734,39 @@ class SaveSlot:
         # XX XX XX XX is item ID.
         #
         # In save-file these lines are in order identical to order in game.
-        face_search = bytes.fromhex("46414345")
+        face_search = bytes.fromhex('46414345')
         face_pos = slot_data_for_equipment_search.find(face_search)
         if face_pos:
             items_datasheet = datasheets.items()
-            items_line = slot_data_for_equipment_search[
-                face_pos - 44 - 40 : face_pos - 44
-            ]
+            items_line = slot_data_for_equipment_search[face_pos-44-40:face_pos-44]
             for i in range(10):
-                item_hex = items_line[i * 4 : i * 4 + 2]
-                item_search = item_hex.hex(" ").replace(" ", "")
+                item_hex = items_line[i*4:i*4+2]
+                item_search = item_hex.hex(' ').replace(' ', '')
 
-                item_name = next(
-                    (x[2] for x in items_datasheet if x[1] == item_search), None
-                )
+                item_name = next((x[2] for x in items_datasheet if x[1] == item_search), None)
                 if item_name is None:
-                    item_name = ""
+                    item_name = ''
 
                 item_dict = {}
-                item_dict.setdefault("type", "items")
-                item_dict.setdefault("name", item_name)
-                item_dict.setdefault("id", item_search)
-                item_dict.setdefault("order_in_file", str(i))
+                item_dict.setdefault('type', 'items')
+                item_dict.setdefault('name', item_name)
+                item_dict.setdefault('id', item_search)
+                item_dict.setdefault('order_in_file', str(i))
                 inventory_list.append(item_dict)
 
-        sorted_equipment = sorted(
-            inventory_list, key=lambda x: (x["type"], int(x["order_in_file"], 16))
-        )
+        sorted_equipment = sorted(inventory_list, key=lambda x: (x['type'],
+                                                  int(x['order_in_file'], 16)))
 
         fields_accordance = {
-            "weapons": self.weapons,
-            "armor_head": self.armor_head,
-            "armor_chest": self.armor_chest,
-            "armor_arms": self.armor_arms,
-            "armor_legs": self.armor_legs,
-            "talismans": self.talismans,
-            "spells": self.spells,
-            "items": self.items,
+            'weapons': self.weapons,
+            'armor_head': self.armor_head,
+            'armor_chest': self.armor_chest,
+            'armor_arms': self.armor_arms,
+            'armor_legs': self.armor_legs,
+            'talismans': self.talismans,
+            'spells': self.spells,
+            'items': self.items,
         }
 
         for equipment in sorted_equipment:
-            fields_accordance[equipment["type"]].append(equipment)
+            fields_accordance[equipment['type']].append(equipment)

@@ -531,7 +531,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>9</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
