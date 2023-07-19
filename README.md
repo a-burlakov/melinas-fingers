@@ -17,7 +17,7 @@
   <a target="blank"><img src="src/images/screenshot_3.png" alt="MF Logo" /></a>
 </p>
 
-## Features
+### Features
 Melina's Fingers lets you bind game actions to hotkeys, making your gameplay much more fluid and pleasant as actions that required pressing >10 buttons now require pressing only one. 
 
 Melina's Fingers have separate functionality depending on if EasyAntiCheat (EAC) is on or off.
@@ -44,7 +44,7 @@ With **EAC off** you can additionally bind almost anything:
 
 and any crazy hotkey you made yourself via rich DIY-constructor. You can even make a hotkey for farming mobs being AFK.
 
-## Getting Started
+### Getting Started
 1. [Download latest Melina's Fingers release](https://github.com/flower-ab/EldenRing-MelinasFingers/releases/latest);
 2. Put .exe file to separate folder (as next to it will be created an additional .cfg file);
 3. As you launch Melina's Fingers, it will try to get your save file from standard path. But if something went wrong, choose save file manually with "Open save file" button; 
@@ -70,20 +70,51 @@ For "Equipment", "Magic" and "Item" types of hotkeys there are also two search m
 - **Auto**: slower but more stable;
 - **Semi-manual**: faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 
-## Some little important things
+### Some little important things
 
-### Put everything you don't need in the chest
+#### Put everything you don't need in the chest
 If you have a big inventory, then virtual key press sequences will be long and unstable. Melina's Fingers works great on lists with less than 50 items. I actually don't think you need more. 
 
-### There's still problems with collecting weapons and armor from save file
+#### There's still problems with collecting weapons and armor from save file
 Unfortunately, it's very likely that you'll have to use "Manual mode" in "Equipment" hotkeys as weapons and armor can be stored in save file according to very complex rules. 
 Sometimes Melina's Fingers can read it from save file. But sometimes not, especially if you have many items.
 
-### Not every hotkey bindings will work
+#### Not every hotkey bindings will work
 Some bindings would call OS commands so be careful with bindings with specific keys. E.g. don't bind your hotkeys to "Ctrl+Alt+Delete" :)
 
-### Don't use too short profile name
+#### Don't use too short profile name
 There are can be problems to collect your equipment information from save file if your character in named "F", "a", "." and so on.
 
-### The only way to interrupt a sequence is to Alt+Tab to another application
+#### The only way to interrupt a sequence is to Alt+Tab to another application
 There're no long sequences, but you can make something really long in DIY hotkey type. If you did so, just Alt+Tab from Elden Ring, it will break the sequence.
+
+# Developing
+
+### First run
+
+1. Clone the repo.
+   ```sh
+   $ git clone git@github.com:a-burlakov/melinas-fingers.git
+   ```
+2. Install dependencies:
+   ```sh
+   cd melinas-fingers  # if needed
+   pip install -r requirements.txt 
+   ```
+3. Run ```src/main.py```.
+
+### UI development
+
+1. Install [Qt Designer](https://build-system.fman.io/qt-designer-download) for interactive UI development.
+2. Open ```src/mainWindow.ui``` via Qt Designer.
+3. Make your changes.
+4. Run ```src/qtdesigner_to_py.bat```. That will create corresponding UI files used by Python.
+
+### Freezing to .exe
+
+1. Just use PyInstaller:
+```sh
+pyinstaller src\main.py -F -w -i src\images\icon.ico  
+```
+
+2. Newly created ```dist``` folder will have your .exe file.
