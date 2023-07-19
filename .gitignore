@@ -4,7 +4,6 @@
 **/venv
 **/mf_settings_backups
 mf_settings.cfg
-qtdesigner_to_py.bat
 main.spec
 build
 dist
