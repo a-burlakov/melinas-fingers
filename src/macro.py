@@ -288,11 +288,11 @@ class Macro:
         if time_start - self.savefile.safe_online_mode_last_check_time > 20:
             self.savefile.calculate_online_mode()
 
-        if not self.is_safe_for_online() and self.savefile.safe_online_mode:
-            self.savefile.make_journal_entry('The macro is not safe for '
-                                             'current online mode so it '
-                                             'won\'t be performed.')
-            return
+        # if not self.is_safe_for_online() and self.savefile.safe_online_mode:
+        #     self.savefile.make_journal_entry('The macro is not safe for '
+        #                                      'current online mode so it '
+        #                                      'won\'t be performed.')
+        #     return
 
         # Nobody knows what can happen inside keylines mechanism
         # (especially with DIYs), so we need exceptions catch.
