@@ -15,182 +15,190 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1155, 716)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/newPrefix/images/icon.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap(":/newPrefix/images/icon.jpg"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setStyleSheet("QLabel\n"
-"{\n"
-"      color: rgb(200, 200, 200);\n"
-"}\n"
-"\n"
-"QLineEdit\n"
-"{\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    color: rgb(200, 200, 200);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"}\n"
-"\n"
-"QTextEdit\n"
-"{\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    color: rgb(200, 200, 200);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"}\n"
-"\n"
-"\n"
-"select {\n"
-"   border:0px;\n"
-"   outline:0px;\n"
-"}\n"
-"\n"
-"QComboBox\n"
-"{\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    color: rgb(200, 200, 200);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"\n"
-"}\n"
-"\n"
-"QComboBox QAbstractItemView\n"
-"{\n"
-"    border: 1px;\n"
-"    color: rgb(200, 200, 200);\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"}\n"
-"\n"
-"QComboBox:item:selected\n"
-"{\n"
-"    border: 1px solid\n"
-"}\n"
-"\n"
-"QComboBox:disabled {\n"
-"    border-color: rgb(70, 70, 70);\n"
-"    color: rgb(100, 100, 100);\n"
-"       background-color:rgb(20, 20, 20);\n"
-"}\n"
-"\n"
-"QComboBox::down-arrow {\n"
-"       \n"
-"    image: url(:/newPrefix/images/down_arrow_combobox.png);\n"
-"}\n"
-"\n"
-"QComboBox::drop-down {\n"
-"    border-top-right-radius: 3px;\n"
-"    border-bottom-right-radius: 3px;\n"
-"}\n"
-"\n"
-"QLineEdit:disabled\n"
-"{\n"
-"    border-color: rgb(70, 70, 70);\n"
-"    color: rgb(100, 100, 100);\n"
-"       background-color:rgb(20, 20, 20);\n"
-"}\n"
-"\n"
-"QTableView\n"
-"{\n"
-"    color: rgb(200, 200, 200);\n"
-"    background-color: transparent;\n"
-"    selection-background-color: rgb(65, 61, 51);\n"
-"    selection-color: rgb(220, 220, 220)\n"
-"}\n"
-"\n"
-"QTableView::item\n"
-"{\n"
-"    \n"
-"}\n"
-"\n"
-"QCheckBox {color: rgb(200,200,200)}\n"
-"\n"
-"QCheckBox:indicator:unchecked\n"
-"{\n"
-"    background-color: transparent;\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"}\n"
-"\n"
-"QCheckBox:indicator:checked\n"
-"{\n"
-"\n"
-"}\n"
-"\n"
-"QPushButton\n"
-"{\n"
-"      color: rgb(200, 200, 200);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    background-color: rgb(31, 32, 27);\n"
-"}\n"
-"\n"
-"QPushButton:disabled\n"
-"{\n"
-"    border-color: rgb(70, 70, 70);\n"
-"    color: rgb(100, 100, 100);\n"
-"       background-color:rgb(20, 20, 20);\n"
-"}\n"
-"\n"
-"QPushButton:hover\n"
-"{\n"
-"       background-color:rgb(60, 60, 50);\n"
-"}\n"
-"\n"
-"QSpinBox\n"
-"{\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    color: rgb(200, 200, 200);\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"\n"
-"}\n"
-"\n"
-"QDoubleSpinBox\n"
-"{\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    color: rgb(200, 200, 200);\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"}\n"
-"\n"
-"QScrollBar {\n"
-"            background: rgb(65, 61, 51);\n"
-"            width: 5px;\n"
-"    subcontrol-position: left;\n"
-"    subcontrol-origin: margin;\n"
-"        }\n"
-"\n"
-" QScrollBar::handle:vertical {\n"
-"    border-color: red;\n"
-"    gridline-color: rgb(255, 255, 255);\n"
-" }\n"
-"\n"
-" QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
-"     background: transparent;\n"
-" }")
+        self.centralwidget.setStyleSheet(
+            "QLabel\n"
+            "{\n"
+            "      color: rgb(200, 200, 200);\n"
+            "}\n"
+            "\n"
+            "QLineEdit\n"
+            "{\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            "}\n"
+            "\n"
+            "QTextEdit\n"
+            "{\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "select {\n"
+            "   border:0px;\n"
+            "   outline:0px;\n"
+            "}\n"
+            "\n"
+            "QComboBox\n"
+            "{\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QComboBox QAbstractItemView\n"
+            "{\n"
+            "    border: 1px;\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            "}\n"
+            "\n"
+            "QComboBox:item:selected\n"
+            "{\n"
+            "    border: 1px solid\n"
+            "}\n"
+            "\n"
+            "QComboBox:disabled {\n"
+            "    border-color: rgb(70, 70, 70);\n"
+            "    color: rgb(100, 100, 100);\n"
+            "       background-color:rgb(20, 20, 20);\n"
+            "}\n"
+            "\n"
+            "QComboBox::down-arrow {\n"
+            "       \n"
+            "    image: url(:/newPrefix/images/down_arrow_combobox.png);\n"
+            "}\n"
+            "\n"
+            "QComboBox::drop-down {\n"
+            "    border-top-right-radius: 3px;\n"
+            "    border-bottom-right-radius: 3px;\n"
+            "}\n"
+            "\n"
+            "QLineEdit:disabled\n"
+            "{\n"
+            "    border-color: rgb(70, 70, 70);\n"
+            "    color: rgb(100, 100, 100);\n"
+            "       background-color:rgb(20, 20, 20);\n"
+            "}\n"
+            "\n"
+            "QTableView\n"
+            "{\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    background-color: transparent;\n"
+            "    selection-background-color: rgb(65, 61, 51);\n"
+            "    selection-color: rgb(220, 220, 220)\n"
+            "}\n"
+            "\n"
+            "QTableView::item\n"
+            "{\n"
+            "    \n"
+            "}\n"
+            "\n"
+            "QCheckBox {color: rgb(200,200,200)}\n"
+            "\n"
+            "QCheckBox:indicator:unchecked\n"
+            "{\n"
+            "    background-color: transparent;\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "}\n"
+            "\n"
+            "QCheckBox:indicator:checked\n"
+            "{\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QPushButton\n"
+            "{\n"
+            "      color: rgb(200, 200, 200);\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "}\n"
+            "\n"
+            "QPushButton:disabled\n"
+            "{\n"
+            "    border-color: rgb(70, 70, 70);\n"
+            "    color: rgb(100, 100, 100);\n"
+            "       background-color:rgb(20, 20, 20);\n"
+            "}\n"
+            "\n"
+            "QPushButton:hover\n"
+            "{\n"
+            "       background-color:rgb(60, 60, 50);\n"
+            "}\n"
+            "\n"
+            "QSpinBox\n"
+            "{\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QDoubleSpinBox\n"
+            "{\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            "}\n"
+            "\n"
+            "QScrollBar {\n"
+            "            background: rgb(65, 61, 51);\n"
+            "            width: 5px;\n"
+            "    subcontrol-position: left;\n"
+            "    subcontrol-origin: margin;\n"
+            "        }\n"
+            "\n"
+            " QScrollBar::handle:vertical {\n"
+            "    border-color: red;\n"
+            "    gridline-color: rgb(255, 255, 255);\n"
+            " }\n"
+            "\n"
+            " QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
+            "     background: transparent;\n"
+            " }"
+        )
         self.centralwidget.setObjectName("centralwidget")
         self.comboBox_SaveSlots = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox_SaveSlots.setEnabled(True)
@@ -274,7 +282,9 @@ class Ui_MainWindow(object):
         self.checkBox_MacroKeyCtrl.setObjectName("checkBox_MacroKeyCtrl")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(60, 150, 91, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
@@ -312,28 +322,40 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages_Empty.setObjectName("stackedWidget_Pages_Empty")
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_Empty)
         self.stackedWidget_Pages_Equipment = QtWidgets.QWidget()
-        self.stackedWidget_Pages_Equipment.setObjectName("stackedWidget_Pages_Equipment")
-        self.picture_equip_weaponright_1 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.stackedWidget_Pages_Equipment.setObjectName(
+            "stackedWidget_Pages_Equipment"
+        )
+        self.picture_equip_weaponright_1 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponright_1.setGeometry(QtCore.QRect(20, 30, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponright_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponright_1.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponright_1.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponright_1.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_right.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
-"}")
+        self.picture_equip_weaponright_1.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_right.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
+            "}"
+        )
         self.picture_equip_weaponright_1.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponright_1.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponright_1.setObjectName("picture_equip_weaponright_1")
         self.label_9 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_9.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
@@ -345,228 +367,334 @@ class Ui_MainWindow(object):
         self.label_9.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_9.setTextFormat(QtCore.Qt.PlainText)
         self.label_9.setObjectName("label_9")
-        self.picture_equip_weaponright_2 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_weaponright_2 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponright_2.setGeometry(QtCore.QRect(100, 30, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponright_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponright_2.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponright_2.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponright_2.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_right.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
-"}")
+        self.picture_equip_weaponright_2.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_right.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
+            "}"
+        )
         self.picture_equip_weaponright_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponright_2.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponright_2.setObjectName("picture_equip_weaponright_2")
-        self.picture_equip_weaponright_3 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_weaponright_3 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponright_3.setGeometry(QtCore.QRect(180, 30, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponright_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponright_3.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponright_3.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponright_3.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_right.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
-"}")
+        self.picture_equip_weaponright_3.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_right.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_right_active.png);\n"
+            "}"
+        )
         self.picture_equip_weaponright_3.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponright_3.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponright_3.setObjectName("picture_equip_weaponright_3")
-        self.picture_equip_weaponleft_1 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_weaponleft_1 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponleft_1.setGeometry(QtCore.QRect(20, 110, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponleft_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponleft_1.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponleft_1.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponleft_1.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_left.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
-"}\n"
-"")
+        self.picture_equip_weaponleft_1.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_left.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
+            "}\n"
+            ""
+        )
         self.picture_equip_weaponleft_1.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponleft_1.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponleft_1.setObjectName("picture_equip_weaponleft_1")
-        self.picture_equip_armor_head = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_armor_head = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_armor_head.setGeometry(QtCore.QRect(20, 190, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_armor_head.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_armor_head.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_armor_head.setSizePolicy(sizePolicy)
-        self.picture_equip_armor_head.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/armor_head.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/armor_head_active.png);\n"
-"}\n"
-"")
+        self.picture_equip_armor_head.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/armor_head.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/armor_head_active.png);\n"
+            "}\n"
+            ""
+        )
         self.picture_equip_armor_head.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_armor_head.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_armor_head.setObjectName("picture_equip_armor_head")
-        self.picture_equip_armor_arms = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_armor_arms = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_armor_arms.setGeometry(QtCore.QRect(180, 190, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_armor_arms.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_armor_arms.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_armor_arms.setSizePolicy(sizePolicy)
-        self.picture_equip_armor_arms.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/armor_hands.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/armor_hands_active.png);}")
+        self.picture_equip_armor_arms.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/armor_hands.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/armor_hands_active.png);}"
+        )
         self.picture_equip_armor_arms.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_armor_arms.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_armor_arms.setObjectName("picture_equip_armor_arms")
-        self.picture_equip_armor_chest = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_armor_chest = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_armor_chest.setGeometry(QtCore.QRect(100, 190, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_armor_chest.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_armor_chest.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_armor_chest.setSizePolicy(sizePolicy)
-        self.picture_equip_armor_chest.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/armor_torso.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/armor_torso_active.png);\n"
-"}\n"
-"")
+        self.picture_equip_armor_chest.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/armor_torso.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/armor_torso_active.png);\n"
+            "}\n"
+            ""
+        )
         self.picture_equip_armor_chest.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_armor_chest.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_armor_chest.setObjectName("picture_equip_armor_chest")
-        self.picture_equip_armor_legs = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_armor_legs = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_armor_legs.setGeometry(QtCore.QRect(260, 190, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_armor_legs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_armor_legs.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_armor_legs.setSizePolicy(sizePolicy)
-        self.picture_equip_armor_legs.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/armor_legs.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/armor_legs_active.png);}")
+        self.picture_equip_armor_legs.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/armor_legs.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/armor_legs_active.png);}"
+        )
         self.picture_equip_armor_legs.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_armor_legs.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_armor_legs.setObjectName("picture_equip_armor_legs")
-        self.picture_equip_talisman_1 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_talisman_1 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_talisman_1.setGeometry(QtCore.QRect(20, 270, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_talisman_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_talisman_1.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_talisman_1.setSizePolicy(sizePolicy)
-        self.picture_equip_talisman_1.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/talisman.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/talisman_active.png);}")
+        self.picture_equip_talisman_1.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/talisman.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/talisman_active.png);}"
+        )
         self.picture_equip_talisman_1.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_talisman_1.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_talisman_1.setObjectName("picture_equip_talisman_1")
-        self.picture_equip_weaponleft_2 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_weaponleft_2 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponleft_2.setGeometry(QtCore.QRect(100, 110, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponleft_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponleft_2.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponleft_2.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponleft_2.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_left.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
-"}\n"
-"")
+        self.picture_equip_weaponleft_2.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_left.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
+            "}\n"
+            ""
+        )
         self.picture_equip_weaponleft_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponleft_2.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponleft_2.setObjectName("picture_equip_weaponleft_2")
-        self.picture_equip_weaponleft_3 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_weaponleft_3 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_weaponleft_3.setGeometry(QtCore.QRect(180, 110, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_weaponleft_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_weaponleft_3.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_weaponleft_3.setSizePolicy(sizePolicy)
-        self.picture_equip_weaponleft_3.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/weapon_left.png);\n"
-"}\n"
-"\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
-"}\n"
-"")
+        self.picture_equip_weaponleft_3.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/weapon_left.png);\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/weapon_left_active.png);\n"
+            "}\n"
+            ""
+        )
         self.picture_equip_weaponleft_3.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_weaponleft_3.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_weaponleft_3.setObjectName("picture_equip_weaponleft_3")
-        self.picture_equip_talisman_2 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_talisman_2 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_talisman_2.setGeometry(QtCore.QRect(100, 270, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_talisman_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_talisman_2.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_talisman_2.setSizePolicy(sizePolicy)
-        self.picture_equip_talisman_2.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/talisman.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/talisman_active.png);}")
+        self.picture_equip_talisman_2.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/talisman.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/talisman_active.png);}"
+        )
         self.picture_equip_talisman_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_talisman_2.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_talisman_2.setObjectName("picture_equip_talisman_2")
-        self.picture_equip_talisman_3 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_talisman_3 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_talisman_3.setGeometry(QtCore.QRect(180, 270, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_talisman_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_talisman_3.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_talisman_3.setSizePolicy(sizePolicy)
-        self.picture_equip_talisman_3.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/talisman.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/talisman_active.png);}")
+        self.picture_equip_talisman_3.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/talisman.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/talisman_active.png);}"
+        )
         self.picture_equip_talisman_3.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_talisman_3.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_talisman_3.setObjectName("picture_equip_talisman_3")
-        self.picture_equip_talisman_4 = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_equip_talisman_4 = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_equip_talisman_4.setGeometry(QtCore.QRect(260, 270, 70, 75))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_equip_talisman_4.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_equip_talisman_4.sizePolicy().hasHeightForWidth()
+        )
         self.picture_equip_talisman_4.setSizePolicy(sizePolicy)
-        self.picture_equip_talisman_4.setStyleSheet("QGraphicsView {\n"
-"border-image: url(:/newPrefix/images/talisman.png);}\n"
-"\n"
-"QGraphicsView:hover {\n"
-"border-image: url(:/newPrefix/images/talisman_active.png);}")
+        self.picture_equip_talisman_4.setStyleSheet(
+            "QGraphicsView {\n"
+            "border-image: url(:/newPrefix/images/talisman.png);}\n"
+            "\n"
+            "QGraphicsView:hover {\n"
+            "border-image: url(:/newPrefix/images/talisman_active.png);}"
+        )
         self.picture_equip_talisman_4.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_equip_talisman_4.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_equip_talisman_4.setObjectName("picture_equip_talisman_4")
-        self.button_Equip_Remove = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.button_Equip_Remove = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_Equip_Remove.setEnabled(False)
         self.button_Equip_Remove.setGeometry(QtCore.QRect(260, 110, 71, 25))
         font = QtGui.QFont()
@@ -577,7 +705,9 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.button_Equip_Remove.setFont(font)
         self.button_Equip_Remove.setObjectName("button_Equip_Remove")
-        self.button_Equip_Skip = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.button_Equip_Skip = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_Equip_Skip.setEnabled(False)
         self.button_Equip_Skip.setGeometry(QtCore.QRect(260, 70, 71, 25))
         font = QtGui.QFont()
@@ -588,7 +718,9 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.button_Equip_Skip.setFont(font)
         self.button_Equip_Skip.setObjectName("button_Equip_Skip")
-        self.button_Equip_Cancel = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.button_Equip_Cancel = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_Equip_Cancel.setEnabled(False)
         self.button_Equip_Cancel.setGeometry(QtCore.QRect(260, 150, 71, 25))
         font = QtGui.QFont()
@@ -599,13 +731,19 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.button_Equip_Cancel.setFont(font)
         self.button_Equip_Cancel.setObjectName("button_Equip_Cancel")
-        self.tableWidget_Equipment = QtWidgets.QTableWidget(self.stackedWidget_Pages_Equipment)
+        self.tableWidget_Equipment = QtWidgets.QTableWidget(
+            self.stackedWidget_Pages_Equipment
+        )
         self.tableWidget_Equipment.setEnabled(True)
         self.tableWidget_Equipment.setGeometry(QtCore.QRect(380, 70, 361, 351))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget_Equipment.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tableWidget_Equipment.sizePolicy().hasHeightForWidth()
+        )
         self.tableWidget_Equipment.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -615,14 +753,22 @@ class Ui_MainWindow(object):
         self.tableWidget_Equipment.setToolTipDuration(-1)
         self.tableWidget_Equipment.setStyleSheet("")
         self.tableWidget_Equipment.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidget_Equipment.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget_Equipment.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.tableWidget_Equipment.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff
+        )
+        self.tableWidget_Equipment.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.tableWidget_Equipment.setAutoScroll(True)
         self.tableWidget_Equipment.setTabKeyNavigation(False)
         self.tableWidget_Equipment.setProperty("showDropIndicator", False)
         self.tableWidget_Equipment.setDragDropOverwriteMode(False)
-        self.tableWidget_Equipment.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidget_Equipment.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
+        self.tableWidget_Equipment.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection
+        )
+        self.tableWidget_Equipment.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectItems
+        )
         self.tableWidget_Equipment.setShowGrid(False)
         self.tableWidget_Equipment.setGridStyle(QtCore.Qt.NoPen)
         self.tableWidget_Equipment.setWordWrap(True)
@@ -735,7 +881,9 @@ class Ui_MainWindow(object):
         self.tableWidget_Equipment.verticalHeader().setCascadingSectionResizes(False)
         self.tableWidget_Equipment.verticalHeader().setDefaultSectionSize(70)
         self.tableWidget_Equipment.verticalHeader().setHighlightSections(False)
-        self.comboBox_Equip_InstantAction = QtWidgets.QComboBox(self.stackedWidget_Pages_Equipment)
+        self.comboBox_Equip_InstantAction = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Equipment
+        )
         self.comboBox_Equip_InstantAction.setGeometry(QtCore.QRect(180, 460, 151, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -760,7 +908,9 @@ class Ui_MainWindow(object):
         self.label_47.setObjectName("label_47")
         self.label_48 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_48.setGeometry(QtCore.QRect(0, 405, 241, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_48.sizePolicy().hasHeightForWidth())
@@ -779,12 +929,16 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_50.setFont(font)
         self.label_50.setStyleSheet("")
-        self.label_50.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_50.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_50.setWordWrap(True)
         self.label_50.setObjectName("label_50")
         self.label_51 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_51.setGeometry(QtCore.QRect(360, 420, 381, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_51.sizePolicy().hasHeightForWidth())
@@ -796,7 +950,9 @@ class Ui_MainWindow(object):
         self.label_51.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_51.setTextFormat(QtCore.Qt.PlainText)
         self.label_51.setObjectName("label_51")
-        self.checkBox_Equipment_ManualMode = QtWidgets.QCheckBox(self.stackedWidget_Pages_Equipment)
+        self.checkBox_Equipment_ManualMode = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Equipment
+        )
         self.checkBox_Equipment_ManualMode.setGeometry(QtCore.QRect(480, 472, 16, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -805,7 +961,9 @@ class Ui_MainWindow(object):
         self.checkBox_Equipment_ManualMode.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_Equipment_ManualMode.setStyleSheet("")
         self.checkBox_Equipment_ManualMode.setText("")
-        self.checkBox_Equipment_ManualMode.setObjectName("checkBox_Equipment_ManualMode")
+        self.checkBox_Equipment_ManualMode.setObjectName(
+            "checkBox_Equipment_ManualMode"
+        )
         self.label_52 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_52.setGeometry(QtCore.QRect(380, 470, 101, 25))
         font = QtGui.QFont()
@@ -814,7 +972,9 @@ class Ui_MainWindow(object):
         self.label_52.setFont(font)
         self.label_52.setStyleSheet("")
         self.label_52.setObjectName("label_52")
-        self.button_EquipmentAdd = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.button_EquipmentAdd = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_EquipmentAdd.setGeometry(QtCore.QRect(380, 30, 61, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -824,7 +984,9 @@ class Ui_MainWindow(object):
         self.button_EquipmentAdd.setObjectName("button_EquipmentAdd")
         self.label_49 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_49.setGeometry(QtCore.QRect(360, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_49.sizePolicy().hasHeightForWidth())
@@ -836,7 +998,9 @@ class Ui_MainWindow(object):
         self.label_49.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_49.setTextFormat(QtCore.Qt.PlainText)
         self.label_49.setObjectName("label_49")
-        self.button_EquipmentDelete = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.button_EquipmentDelete = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_EquipmentDelete.setGeometry(QtCore.QRect(450, 30, 61, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -846,10 +1010,14 @@ class Ui_MainWindow(object):
         self.button_EquipmentDelete.setObjectName("button_EquipmentDelete")
         self.label_Weapon_Right_1 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Right_1.setGeometry(QtCore.QRect(20, 30, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Right_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Right_1.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Right_1.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -862,10 +1030,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Right_1.setObjectName("label_Weapon_Right_1")
         self.label_Weapon_Right_2 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Right_2.setGeometry(QtCore.QRect(100, 30, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Right_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Right_2.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Right_2.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -878,10 +1050,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Right_2.setObjectName("label_Weapon_Right_2")
         self.label_Weapon_Right_3 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Right_3.setGeometry(QtCore.QRect(180, 30, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Right_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Right_3.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Right_3.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -894,10 +1070,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Right_3.setObjectName("label_Weapon_Right_3")
         self.label_Weapon_Left_1 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Left_1.setGeometry(QtCore.QRect(20, 110, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Left_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Left_1.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Left_1.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -910,10 +1090,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Left_1.setObjectName("label_Weapon_Left_1")
         self.label_Weapon_Left_2 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Left_2.setGeometry(QtCore.QRect(100, 110, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Left_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Left_2.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Left_2.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -926,10 +1110,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Left_2.setObjectName("label_Weapon_Left_2")
         self.label_Weapon_Left_3 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Weapon_Left_3.setGeometry(QtCore.QRect(180, 110, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Weapon_Left_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Weapon_Left_3.sizePolicy().hasHeightForWidth()
+        )
         self.label_Weapon_Left_3.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -942,10 +1130,14 @@ class Ui_MainWindow(object):
         self.label_Weapon_Left_3.setObjectName("label_Weapon_Left_3")
         self.label_Armor_Head = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Armor_Head.setGeometry(QtCore.QRect(20, 190, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Armor_Head.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Armor_Head.sizePolicy().hasHeightForWidth()
+        )
         self.label_Armor_Head.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -958,10 +1150,14 @@ class Ui_MainWindow(object):
         self.label_Armor_Head.setObjectName("label_Armor_Head")
         self.label_Armor_Chest = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Armor_Chest.setGeometry(QtCore.QRect(100, 190, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Armor_Chest.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Armor_Chest.sizePolicy().hasHeightForWidth()
+        )
         self.label_Armor_Chest.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -974,10 +1170,14 @@ class Ui_MainWindow(object):
         self.label_Armor_Chest.setObjectName("label_Armor_Chest")
         self.label_Armor_Arms = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Armor_Arms.setGeometry(QtCore.QRect(180, 190, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Armor_Arms.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Armor_Arms.sizePolicy().hasHeightForWidth()
+        )
         self.label_Armor_Arms.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -990,10 +1190,14 @@ class Ui_MainWindow(object):
         self.label_Armor_Arms.setObjectName("label_Armor_Arms")
         self.label_Armor_Legs = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Armor_Legs.setGeometry(QtCore.QRect(260, 190, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Armor_Legs.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Armor_Legs.sizePolicy().hasHeightForWidth()
+        )
         self.label_Armor_Legs.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1006,10 +1210,14 @@ class Ui_MainWindow(object):
         self.label_Armor_Legs.setObjectName("label_Armor_Legs")
         self.label_Talisman_1 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Talisman_1.setGeometry(QtCore.QRect(20, 270, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Talisman_1.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Talisman_1.sizePolicy().hasHeightForWidth()
+        )
         self.label_Talisman_1.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1022,10 +1230,14 @@ class Ui_MainWindow(object):
         self.label_Talisman_1.setObjectName("label_Talisman_1")
         self.label_Talisman_2 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Talisman_2.setGeometry(QtCore.QRect(100, 270, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Talisman_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Talisman_2.sizePolicy().hasHeightForWidth()
+        )
         self.label_Talisman_2.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1038,10 +1250,14 @@ class Ui_MainWindow(object):
         self.label_Talisman_2.setObjectName("label_Talisman_2")
         self.label_Talisman_3 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Talisman_3.setGeometry(QtCore.QRect(180, 270, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Talisman_3.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Talisman_3.sizePolicy().hasHeightForWidth()
+        )
         self.label_Talisman_3.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1054,10 +1270,14 @@ class Ui_MainWindow(object):
         self.label_Talisman_3.setObjectName("label_Talisman_3")
         self.label_Talisman_4 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Talisman_4.setGeometry(QtCore.QRect(260, 270, 71, 71))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Talisman_4.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Talisman_4.sizePolicy().hasHeightForWidth()
+        )
         self.label_Talisman_4.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1076,8 +1296,12 @@ class Ui_MainWindow(object):
         self.label_54.setFont(font)
         self.label_54.setStyleSheet("")
         self.label_54.setObjectName("label_54")
-        self.checkBox_Equipment_NotEnoughStats = QtWidgets.QCheckBox(self.stackedWidget_Pages_Equipment)
-        self.checkBox_Equipment_NotEnoughStats.setGeometry(QtCore.QRect(180, 384, 16, 20))
+        self.checkBox_Equipment_NotEnoughStats = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Equipment
+        )
+        self.checkBox_Equipment_NotEnoughStats.setGeometry(
+            QtCore.QRect(180, 384, 16, 20)
+        )
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
@@ -1085,21 +1309,31 @@ class Ui_MainWindow(object):
         self.checkBox_Equipment_NotEnoughStats.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_Equipment_NotEnoughStats.setStyleSheet("")
         self.checkBox_Equipment_NotEnoughStats.setText("")
-        self.checkBox_Equipment_NotEnoughStats.setObjectName("checkBox_Equipment_NotEnoughStats")
-        self.button_EquipmentReloadInventory = QtWidgets.QPushButton(self.stackedWidget_Pages_Equipment)
+        self.checkBox_Equipment_NotEnoughStats.setObjectName(
+            "checkBox_Equipment_NotEnoughStats"
+        )
+        self.button_EquipmentReloadInventory = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Equipment
+        )
         self.button_EquipmentReloadInventory.setGeometry(QtCore.QRect(380, 30, 131, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.button_EquipmentReloadInventory.setFont(font)
         self.button_EquipmentReloadInventory.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.button_EquipmentReloadInventory.setObjectName("button_EquipmentReloadInventory")
+        self.button_EquipmentReloadInventory.setObjectName(
+            "button_EquipmentReloadInventory"
+        )
         self.label_Choosing_Cell = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_Choosing_Cell.setGeometry(QtCore.QRect(260, 30, 71, 41))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_Choosing_Cell.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.label_Choosing_Cell.sizePolicy().hasHeightForWidth()
+        )
         self.label_Choosing_Cell.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1112,7 +1346,9 @@ class Ui_MainWindow(object):
         self.label_Choosing_Cell.setObjectName("label_Choosing_Cell")
         self.label_55 = QtWidgets.QLabel(self.stackedWidget_Pages_Equipment)
         self.label_55.setGeometry(QtCore.QRect(0, 350, 241, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_55.sizePolicy().hasHeightForWidth())
@@ -1124,14 +1360,22 @@ class Ui_MainWindow(object):
         self.label_55.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_55.setTextFormat(QtCore.Qt.PlainText)
         self.label_55.setObjectName("label_55")
-        self.picture_inventory = QtWidgets.QGraphicsView(self.stackedWidget_Pages_Equipment)
+        self.picture_inventory = QtWidgets.QGraphicsView(
+            self.stackedWidget_Pages_Equipment
+        )
         self.picture_inventory.setGeometry(QtCore.QRect(370, 60, 361, 361))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.picture_inventory.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.picture_inventory.sizePolicy().hasHeightForWidth()
+        )
         self.picture_inventory.setSizePolicy(sizePolicy)
-        self.picture_inventory.setStyleSheet("border-image: url(:/newPrefix/images/inventory.png);")
+        self.picture_inventory.setStyleSheet(
+            "border-image: url(:/newPrefix/images/inventory.png);"
+        )
         self.picture_inventory.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.picture_inventory.setFrameShadow(QtWidgets.QFrame.Plain)
         self.picture_inventory.setObjectName("picture_inventory")
@@ -1143,7 +1387,9 @@ class Ui_MainWindow(object):
         self.label_63.setFont(font)
         self.label_63.setStyleSheet("")
         self.label_63.setObjectName("label_63")
-        self.comboBox_Equip_TwoHand = QtWidgets.QComboBox(self.stackedWidget_Pages_Equipment)
+        self.comboBox_Equip_TwoHand = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Equipment
+        )
         self.comboBox_Equip_TwoHand.setGeometry(QtCore.QRect(180, 430, 151, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1155,8 +1401,12 @@ class Ui_MainWindow(object):
         self.comboBox_Equip_TwoHand.setItemText(0, "")
         self.comboBox_Equip_TwoHand.addItem("")
         self.comboBox_Equip_TwoHand.addItem("")
-        self.comboBox_EquipmentInventoryCurrentType = QtWidgets.QComboBox(self.stackedWidget_Pages_Equipment)
-        self.comboBox_EquipmentInventoryCurrentType.setGeometry(QtCore.QRect(590, 30, 141, 25))
+        self.comboBox_EquipmentInventoryCurrentType = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Equipment
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setGeometry(
+            QtCore.QRect(590, 30, 141, 25)
+        )
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
@@ -1165,7 +1415,9 @@ class Ui_MainWindow(object):
         self.comboBox_EquipmentInventoryCurrentType.setAcceptDrops(False)
         self.comboBox_EquipmentInventoryCurrentType.setIconSize(QtCore.QSize(12, 12))
         self.comboBox_EquipmentInventoryCurrentType.setFrame(True)
-        self.comboBox_EquipmentInventoryCurrentType.setObjectName("comboBox_EquipmentInventoryCurrentType")
+        self.comboBox_EquipmentInventoryCurrentType.setObjectName(
+            "comboBox_EquipmentInventoryCurrentType"
+        )
         self.comboBox_EquipmentInventoryCurrentType.addItem("")
         self.comboBox_EquipmentInventoryCurrentType.addItem("")
         self.comboBox_EquipmentInventoryCurrentType.addItem("")
@@ -1227,13 +1479,19 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_Equipment)
         self.stackedWidget_Pages_Magic = QtWidgets.QWidget()
         self.stackedWidget_Pages_Magic.setObjectName("stackedWidget_Pages_Magic")
-        self.tableWidget_AvaiableMagic = QtWidgets.QTableWidget(self.stackedWidget_Pages_Magic)
+        self.tableWidget_AvaiableMagic = QtWidgets.QTableWidget(
+            self.stackedWidget_Pages_Magic
+        )
         self.tableWidget_AvaiableMagic.setEnabled(True)
         self.tableWidget_AvaiableMagic.setGeometry(QtCore.QRect(20, 30, 261, 451))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget_AvaiableMagic.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tableWidget_AvaiableMagic.sizePolicy().hasHeightForWidth()
+        )
         self.tableWidget_AvaiableMagic.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1242,14 +1500,22 @@ class Ui_MainWindow(object):
         self.tableWidget_AvaiableMagic.setFocusPolicy(QtCore.Qt.NoFocus)
         self.tableWidget_AvaiableMagic.setStyleSheet("")
         self.tableWidget_AvaiableMagic.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidget_AvaiableMagic.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget_AvaiableMagic.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.tableWidget_AvaiableMagic.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff
+        )
+        self.tableWidget_AvaiableMagic.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.tableWidget_AvaiableMagic.setAutoScroll(True)
         self.tableWidget_AvaiableMagic.setTabKeyNavigation(False)
         self.tableWidget_AvaiableMagic.setProperty("showDropIndicator", False)
         self.tableWidget_AvaiableMagic.setDragDropOverwriteMode(False)
-        self.tableWidget_AvaiableMagic.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidget_AvaiableMagic.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_AvaiableMagic.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection
+        )
+        self.tableWidget_AvaiableMagic.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows
+        )
         self.tableWidget_AvaiableMagic.setShowGrid(False)
         self.tableWidget_AvaiableMagic.setGridStyle(QtCore.Qt.NoPen)
         self.tableWidget_AvaiableMagic.setWordWrap(False)
@@ -1273,10 +1539,14 @@ class Ui_MainWindow(object):
         self.tableWidget_AvaiableMagic.horizontalHeader().setSortIndicatorShown(False)
         self.tableWidget_AvaiableMagic.horizontalHeader().setStretchLastSection(False)
         self.tableWidget_AvaiableMagic.verticalHeader().setVisible(False)
-        self.tableWidget_AvaiableMagic.verticalHeader().setCascadingSectionResizes(False)
+        self.tableWidget_AvaiableMagic.verticalHeader().setCascadingSectionResizes(
+            False
+        )
         self.tableWidget_AvaiableMagic.verticalHeader().setDefaultSectionSize(27)
         self.tableWidget_AvaiableMagic.verticalHeader().setHighlightSections(False)
-        self.checkBox_MagicInstantUseLeftHand = QtWidgets.QCheckBox(self.stackedWidget_Pages_Magic)
+        self.checkBox_MagicInstantUseLeftHand = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Magic
+        )
         self.checkBox_MagicInstantUseLeftHand.setGeometry(QtCore.QRect(310, 60, 91, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1284,16 +1554,24 @@ class Ui_MainWindow(object):
         self.checkBox_MagicInstantUseLeftHand.setFont(font)
         self.checkBox_MagicInstantUseLeftHand.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_MagicInstantUseLeftHand.setStyleSheet("")
-        self.checkBox_MagicInstantUseLeftHand.setObjectName("checkBox_MagicInstantUseLeftHand")
-        self.checkBox_MagicInstantUseRightHand = QtWidgets.QCheckBox(self.stackedWidget_Pages_Magic)
-        self.checkBox_MagicInstantUseRightHand.setGeometry(QtCore.QRect(420, 60, 101, 20))
+        self.checkBox_MagicInstantUseLeftHand.setObjectName(
+            "checkBox_MagicInstantUseLeftHand"
+        )
+        self.checkBox_MagicInstantUseRightHand = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Magic
+        )
+        self.checkBox_MagicInstantUseRightHand.setGeometry(
+            QtCore.QRect(420, 60, 101, 20)
+        )
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.checkBox_MagicInstantUseRightHand.setFont(font)
         self.checkBox_MagicInstantUseRightHand.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_MagicInstantUseRightHand.setStyleSheet("")
-        self.checkBox_MagicInstantUseRightHand.setObjectName("checkBox_MagicInstantUseRightHand")
+        self.checkBox_MagicInstantUseRightHand.setObjectName(
+            "checkBox_MagicInstantUseRightHand"
+        )
         self.label_5 = QtWidgets.QLabel(self.stackedWidget_Pages_Magic)
         self.label_5.setGeometry(QtCore.QRect(310, 30, 381, 31))
         font = QtGui.QFont()
@@ -1301,12 +1579,16 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_5.setFont(font)
         self.label_5.setStyleSheet("")
-        self.label_5.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_5.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_5.setWordWrap(True)
         self.label_5.setObjectName("label_5")
         self.label_10 = QtWidgets.QLabel(self.stackedWidget_Pages_Magic)
         self.label_10.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
@@ -1320,7 +1602,9 @@ class Ui_MainWindow(object):
         self.label_10.setObjectName("label_10")
         self.label_13 = QtWidgets.QLabel(self.stackedWidget_Pages_Magic)
         self.label_13.setGeometry(QtCore.QRect(290, 0, 131, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
@@ -1340,12 +1624,16 @@ class Ui_MainWindow(object):
         self.label_17.setFont(font)
         self.label_17.setStyleSheet("")
         self.label_17.setTextFormat(QtCore.Qt.RichText)
-        self.label_17.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_17.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_17.setWordWrap(True)
         self.label_17.setObjectName("label_17")
         self.label_41 = QtWidgets.QLabel(self.stackedWidget_Pages_Magic)
         self.label_41.setGeometry(QtCore.QRect(290, 90, 361, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_41.sizePolicy().hasHeightForWidth())
@@ -1379,7 +1667,9 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages_Items.setObjectName("stackedWidget_Pages_Items")
         self.label_57 = QtWidgets.QLabel(self.stackedWidget_Pages_Items)
         self.label_57.setGeometry(QtCore.QRect(290, 90, 361, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_57.sizePolicy().hasHeightForWidth())
@@ -1391,7 +1681,9 @@ class Ui_MainWindow(object):
         self.label_57.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_57.setTextFormat(QtCore.Qt.PlainText)
         self.label_57.setObjectName("label_57")
-        self.checkBox_ItemInstantUse = QtWidgets.QCheckBox(self.stackedWidget_Pages_Items)
+        self.checkBox_ItemInstantUse = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Items
+        )
         self.checkBox_ItemInstantUse.setGeometry(QtCore.QRect(310, 60, 161, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1408,16 +1700,22 @@ class Ui_MainWindow(object):
         self.label_58.setFont(font)
         self.label_58.setStyleSheet("")
         self.label_58.setTextFormat(QtCore.Qt.RichText)
-        self.label_58.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_58.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_58.setWordWrap(True)
         self.label_58.setObjectName("label_58")
         self.tableWidget_Items = QtWidgets.QTableWidget(self.stackedWidget_Pages_Items)
         self.tableWidget_Items.setEnabled(True)
         self.tableWidget_Items.setGeometry(QtCore.QRect(20, 30, 261, 451))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget_Items.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tableWidget_Items.sizePolicy().hasHeightForWidth()
+        )
         self.tableWidget_Items.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1426,14 +1724,22 @@ class Ui_MainWindow(object):
         self.tableWidget_Items.setFocusPolicy(QtCore.Qt.NoFocus)
         self.tableWidget_Items.setStyleSheet("")
         self.tableWidget_Items.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidget_Items.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget_Items.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.tableWidget_Items.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff
+        )
+        self.tableWidget_Items.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.tableWidget_Items.setAutoScroll(True)
         self.tableWidget_Items.setTabKeyNavigation(False)
         self.tableWidget_Items.setProperty("showDropIndicator", False)
         self.tableWidget_Items.setDragDropOverwriteMode(False)
-        self.tableWidget_Items.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidget_Items.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_Items.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection
+        )
+        self.tableWidget_Items.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows
+        )
         self.tableWidget_Items.setShowGrid(False)
         self.tableWidget_Items.setGridStyle(QtCore.Qt.NoPen)
         self.tableWidget_Items.setWordWrap(False)
@@ -1467,12 +1773,16 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_59.setFont(font)
         self.label_59.setStyleSheet("")
-        self.label_59.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_59.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_59.setWordWrap(True)
         self.label_59.setObjectName("label_59")
         self.label_60 = QtWidgets.QLabel(self.stackedWidget_Pages_Items)
         self.label_60.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_60.sizePolicy().hasHeightForWidth())
@@ -1486,7 +1796,9 @@ class Ui_MainWindow(object):
         self.label_60.setObjectName("label_60")
         self.label_61 = QtWidgets.QLabel(self.stackedWidget_Pages_Items)
         self.label_61.setGeometry(QtCore.QRect(290, 0, 131, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_61.sizePolicy().hasHeightForWidth())
@@ -1498,7 +1810,9 @@ class Ui_MainWindow(object):
         self.label_61.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_61.setTextFormat(QtCore.Qt.PlainText)
         self.label_61.setObjectName("label_61")
-        self.pushButton_ItemReload = QtWidgets.QPushButton(self.stackedWidget_Pages_Items)
+        self.pushButton_ItemReload = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Items
+        )
         self.pushButton_ItemReload.setGeometry(QtCore.QRect(290, 230, 161, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1509,13 +1823,19 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_Items)
         self.stackedWidget_Pages_BuiltIn = QtWidgets.QWidget()
         self.stackedWidget_Pages_BuiltIn.setObjectName("stackedWidget_Pages_BuiltIn")
-        self.tableWidget_BuiltInMacros = QtWidgets.QTableWidget(self.stackedWidget_Pages_BuiltIn)
+        self.tableWidget_BuiltInMacros = QtWidgets.QTableWidget(
+            self.stackedWidget_Pages_BuiltIn
+        )
         self.tableWidget_BuiltInMacros.setEnabled(True)
         self.tableWidget_BuiltInMacros.setGeometry(QtCore.QRect(20, 30, 251, 461))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget_BuiltInMacros.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tableWidget_BuiltInMacros.sizePolicy().hasHeightForWidth()
+        )
         self.tableWidget_BuiltInMacros.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1525,14 +1845,22 @@ class Ui_MainWindow(object):
         self.tableWidget_BuiltInMacros.setStyleSheet("")
         self.tableWidget_BuiltInMacros.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.tableWidget_BuiltInMacros.setFrameShadow(QtWidgets.QFrame.Plain)
-        self.tableWidget_BuiltInMacros.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget_BuiltInMacros.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.tableWidget_BuiltInMacros.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff
+        )
+        self.tableWidget_BuiltInMacros.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.tableWidget_BuiltInMacros.setAutoScroll(True)
         self.tableWidget_BuiltInMacros.setTabKeyNavigation(False)
         self.tableWidget_BuiltInMacros.setProperty("showDropIndicator", False)
         self.tableWidget_BuiltInMacros.setDragDropOverwriteMode(False)
-        self.tableWidget_BuiltInMacros.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidget_BuiltInMacros.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_BuiltInMacros.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection
+        )
+        self.tableWidget_BuiltInMacros.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows
+        )
         self.tableWidget_BuiltInMacros.setShowGrid(False)
         self.tableWidget_BuiltInMacros.setGridStyle(QtCore.Qt.NoPen)
         self.tableWidget_BuiltInMacros.setWordWrap(False)
@@ -1604,10 +1932,14 @@ class Ui_MainWindow(object):
         self.tableWidget_BuiltInMacros.horizontalHeader().setSortIndicatorShown(False)
         self.tableWidget_BuiltInMacros.horizontalHeader().setStretchLastSection(False)
         self.tableWidget_BuiltInMacros.verticalHeader().setVisible(False)
-        self.tableWidget_BuiltInMacros.verticalHeader().setCascadingSectionResizes(False)
+        self.tableWidget_BuiltInMacros.verticalHeader().setCascadingSectionResizes(
+            False
+        )
         self.tableWidget_BuiltInMacros.verticalHeader().setDefaultSectionSize(27)
         self.tableWidget_BuiltInMacros.verticalHeader().setHighlightSections(False)
-        self.label_BuiltInMacroComment = QtWidgets.QLabel(self.stackedWidget_Pages_BuiltIn)
+        self.label_BuiltInMacroComment = QtWidgets.QLabel(
+            self.stackedWidget_Pages_BuiltIn
+        )
         self.label_BuiltInMacroComment.setGeometry(QtCore.QRect(310, 30, 401, 461))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1615,12 +1947,16 @@ class Ui_MainWindow(object):
         self.label_BuiltInMacroComment.setFont(font)
         self.label_BuiltInMacroComment.setStyleSheet("")
         self.label_BuiltInMacroComment.setTextFormat(QtCore.Qt.AutoText)
-        self.label_BuiltInMacroComment.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_BuiltInMacroComment.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_BuiltInMacroComment.setWordWrap(True)
         self.label_BuiltInMacroComment.setObjectName("label_BuiltInMacroComment")
         self.label_11 = QtWidgets.QLabel(self.stackedWidget_Pages_BuiltIn)
         self.label_11.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
@@ -1634,7 +1970,9 @@ class Ui_MainWindow(object):
         self.label_11.setObjectName("label_11")
         self.label_42 = QtWidgets.QLabel(self.stackedWidget_Pages_BuiltIn)
         self.label_42.setGeometry(QtCore.QRect(290, 0, 131, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_42.sizePolicy().hasHeightForWidth())
@@ -1657,11 +1995,13 @@ class Ui_MainWindow(object):
         self.textEdit_DIY.setFont(font)
         self.textEdit_DIY.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.textEdit_DIY.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.textEdit_DIY.setHtml("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Consolas\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'MS Shell Dlg 2\'; font-size:8pt;\"><br /></p></body></html>")
+        self.textEdit_DIY.setHtml(
+            '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">\n'
+            '<html><head><meta name="qrichtext" content="1" /><style type="text/css">\n'
+            "p, li { white-space: pre-wrap; }\n"
+            "</style></head><body style=\" font-family:'Consolas'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+            "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;\"><br /></p></body></html>"
+        )
         self.textEdit_DIY.setAcceptRichText(False)
         self.textEdit_DIY.setObjectName("textEdit_DIY")
         self.label_DIYComment = QtWidgets.QLabel(self.stackedWidget_Pages_DIY)
@@ -1672,11 +2012,15 @@ class Ui_MainWindow(object):
         self.label_DIYComment.setFont(font)
         self.label_DIYComment.setStyleSheet("")
         self.label_DIYComment.setTextFormat(QtCore.Qt.RichText)
-        self.label_DIYComment.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_DIYComment.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_DIYComment.setObjectName("label_DIYComment")
         self.label_12 = QtWidgets.QLabel(self.stackedWidget_Pages_DIY)
         self.label_12.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
@@ -1696,7 +2040,9 @@ class Ui_MainWindow(object):
         self.label_DIYComment_2.setFont(font)
         self.label_DIYComment_2.setStyleSheet("")
         self.label_DIYComment_2.setTextFormat(QtCore.Qt.RichText)
-        self.label_DIYComment_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_DIYComment_2.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_DIYComment_2.setWordWrap(True)
         self.label_DIYComment_2.setObjectName("label_DIYComment_2")
         self.label_DIYComment_3 = QtWidgets.QLabel(self.stackedWidget_Pages_DIY)
@@ -1707,7 +2053,9 @@ class Ui_MainWindow(object):
         self.label_DIYComment_3.setFont(font)
         self.label_DIYComment_3.setStyleSheet("")
         self.label_DIYComment_3.setTextFormat(QtCore.Qt.RichText)
-        self.label_DIYComment_3.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_DIYComment_3.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_DIYComment_3.setWordWrap(True)
         self.label_DIYComment_3.setObjectName("label_DIYComment_3")
         self.spinBox_DIYTimes = QtWidgets.QSpinBox(self.stackedWidget_Pages_DIY)
@@ -1729,14 +2077,20 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_16.setFont(font)
-        self.label_16.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_16.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_16.setObjectName("label_16")
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_DIY)
         self.stackedWidget_Pages_Multiplayer = QtWidgets.QWidget()
-        self.stackedWidget_Pages_Multiplayer.setObjectName("stackedWidget_Pages_Multiplayer")
+        self.stackedWidget_Pages_Multiplayer.setObjectName(
+            "stackedWidget_Pages_Multiplayer"
+        )
         self.label_14 = QtWidgets.QLabel(self.stackedWidget_Pages_Multiplayer)
         self.label_14.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
@@ -1751,7 +2105,9 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages.addWidget(self.stackedWidget_Pages_Multiplayer)
         self.stackedWidget_Pages_Settings = QtWidgets.QWidget()
         self.stackedWidget_Pages_Settings.setObjectName("stackedWidget_Pages_Settings")
-        self.spinBox_StandardPauseTime = QtWidgets.QSpinBox(self.stackedWidget_Pages_Settings)
+        self.spinBox_StandardPauseTime = QtWidgets.QSpinBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.spinBox_StandardPauseTime.setGeometry(QtCore.QRect(20, 440, 51, 22))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1770,9 +2126,13 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_4.setFont(font)
-        self.label_4.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_4.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_4.setObjectName("label_4")
-        self.comboBox_ControlKeyRoll = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyRoll = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyRoll.setGeometry(QtCore.QRect(460, 310, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1782,7 +2142,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyRoll.setObjectName("comboBox_ControlKeyRoll")
         self.comboBox_ControlKeyRoll.addItem("")
         self.comboBox_ControlKeyRoll.setItemText(0, "")
-        self.comboBox_ControlKeyJump = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyJump = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyJump.setGeometry(QtCore.QRect(460, 340, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1792,7 +2154,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyJump.setObjectName("comboBox_ControlKeyJump")
         self.comboBox_ControlKeyJump.addItem("")
         self.comboBox_ControlKeyJump.setItemText(0, "")
-        self.comboBox_ControlKeyCrouch = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyCrouch = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyCrouch.setGeometry(QtCore.QRect(460, 370, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1802,37 +2166,51 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyCrouch.setObjectName("comboBox_ControlKeyCrouch")
         self.comboBox_ControlKeyCrouch.addItem("")
         self.comboBox_ControlKeyCrouch.setItemText(0, "")
-        self.comboBox_ControlKeyResetCamera = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyResetCamera = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyResetCamera.setGeometry(QtCore.QRect(460, 400, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.comboBox_ControlKeyResetCamera.setFont(font)
         self.comboBox_ControlKeyResetCamera.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox_ControlKeyResetCamera.setObjectName("comboBox_ControlKeyResetCamera")
+        self.comboBox_ControlKeyResetCamera.setObjectName(
+            "comboBox_ControlKeyResetCamera"
+        )
         self.comboBox_ControlKeyResetCamera.addItem("")
         self.comboBox_ControlKeyResetCamera.setItemText(0, "")
-        self.comboBox_ControlKeySwitchSpell = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeySwitchSpell = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeySwitchSpell.setGeometry(QtCore.QRect(650, 190, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.comboBox_ControlKeySwitchSpell.setFont(font)
         self.comboBox_ControlKeySwitchSpell.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox_ControlKeySwitchSpell.setObjectName("comboBox_ControlKeySwitchSpell")
+        self.comboBox_ControlKeySwitchSpell.setObjectName(
+            "comboBox_ControlKeySwitchSpell"
+        )
         self.comboBox_ControlKeySwitchSpell.addItem("")
         self.comboBox_ControlKeySwitchSpell.setItemText(0, "")
-        self.comboBox_ControlKeySwitchItem = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeySwitchItem = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeySwitchItem.setGeometry(QtCore.QRect(650, 220, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.comboBox_ControlKeySwitchItem.setFont(font)
         self.comboBox_ControlKeySwitchItem.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox_ControlKeySwitchItem.setObjectName("comboBox_ControlKeySwitchItem")
+        self.comboBox_ControlKeySwitchItem.setObjectName(
+            "comboBox_ControlKeySwitchItem"
+        )
         self.comboBox_ControlKeySwitchItem.addItem("")
         self.comboBox_ControlKeySwitchItem.setItemText(0, "")
-        self.comboBox_ControlKeyAttack = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyAttack = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyAttack.setGeometry(QtCore.QRect(650, 250, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1842,17 +2220,23 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyAttack.setObjectName("comboBox_ControlKeyAttack")
         self.comboBox_ControlKeyAttack.addItem("")
         self.comboBox_ControlKeyAttack.setItemText(0, "")
-        self.comboBox_ControlKeyStrongAttack = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyStrongAttack = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyStrongAttack.setGeometry(QtCore.QRect(650, 280, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.comboBox_ControlKeyStrongAttack.setFont(font)
         self.comboBox_ControlKeyStrongAttack.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox_ControlKeyStrongAttack.setObjectName("comboBox_ControlKeyStrongAttack")
+        self.comboBox_ControlKeyStrongAttack.setObjectName(
+            "comboBox_ControlKeyStrongAttack"
+        )
         self.comboBox_ControlKeyStrongAttack.addItem("")
         self.comboBox_ControlKeyStrongAttack.setItemText(0, "")
-        self.comboBox_ControlKeyGuard = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyGuard = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyGuard.setGeometry(QtCore.QRect(650, 310, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1862,7 +2246,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyGuard.setObjectName("comboBox_ControlKeyGuard")
         self.comboBox_ControlKeyGuard.addItem("")
         self.comboBox_ControlKeyGuard.setItemText(0, "")
-        self.comboBox_ControlKeySkill = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeySkill = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeySkill.setGeometry(QtCore.QRect(650, 340, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1872,7 +2258,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeySkill.setObjectName("comboBox_ControlKeySkill")
         self.comboBox_ControlKeySkill.addItem("")
         self.comboBox_ControlKeySkill.setItemText(0, "")
-        self.comboBox_ControlKeyUseItem = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyUseItem = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyUseItem.setGeometry(QtCore.QRect(650, 370, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1882,7 +2270,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyUseItem.setObjectName("comboBox_ControlKeyUseItem")
         self.comboBox_ControlKeyUseItem.addItem("")
         self.comboBox_ControlKeyUseItem.setItemText(0, "")
-        self.comboBox_ControlKeyUse = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyUse = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyUse.setGeometry(QtCore.QRect(650, 400, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -1899,7 +2289,9 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_20.setFont(font)
         self.label_20.setStyleSheet("")
-        self.label_20.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_20.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_20.setObjectName("label_20")
         self.label_21 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_21.setGeometry(QtCore.QRect(380, 340, 81, 25))
@@ -1907,7 +2299,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_21.setFont(font)
-        self.label_21.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_21.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_21.setObjectName("label_21")
         self.label_22 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_22.setGeometry(QtCore.QRect(380, 370, 81, 25))
@@ -1916,7 +2310,9 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_22.setFont(font)
         self.label_22.setStyleSheet("")
-        self.label_22.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_22.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_22.setObjectName("label_22")
         self.label_23 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_23.setGeometry(QtCore.QRect(380, 400, 81, 25))
@@ -1924,7 +2320,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_23.setFont(font)
-        self.label_23.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_23.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_23.setObjectName("label_23")
         self.label_24 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_24.setGeometry(QtCore.QRect(570, 190, 81, 25))
@@ -1932,7 +2330,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_24.setFont(font)
-        self.label_24.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_24.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_24.setObjectName("label_24")
         self.label_25 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_25.setGeometry(QtCore.QRect(570, 220, 81, 25))
@@ -1940,7 +2340,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_25.setFont(font)
-        self.label_25.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_25.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_25.setObjectName("label_25")
         self.label_26 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_26.setGeometry(QtCore.QRect(570, 250, 81, 25))
@@ -1948,7 +2350,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_26.setFont(font)
-        self.label_26.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_26.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_26.setObjectName("label_26")
         self.label_27 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_27.setGeometry(QtCore.QRect(570, 280, 81, 25))
@@ -1956,7 +2360,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_27.setFont(font)
-        self.label_27.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_27.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_27.setObjectName("label_27")
         self.label_28 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_28.setGeometry(QtCore.QRect(570, 310, 81, 25))
@@ -1964,7 +2370,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_28.setFont(font)
-        self.label_28.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_28.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_28.setObjectName("label_28")
         self.label_29 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_29.setGeometry(QtCore.QRect(570, 340, 81, 25))
@@ -1972,7 +2380,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_29.setFont(font)
-        self.label_29.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_29.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_29.setObjectName("label_29")
         self.label_30 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_30.setGeometry(QtCore.QRect(570, 370, 81, 25))
@@ -1980,7 +2390,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_30.setFont(font)
-        self.label_30.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_30.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_30.setObjectName("label_30")
         self.label_31 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_31.setGeometry(QtCore.QRect(570, 400, 81, 25))
@@ -1988,9 +2400,13 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_31.setFont(font)
-        self.label_31.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_31.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_31.setObjectName("label_31")
-        self.comboBox_RecoveryHotkey = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_RecoveryHotkey = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_RecoveryHotkey.setGeometry(QtCore.QRect(120, 290, 111, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2007,9 +2423,13 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_19.setFont(font)
         self.label_19.setStyleSheet("")
-        self.label_19.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_19.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_19.setObjectName("label_19")
-        self.checkBox_RecoveryKeyAlt = QtWidgets.QCheckBox(self.stackedWidget_Pages_Settings)
+        self.checkBox_RecoveryKeyAlt = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.checkBox_RecoveryKeyAlt.setGeometry(QtCore.QRect(240, 330, 121, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2018,7 +2438,9 @@ class Ui_MainWindow(object):
         self.checkBox_RecoveryKeyAlt.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_RecoveryKeyAlt.setStyleSheet("")
         self.checkBox_RecoveryKeyAlt.setObjectName("checkBox_RecoveryKeyAlt")
-        self.checkBox_RecoveryKeyCtrl = QtWidgets.QCheckBox(self.stackedWidget_Pages_Settings)
+        self.checkBox_RecoveryKeyCtrl = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.checkBox_RecoveryKeyCtrl.setGeometry(QtCore.QRect(240, 286, 121, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2027,7 +2449,9 @@ class Ui_MainWindow(object):
         self.checkBox_RecoveryKeyCtrl.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_RecoveryKeyCtrl.setStyleSheet("")
         self.checkBox_RecoveryKeyCtrl.setObjectName("checkBox_RecoveryKeyCtrl")
-        self.checkBox_RecoveryKeyShift = QtWidgets.QCheckBox(self.stackedWidget_Pages_Settings)
+        self.checkBox_RecoveryKeyShift = QtWidgets.QCheckBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.checkBox_RecoveryKeyShift.setGeometry(QtCore.QRect(240, 308, 121, 20))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2036,7 +2460,9 @@ class Ui_MainWindow(object):
         self.checkBox_RecoveryKeyShift.setFocusPolicy(QtCore.Qt.NoFocus)
         self.checkBox_RecoveryKeyShift.setStyleSheet("")
         self.checkBox_RecoveryKeyShift.setObjectName("checkBox_RecoveryKeyShift")
-        self.comboBox_ControlKeyMove_Up = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyMove_Up = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyMove_Up.setGeometry(QtCore.QRect(460, 190, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2046,7 +2472,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyMove_Up.setObjectName("comboBox_ControlKeyMove_Up")
         self.comboBox_ControlKeyMove_Up.addItem("")
         self.comboBox_ControlKeyMove_Up.setItemText(0, "")
-        self.comboBox_ControlKeyMove_Down = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyMove_Down = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyMove_Down.setGeometry(QtCore.QRect(460, 250, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2056,7 +2484,9 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyMove_Down.setObjectName("comboBox_ControlKeyMove_Down")
         self.comboBox_ControlKeyMove_Down.addItem("")
         self.comboBox_ControlKeyMove_Down.setItemText(0, "")
-        self.comboBox_ControlKeyMove_Left = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyMove_Left = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyMove_Left.setGeometry(QtCore.QRect(460, 220, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2066,14 +2496,18 @@ class Ui_MainWindow(object):
         self.comboBox_ControlKeyMove_Left.setObjectName("comboBox_ControlKeyMove_Left")
         self.comboBox_ControlKeyMove_Left.addItem("")
         self.comboBox_ControlKeyMove_Left.setItemText(0, "")
-        self.comboBox_ControlKeyMove_Right = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ControlKeyMove_Right = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ControlKeyMove_Right.setGeometry(QtCore.QRect(460, 280, 91, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.comboBox_ControlKeyMove_Right.setFont(font)
         self.comboBox_ControlKeyMove_Right.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.comboBox_ControlKeyMove_Right.setObjectName("comboBox_ControlKeyMove_Right")
+        self.comboBox_ControlKeyMove_Right.setObjectName(
+            "comboBox_ControlKeyMove_Right"
+        )
         self.comboBox_ControlKeyMove_Right.addItem("")
         self.comboBox_ControlKeyMove_Right.setItemText(0, "")
         self.label_32 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
@@ -2082,7 +2516,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_32.setFont(font)
-        self.label_32.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_32.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_32.setObjectName("label_32")
         self.label_33 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_33.setGeometry(QtCore.QRect(380, 250, 81, 25))
@@ -2090,7 +2526,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_33.setFont(font)
-        self.label_33.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_33.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_33.setObjectName("label_33")
         self.label_34 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_34.setGeometry(QtCore.QRect(380, 220, 81, 25))
@@ -2098,7 +2536,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_34.setFont(font)
-        self.label_34.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_34.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_34.setObjectName("label_34")
         self.label_35 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_35.setGeometry(QtCore.QRect(380, 280, 81, 25))
@@ -2106,9 +2546,13 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_35.setFont(font)
-        self.label_35.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_35.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_35.setObjectName("label_35")
-        self.comboBox_MagicSearchMode = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_MagicSearchMode = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_MagicSearchMode.setGeometry(QtCore.QRect(120, 230, 111, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2118,7 +2562,9 @@ class Ui_MainWindow(object):
         self.comboBox_MagicSearchMode.setObjectName("comboBox_MagicSearchMode")
         self.comboBox_MagicSearchMode.addItem("")
         self.comboBox_MagicSearchMode.addItem("")
-        self.comboBox_EquipmentSearchMode = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_EquipmentSearchMode = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_EquipmentSearchMode.setGeometry(QtCore.QRect(120, 200, 111, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2134,7 +2580,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_36.setFont(font)
-        self.label_36.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_36.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_36.setObjectName("label_36")
         self.label_37 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_37.setGeometry(QtCore.QRect(20, 200, 81, 25))
@@ -2142,11 +2590,15 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_37.setFont(font)
-        self.label_37.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_37.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_37.setObjectName("label_37")
         self.label_18 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_18.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
@@ -2160,7 +2612,9 @@ class Ui_MainWindow(object):
         self.label_18.setObjectName("label_18")
         self.label_39 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_39.setGeometry(QtCore.QRect(360, 120, 151, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_39.sizePolicy().hasHeightForWidth())
@@ -2178,12 +2632,16 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_40.setFont(font)
-        self.label_40.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_40.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_40.setWordWrap(True)
         self.label_40.setObjectName("label_40")
         self.label_43 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_43.setGeometry(QtCore.QRect(0, 350, 201, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_43.sizePolicy().hasHeightForWidth())
@@ -2201,7 +2659,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_44.setFont(font)
-        self.label_44.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_44.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_44.setWordWrap(True)
         self.label_44.setObjectName("label_44")
         self.label_46 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
@@ -2210,10 +2670,14 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_46.setFont(font)
-        self.label_46.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_46.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_46.setWordWrap(True)
         self.label_46.setObjectName("label_46")
-        self.button_FontSizeUp = QtWidgets.QPushButton(self.stackedWidget_Pages_Settings)
+        self.button_FontSizeUp = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Settings
+        )
         self.button_FontSizeUp.setGeometry(QtCore.QRect(510, 30, 41, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2224,7 +2688,9 @@ class Ui_MainWindow(object):
         self.button_FontSizeUp.setFont(font)
         self.button_FontSizeUp.setFocusPolicy(QtCore.Qt.NoFocus)
         self.button_FontSizeUp.setObjectName("button_FontSizeUp")
-        self.button_FontSizeDown = QtWidgets.QPushButton(self.stackedWidget_Pages_Settings)
+        self.button_FontSizeDown = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Settings
+        )
         self.button_FontSizeDown.setGeometry(QtCore.QRect(460, 30, 41, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2241,11 +2707,15 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_53.setFont(font)
-        self.label_53.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_53.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_53.setObjectName("label_53")
         self.label_45 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_45.setGeometry(QtCore.QRect(360, 10, 201, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_45.sizePolicy().hasHeightForWidth())
@@ -2257,7 +2727,9 @@ class Ui_MainWindow(object):
         self.label_45.setStyleSheet("color: rgb(180, 166, 138);")
         self.label_45.setTextFormat(QtCore.Qt.PlainText)
         self.label_45.setObjectName("label_45")
-        self.button_ControlsReload = QtWidgets.QPushButton(self.stackedWidget_Pages_Settings)
+        self.button_ControlsReload = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Settings
+        )
         self.button_ControlsReload.setGeometry(QtCore.QRect(570, 440, 171, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2296,10 +2768,14 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_56.setFont(font)
-        self.label_56.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_56.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_56.setWordWrap(True)
         self.label_56.setObjectName("label_56")
-        self.comboBox_ItemsSearchMode = QtWidgets.QComboBox(self.stackedWidget_Pages_Settings)
+        self.comboBox_ItemsSearchMode = QtWidgets.QComboBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.comboBox_ItemsSearchMode.setGeometry(QtCore.QRect(120, 260, 111, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2315,7 +2791,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_62.setFont(font)
-        self.label_62.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_62.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_62.setObjectName("label_62")
         self.label_74 = QtWidgets.QLabel(self.stackedWidget_Pages_Settings)
         self.label_74.setGeometry(QtCore.QRect(380, 70, 101, 41))
@@ -2323,10 +2801,14 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_74.setFont(font)
-        self.label_74.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
+        self.label_74.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter
+        )
         self.label_74.setWordWrap(True)
         self.label_74.setObjectName("label_74")
-        self.spinBox_WindowScale = QtWidgets.QDoubleSpinBox(self.stackedWidget_Pages_Settings)
+        self.spinBox_WindowScale = QtWidgets.QDoubleSpinBox(
+            self.stackedWidget_Pages_Settings
+        )
         self.spinBox_WindowScale.setGeometry(QtCore.QRect(490, 80, 62, 22))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2404,7 +2886,9 @@ class Ui_MainWindow(object):
         self.stackedWidget_Pages_Journal.setObjectName("stackedWidget_Pages_Journal")
         self.label_38 = QtWidgets.QLabel(self.stackedWidget_Pages_Journal)
         self.label_38.setGeometry(QtCore.QRect(0, 0, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_38.sizePolicy().hasHeightForWidth())
@@ -2419,28 +2903,36 @@ class Ui_MainWindow(object):
         self.table_Journal = QtWidgets.QTableWidget(self.stackedWidget_Pages_Journal)
         self.table_Journal.setEnabled(True)
         self.table_Journal.setGeometry(QtCore.QRect(20, 30, 721, 431))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.table_Journal.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.table_Journal.sizePolicy().hasHeightForWidth()
+        )
         self.table_Journal.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Consolas")
         font.setPointSize(9)
         self.table_Journal.setFont(font)
         self.table_Journal.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.table_Journal.setStyleSheet("\n"
-"    background-color: rgb(31, 32, 27);\n"
-"    color: rgb(200, 200, 200);\n"
-"    border: 1px solid;\n"
-"    border-color: rgb(150, 150, 150);\n"
-"    border-radius: 2px;\n"
-"    selection-background-color:rgb(65, 61, 51);\n"
-"    selection-color:rgb(220, 220, 220);\n"
-"")
+        self.table_Journal.setStyleSheet(
+            "\n"
+            "    background-color: rgb(31, 32, 27);\n"
+            "    color: rgb(200, 200, 200);\n"
+            "    border: 1px solid;\n"
+            "    border-color: rgb(150, 150, 150);\n"
+            "    border-radius: 2px;\n"
+            "    selection-background-color:rgb(65, 61, 51);\n"
+            "    selection-color:rgb(220, 220, 220);\n"
+            ""
+        )
         self.table_Journal.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.table_Journal.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.table_Journal.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.table_Journal.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.table_Journal.setAutoScroll(True)
         self.table_Journal.setTabKeyNavigation(False)
         self.table_Journal.setProperty("showDropIndicator", False)
@@ -2455,10 +2947,10 @@ class Ui_MainWindow(object):
         self.table_Journal.setColumnCount(2)
         self.table_Journal.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignTop)
+        item.setTextAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignTop)
         self.table_Journal.setHorizontalHeaderItem(0, item)
         item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignTop)
+        item.setTextAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignTop)
         self.table_Journal.setHorizontalHeaderItem(1, item)
         self.table_Journal.horizontalHeader().setVisible(False)
         self.table_Journal.horizontalHeader().setCascadingSectionResizes(False)
@@ -2472,7 +2964,9 @@ class Ui_MainWindow(object):
         self.table_Journal.verticalHeader().setDefaultSectionSize(10)
         self.table_Journal.verticalHeader().setHighlightSections(False)
         self.table_Journal.verticalHeader().setMinimumSectionSize(10)
-        self.button_RefreshJournal = QtWidgets.QPushButton(self.stackedWidget_Pages_Journal)
+        self.button_RefreshJournal = QtWidgets.QPushButton(
+            self.stackedWidget_Pages_Journal
+        )
         self.button_RefreshJournal.setGeometry(QtCore.QRect(590, 465, 151, 25))
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2496,9 +2990,11 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.button_GitHub2.setFont(font)
         self.button_GitHub2.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.button_GitHub2.setStyleSheet("color: rgb(180, 166, 138);\n"
-"    border: 2px solid;\n"
-"    border-color: rgb(180, 166, 138);")
+        self.button_GitHub2.setStyleSheet(
+            "color: rgb(180, 166, 138);\n"
+            "    border: 2px solid;\n"
+            "    border-color: rgb(180, 166, 138);"
+        )
         self.button_GitHub2.setObjectName("button_GitHub2")
         self.button_Nexus = QtWidgets.QPushButton(self.stackedWidget_Pages_About)
         self.button_Nexus.setGeometry(QtCore.QRect(20, 360, 171, 21))
@@ -2538,7 +3034,9 @@ class Ui_MainWindow(object):
         self.label_68.setObjectName("label_68")
         self.label_69 = QtWidgets.QLabel(self.stackedWidget_Pages_About)
         self.label_69.setGeometry(QtCore.QRect(350, 80, 221, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_69.sizePolicy().hasHeightForWidth())
@@ -2552,7 +3050,9 @@ class Ui_MainWindow(object):
         self.label_69.setObjectName("label_69")
         self.label_70 = QtWidgets.QLabel(self.stackedWidget_Pages_About)
         self.label_70.setGeometry(QtCore.QRect(0, 80, 221, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_70.sizePolicy().hasHeightForWidth())
@@ -2566,7 +3066,9 @@ class Ui_MainWindow(object):
         self.label_70.setObjectName("label_70")
         self.label_71 = QtWidgets.QLabel(self.stackedWidget_Pages_About)
         self.label_71.setGeometry(QtCore.QRect(0, 320, 341, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_71.sizePolicy().hasHeightForWidth())
@@ -2580,7 +3082,9 @@ class Ui_MainWindow(object):
         self.label_71.setObjectName("label_71")
         self.graphicsView = QtWidgets.QGraphicsView(self.stackedWidget_Pages_About)
         self.graphicsView.setGeometry(QtCore.QRect(20, 130, 121, 121))
-        self.graphicsView.setStyleSheet("border-image: url(:/newPrefix/images/flower.png);")
+        self.graphicsView.setStyleSheet(
+            "border-image: url(:/newPrefix/images/flower.png);"
+        )
         self.graphicsView.setObjectName("graphicsView")
         self.label_72 = QtWidgets.QLabel(self.stackedWidget_Pages_About)
         self.label_72.setGeometry(QtCore.QRect(240, 160, 111, 25))
@@ -2604,7 +3108,9 @@ class Ui_MainWindow(object):
         font.setFamily("Garamond")
         font.setPointSize(10)
         self.label_65.setFont(font)
-        self.label_65.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
+        self.label_65.setAlignment(
+            QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignTop
+        )
         self.label_65.setWordWrap(True)
         self.label_65.setObjectName("label_65")
         self.button_GitHub3 = QtWidgets.QPushButton(self.stackedWidget_Pages_About)
@@ -2651,10 +3157,14 @@ class Ui_MainWindow(object):
         self.tableWidget_Macros = QtWidgets.QTableWidget(self.centralwidget)
         self.tableWidget_Macros.setEnabled(True)
         self.tableWidget_Macros.setGeometry(QtCore.QRect(60, 250, 281, 425))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget_Macros.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.tableWidget_Macros.sizePolicy().hasHeightForWidth()
+        )
         self.tableWidget_Macros.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setFamily("Garamond")
@@ -2663,15 +3173,25 @@ class Ui_MainWindow(object):
         self.tableWidget_Macros.setFocusPolicy(QtCore.Qt.NoFocus)
         self.tableWidget_Macros.setStyleSheet("")
         self.tableWidget_Macros.setFrameShape(QtWidgets.QFrame.NoFrame)
-        self.tableWidget_Macros.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.tableWidget_Macros.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustIgnored)
+        self.tableWidget_Macros.setHorizontalScrollBarPolicy(
+            QtCore.Qt.ScrollBarAlwaysOff
+        )
+        self.tableWidget_Macros.setSizeAdjustPolicy(
+            QtWidgets.QAbstractScrollArea.AdjustIgnored
+        )
         self.tableWidget_Macros.setAutoScroll(True)
-        self.tableWidget_Macros.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget_Macros.setEditTriggers(
+            QtWidgets.QAbstractItemView.NoEditTriggers
+        )
         self.tableWidget_Macros.setTabKeyNavigation(False)
         self.tableWidget_Macros.setProperty("showDropIndicator", False)
         self.tableWidget_Macros.setDragDropOverwriteMode(False)
-        self.tableWidget_Macros.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
-        self.tableWidget_Macros.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.tableWidget_Macros.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection
+        )
+        self.tableWidget_Macros.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows
+        )
         self.tableWidget_Macros.setShowGrid(False)
         self.tableWidget_Macros.setGridStyle(QtCore.Qt.NoPen)
         self.tableWidget_Macros.setWordWrap(False)
@@ -2688,7 +3208,7 @@ class Ui_MainWindow(object):
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_Macros.setHorizontalHeaderItem(1, item)
         item = QtWidgets.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignVCenter)
+        item.setTextAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignVCenter)
         font = QtGui.QFont()
         font.setBold(False)
         font.setWeight(50)
@@ -2747,17 +3267,23 @@ class Ui_MainWindow(object):
         self.comboBox_MacroKey.setItemText(0, "")
         self.graphicsView_2 = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView_2.setGeometry(QtCore.QRect(0, 0, 1161, 721))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.graphicsView_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.graphicsView_2.sizePolicy().hasHeightForWidth()
+        )
         self.graphicsView_2.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(10)
         self.graphicsView_2.setFont(font)
         self.graphicsView_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.graphicsView_2.setAutoFillBackground(False)
-        self.graphicsView_2.setStyleSheet("border-image: url(:/newPrefix/images/background.png);")
+        self.graphicsView_2.setStyleSheet(
+            "border-image: url(:/newPrefix/images/background.png);"
+        )
         self.graphicsView_2.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.graphicsView_2.setObjectName("graphicsView_2")
         self.button_Settings = QtWidgets.QPushButton(self.centralwidget)
@@ -2789,7 +3315,9 @@ class Ui_MainWindow(object):
         self.button_DownMacros.setObjectName("button_DownMacros")
         self.label_6 = QtWidgets.QLabel(self.centralwidget)
         self.label_6.setGeometry(QtCore.QRect(40, 190, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
@@ -2803,7 +3331,9 @@ class Ui_MainWindow(object):
         self.label_6.setObjectName("label_6")
         self.label_7 = QtWidgets.QLabel(self.centralwidget)
         self.label_7.setGeometry(QtCore.QRect(40, 90, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
@@ -2820,7 +3350,9 @@ class Ui_MainWindow(object):
         self.label_7.setObjectName("label_7")
         self.label_8 = QtWidgets.QLabel(self.centralwidget)
         self.label_8.setGeometry(QtCore.QRect(370, 90, 111, 25))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
@@ -2875,9 +3407,11 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.button_GitHub.setFont(font)
         self.button_GitHub.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.button_GitHub.setStyleSheet("color: rgb(180, 166, 138);\n"
-"    border: 2px solid;\n"
-"    border-color: rgb(180, 166, 138);")
+        self.button_GitHub.setStyleSheet(
+            "color: rgb(180, 166, 138);\n"
+            "    border: 2px solid;\n"
+            "    border-color: rgb(180, 166, 138);"
+        )
         self.button_GitHub.setObjectName("button_GitHub")
         self.graphicsView_2.raise_()
         self.comboBox_SaveSlots.raise_()
@@ -2915,16 +3449,36 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.comboBox_SaveSlots.setItemText(0, _translate("MainWindow", "< Save slot 1 >"))
-        self.comboBox_SaveSlots.setItemText(1, _translate("MainWindow", "< Save slot 2 >"))
-        self.comboBox_SaveSlots.setItemText(2, _translate("MainWindow", "< Save slot 3 >"))
-        self.comboBox_SaveSlots.setItemText(3, _translate("MainWindow", "< Save slot 4 >"))
-        self.comboBox_SaveSlots.setItemText(4, _translate("MainWindow", "< Save slot 5 >"))
-        self.comboBox_SaveSlots.setItemText(5, _translate("MainWindow", "< Save slot 6 >"))
-        self.comboBox_SaveSlots.setItemText(6, _translate("MainWindow", "< Save slot 7 >"))
-        self.comboBox_SaveSlots.setItemText(7, _translate("MainWindow", "< Save slot 8 >"))
-        self.comboBox_SaveSlots.setItemText(8, _translate("MainWindow", "< Save slot 9 >"))
-        self.comboBox_SaveSlots.setItemText(9, _translate("MainWindow", "< Save slot 10 >"))
+        self.comboBox_SaveSlots.setItemText(
+            0, _translate("MainWindow", "< Save slot 1 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            1, _translate("MainWindow", "< Save slot 2 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            2, _translate("MainWindow", "< Save slot 3 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            3, _translate("MainWindow", "< Save slot 4 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            4, _translate("MainWindow", "< Save slot 5 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            5, _translate("MainWindow", "< Save slot 6 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            6, _translate("MainWindow", "< Save slot 7 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            7, _translate("MainWindow", "< Save slot 8 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            8, _translate("MainWindow", "< Save slot 9 >")
+        )
+        self.comboBox_SaveSlots.setItemText(
+            9, _translate("MainWindow", "< Save slot 10 >")
+        )
         self.button_AddMacros.setText(_translate("MainWindow", "Add"))
         self.button_DeleteMacros.setText(_translate("MainWindow", "Delete Hotkey"))
         self.comboBox_MacroType.setItemText(1, _translate("MainWindow", "Equipment"))
@@ -2971,82 +3525,96 @@ class Ui_MainWindow(object):
         item = self.tableWidget_Equipment.item(0, 0)
         item.setText(_translate("MainWindow", "Quality Great Épée"))
         item = self.tableWidget_Equipment.item(0, 1)
-        item.setText(_translate("MainWindow", "Gargoyle\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Gargoyle's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(0, 2)
-        item.setText(_translate("MainWindow", "Watchdog\'s Cold Greatsword"))
+        item.setText(_translate("MainWindow", "Watchdog's Cold Greatsword"))
         item = self.tableWidget_Equipment.item(0, 3)
-        item.setText(_translate("MainWindow", "Watchdog\'s Cold Greatsword"))
+        item.setText(_translate("MainWindow", "Watchdog's Cold Greatsword"))
         item = self.tableWidget_Equipment.item(0, 4)
-        item.setText(_translate("MainWindow", "Gargoyle\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Gargoyle's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(1, 0)
-        item.setText(_translate("MainWindow", "Banished Knight\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Banished Knight's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(1, 1)
         item.setText(_translate("MainWindow", "Magic Antspur Rapier"))
         item = self.tableWidget_Equipment.item(1, 2)
-        item.setText(_translate("MainWindow", "Cleanrot Knight\'s Flame Art Sword"))
+        item.setText(_translate("MainWindow", "Cleanrot Knight's Flame Art Sword"))
         item = self.tableWidget_Equipment.item(1, 3)
-        item.setText(_translate("MainWindow", "Watchdog\'s Cold Greatsword"))
+        item.setText(_translate("MainWindow", "Watchdog's Cold Greatsword"))
         item = self.tableWidget_Equipment.item(1, 4)
-        item.setText(_translate("MainWindow", "Banished Knight\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Banished Knight's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(2, 0)
-        item.setText(_translate("MainWindow", "Gargoyle\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Gargoyle's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(2, 1)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(2, 2)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(2, 3)
-        item.setText(_translate("MainWindow", "Banished Knight\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Banished Knight's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(2, 4)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(3, 0)
         item.setText(_translate("MainWindow", "Reduvia"))
         item = self.tableWidget_Equipment.item(3, 1)
-        item.setText(_translate("MainWindow", "Watchdog\'s Cold Greatsword"))
+        item.setText(_translate("MainWindow", "Watchdog's Cold Greatsword"))
         item = self.tableWidget_Equipment.item(3, 2)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(3, 3)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(3, 4)
-        item.setText(_translate("MainWindow", "Banished Knight\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Banished Knight's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(4, 0)
         item.setText(_translate("MainWindow", "Reduvia"))
         item = self.tableWidget_Equipment.item(4, 1)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(4, 2)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(4, 3)
         item.setText(_translate("MainWindow", "Weathered Occult Straight Sword"))
         item = self.tableWidget_Equipment.item(4, 4)
-        item.setText(_translate("MainWindow", "Banished Knight\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Banished Knight's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(5, 0)
-        item.setText(_translate("MainWindow", "Gargoyle\'s Lightning Greatsword"))
+        item.setText(_translate("MainWindow", "Gargoyle's Lightning Greatsword"))
         item = self.tableWidget_Equipment.item(5, 1)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(5, 2)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(5, 3)
         item.setText(_translate("MainWindow", "Reduvia"))
         item = self.tableWidget_Equipment.item(5, 4)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(6, 0)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(6, 1)
         item.setText(_translate("MainWindow", "Reduvia"))
         item = self.tableWidget_Equipment.item(6, 2)
-        item.setText(_translate("MainWindow", "Cleanrot Knight\'s Flame Art Sword"))
+        item.setText(_translate("MainWindow", "Cleanrot Knight's Flame Art Sword"))
         item = self.tableWidget_Equipment.item(6, 3)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         item = self.tableWidget_Equipment.item(6, 4)
-        item.setText(_translate("MainWindow", "Dragon King\'s Cragblade"))
+        item.setText(_translate("MainWindow", "Dragon King's Cragblade"))
         self.tableWidget_Equipment.setSortingEnabled(__sortingEnabled)
-        self.comboBox_Equip_InstantAction.setItemText(1, _translate("MainWindow", "Attack"))
-        self.comboBox_Equip_InstantAction.setItemText(2, _translate("MainWindow", "Strong attack"))
-        self.comboBox_Equip_InstantAction.setItemText(3, _translate("MainWindow", "Skill"))
-        self.comboBox_Equip_InstantAction.setItemText(4, _translate("MainWindow", "Stance attack"))
-        self.comboBox_Equip_InstantAction.setItemText(5, _translate("MainWindow", "Stance strong attack"))
+        self.comboBox_Equip_InstantAction.setItemText(
+            1, _translate("MainWindow", "Attack")
+        )
+        self.comboBox_Equip_InstantAction.setItemText(
+            2, _translate("MainWindow", "Strong attack")
+        )
+        self.comboBox_Equip_InstantAction.setItemText(
+            3, _translate("MainWindow", "Skill")
+        )
+        self.comboBox_Equip_InstantAction.setItemText(
+            4, _translate("MainWindow", "Stance attack")
+        )
+        self.comboBox_Equip_InstantAction.setItemText(
+            5, _translate("MainWindow", "Stance strong attack")
+        )
         self.label_47.setText(_translate("MainWindow", "Instant action:"))
         self.label_48.setText(_translate("MainWindow", "General settings"))
-        self.label_50.setText(_translate("MainWindow", "Enter any names. The only important thing is order."))
+        self.label_50.setText(
+            _translate(
+                "MainWindow", "Enter any names. The only important thing is order."
+            )
+        )
         self.label_51.setText(_translate("MainWindow", "Manual mode"))
         self.label_52.setText(_translate("MainWindow", "Manual mode:"))
         self.button_EquipmentAdd.setText(_translate("MainWindow", "Add"))
@@ -3067,18 +3635,36 @@ class Ui_MainWindow(object):
         self.label_Talisman_3.setText(_translate("MainWindow", "Equip"))
         self.label_Talisman_4.setText(_translate("MainWindow", "Equip"))
         self.label_54.setText(_translate("MainWindow", "Low stats attention skip:"))
-        self.button_EquipmentReloadInventory.setText(_translate("MainWindow", "Reload from save file"))
+        self.button_EquipmentReloadInventory.setText(
+            _translate("MainWindow", "Reload from save file")
+        )
         self.label_Choosing_Cell.setText(_translate("MainWindow", "Cell"))
         self.label_55.setText(_translate("MainWindow", "Item settings"))
         self.label_63.setText(_translate("MainWindow", "Two-hand a weapon:"))
-        self.comboBox_Equip_TwoHand.setItemText(1, _translate("MainWindow", "Right weapon"))
-        self.comboBox_Equip_TwoHand.setItemText(2, _translate("MainWindow", "Left weapon"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(0, _translate("MainWindow", "Armament"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(1, _translate("MainWindow", "Armor (head)"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(2, _translate("MainWindow", "Armor (chest)"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(3, _translate("MainWindow", "Armor (arms)"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(4, _translate("MainWindow", "Armor (legs)"))
-        self.comboBox_EquipmentInventoryCurrentType.setItemText(5, _translate("MainWindow", "Talismans"))
+        self.comboBox_Equip_TwoHand.setItemText(
+            1, _translate("MainWindow", "Right weapon")
+        )
+        self.comboBox_Equip_TwoHand.setItemText(
+            2, _translate("MainWindow", "Left weapon")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            0, _translate("MainWindow", "Armament")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            1, _translate("MainWindow", "Armor (head)")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            2, _translate("MainWindow", "Armor (chest)")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            3, _translate("MainWindow", "Armor (arms)")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            4, _translate("MainWindow", "Armor (legs)")
+        )
+        self.comboBox_EquipmentInventoryCurrentType.setItemText(
+            5, _translate("MainWindow", "Talismans")
+        )
         item = self.tableWidget_AvaiableMagic.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.tableWidget_AvaiableMagic.verticalHeaderItem(1)
@@ -3092,17 +3678,38 @@ class Ui_MainWindow(object):
         item = self.tableWidget_AvaiableMagic.item(1, 0)
         item.setText(_translate("MainWindow", "O, Flame!"))
         self.tableWidget_AvaiableMagic.setSortingEnabled(__sortingEnabled)
-        self.checkBox_MagicInstantUseLeftHand.setText(_translate("MainWindow", "Left hand"))
-        self.checkBox_MagicInstantUseRightHand.setText(_translate("MainWindow", "Right hand"))
-        self.label_5.setText(_translate("MainWindow", "If active, spell will be casted immediately after selection."))
+        self.checkBox_MagicInstantUseLeftHand.setText(
+            _translate("MainWindow", "Left hand")
+        )
+        self.checkBox_MagicInstantUseRightHand.setText(
+            _translate("MainWindow", "Right hand")
+        )
+        self.label_5.setText(
+            _translate(
+                "MainWindow",
+                "If active, spell will be casted immediately after selection.",
+            )
+        )
         self.label_10.setText(_translate("MainWindow", "Magic"))
         self.label_13.setText(_translate("MainWindow", "Instant magic cast"))
-        self.label_17.setText(_translate("MainWindow", "<html><head/><body><p>Check &quot;HUD&quot; setting in Elden Ring options. Set &quot;On&quot; or &quot;Off&quot; value.</p><p>If it\'s set to &quot;Auto&quot;, it will break all <span style=\" color:#b4a68a;\">Semi-manual </span>magic hotkeys due to the fact that first &quot;Switch spell&quot; action will not switch current spell but reappear the HUD instead. </p></body></html>"))
+        self.label_17.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p>Check &quot;HUD&quot; setting in Elden Ring options. Set &quot;On&quot; or &quot;Off&quot; value.</p><p>If it\'s set to &quot;Auto&quot;, it will break all <span style=" color:#b4a68a;">Semi-manual </span>magic hotkeys due to the fact that first &quot;Switch spell&quot; action will not switch current spell but reappear the HUD instead. </p></body></html>',
+            )
+        )
         self.label_41.setText(_translate("MainWindow", "Note about Semi-manual mode"))
-        self.button_MagicReload.setText(_translate("MainWindow", "Reload from save file"))
+        self.button_MagicReload.setText(
+            _translate("MainWindow", "Reload from save file")
+        )
         self.label_57.setText(_translate("MainWindow", "Note about Semi-manual mode"))
         self.checkBox_ItemInstantUse.setText(_translate("MainWindow", "Instant use"))
-        self.label_58.setText(_translate("MainWindow", "<html><head/><body><p>Check &quot;HUD&quot; setting in Elden Ring options. Set &quot;On&quot; or &quot;Off&quot; value.</p><p>If it\'s set to &quot;Auto&quot;, it will break all <span style=\" color:#b4a68a;\">Semi-manual </span>item hotkeys due to the fact that first &quot;Switch item&quot; action will not switch current item but reappear the HUD instead. </p></body></html>"))
+        self.label_58.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p>Check &quot;HUD&quot; setting in Elden Ring options. Set &quot;On&quot; or &quot;Off&quot; value.</p><p>If it\'s set to &quot;Auto&quot;, it will break all <span style=" color:#b4a68a;">Semi-manual </span>item hotkeys due to the fact that first &quot;Switch item&quot; action will not switch current item but reappear the HUD instead. </p></body></html>',
+            )
+        )
         item = self.tableWidget_Items.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.tableWidget_Items.verticalHeaderItem(1)
@@ -3116,10 +3723,17 @@ class Ui_MainWindow(object):
         item = self.tableWidget_Items.item(1, 0)
         item.setText(_translate("MainWindow", "Boluses"))
         self.tableWidget_Items.setSortingEnabled(__sortingEnabled)
-        self.label_59.setText(_translate("MainWindow", "If active, item will be used immediately after selection."))
+        self.label_59.setText(
+            _translate(
+                "MainWindow",
+                "If active, item will be used immediately after selection.",
+            )
+        )
         self.label_60.setText(_translate("MainWindow", "Items"))
         self.label_61.setText(_translate("MainWindow", "Instant use"))
-        self.pushButton_ItemReload.setText(_translate("MainWindow", "Reload from save file"))
+        self.pushButton_ItemReload.setText(
+            _translate("MainWindow", "Reload from save file")
+        )
         item = self.tableWidget_BuiltInMacros.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", "1"))
         item = self.tableWidget_BuiltInMacros.verticalHeaderItem(1)
@@ -3181,60 +3795,189 @@ class Ui_MainWindow(object):
         item = self.tableWidget_BuiltInMacros.item(25, 0)
         item.setText(_translate("MainWindow", "Two hand a weapon (left)"))
         self.tableWidget_BuiltInMacros.setSortingEnabled(__sortingEnabled)
-        self.label_BuiltInMacroComment.setText(_translate("MainWindow", "<html><head/><body><p>Description</p></body></html>"))
+        self.label_BuiltInMacroComment.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Description</p></body></html>"
+            )
+        )
         self.label_11.setText(_translate("MainWindow", "Built-in"))
         self.label_42.setText(_translate("MainWindow", "Description"))
-        self.label_DIYComment.setText(_translate("MainWindow", "<html><head/><body><p>One line - one command. You can use these:</p><p>1) <span style=\" color:#b4a68a;\">keyboard buttons</span>, like &quot;W&quot;, &quot;Esc&quot;, &quot;Home&quot;, &quot;F7&quot; etc.</p><p>2) <span style=\" color:#b4a68a;\">game commands</span> from the list:</p><p><br/></p></body></html>"))
+        self.label_DIYComment.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p>One line - one command. You can use these:</p><p>1) <span style=" color:#b4a68a;">keyboard buttons</span>, like &quot;W&quot;, &quot;Esc&quot;, &quot;Home&quot;, &quot;F7&quot; etc.</p><p>2) <span style=" color:#b4a68a;">game commands</span> from the list:</p><p><br/></p></body></html>',
+            )
+        )
         self.label_12.setText(_translate("MainWindow", "DIY"))
-        self.label_DIYComment_2.setText(_translate("MainWindow", "<html><head/><body><p>move_up, move_down, move_left, move_right, roll, jump, crouch, reset_camera, switch_spell, switch_item, attack, strong_attack, guard, skill, use_item, event_action</p></body></html>"))
-        self.label_DIYComment_3.setText(_translate("MainWindow", "<html><head/><body><p>3) <span style=\" color:#b4a68a;\">any built-in hotkey name</span>, like &quot;Stance attack&quot;</p><p>4) <span style=\" color:#b4a68a;\">any hotkey name</span>, like &quot;My lovely hotkey from the table on the left&quot;</p><p>5) <span style=\" color:#b4a68a;\">_pressN </span>postfix for pressing a button, where N is ms. E.g. &quot;roll_press5000&quot; will press your &quot;roll&quot; key for 5 seconds.</p><p>6) <span style=\" color:#b4a68a;\">pauseN </span>for a pause, where N is ms. <span style=\" color:#b4a68a;\">_pauseN </span>postfix for a pause after pressing a button. E.g. &quot;jump_pause2000&quot; and &quot;Crouch attack&quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.</p><p>7) <span style=\" color:#b4a68a;\">multiplication (*) </span>for making actions many times. E.g. &quot;crouch_pause100 * 50&quot; will make you feel very good about yourself.</p><p>8) <span style=\" color:#b4a68a;\">simultaneous press (+)</span>. E.g. &quot;alt+move_up_press5000&quot; will make you walk forward for 5 seconds</p><p>9) <span style=\" color:#b4a68a;\">comment (#)</span>. E.g. &quot;# please please just work&quot;.</p></body></html>"))
-        self.label_16.setText(_translate("MainWindow", "<html><head/><body><p>Times to repeat:</p></body></html>"))
+        self.label_DIYComment_2.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>move_up, move_down, move_left, move_right, roll, jump, crouch, reset_camera, switch_spell, switch_item, attack, strong_attack, guard, skill, use_item, event_action</p></body></html>",
+            )
+        )
+        self.label_DIYComment_3.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p>3) <span style=" color:#b4a68a;">any built-in hotkey name</span>, like &quot;Stance attack&quot;</p><p>4) <span style=" color:#b4a68a;">any hotkey name</span>, like &quot;My lovely hotkey from the table on the left&quot;</p><p>5) <span style=" color:#b4a68a;">_pressN </span>postfix for pressing a button, where N is ms. E.g. &quot;roll_press5000&quot; will press your &quot;roll&quot; key for 5 seconds.</p><p>6) <span style=" color:#b4a68a;">pauseN </span>for a pause, where N is ms. <span style=" color:#b4a68a;">_pauseN </span>postfix for a pause after pressing a button. E.g. &quot;jump_pause2000&quot; and &quot;Crouch attack&quot; on next line will make you jump, wait for 2 seconds and perform a crouch attack.</p><p>7) <span style=" color:#b4a68a;">multiplication (*) </span>for making actions many times. E.g. &quot;crouch_pause100 * 50&quot; will make you feel very good about yourself.</p><p>8) <span style=" color:#b4a68a;">simultaneous press (+)</span>. E.g. &quot;alt+move_up_press5000&quot; will make you walk forward for 5 seconds</p><p>9) <span style=" color:#b4a68a;">comment (#)</span>. E.g. &quot;# please please just work&quot;.</p></body></html>',
+            )
+        )
+        self.label_16.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Times to repeat:</p></body></html>"
+            )
+        )
         self.label_14.setText(_translate("MainWindow", "Multiplayer"))
-        self.label_4.setText(_translate("MainWindow", "<html><head/><body><p>ms. (1/1000 sec.)</p></body></html>"))
-        self.label_20.setText(_translate("MainWindow", "<html><head/><body><p>Roll:</p></body></html>"))
-        self.label_21.setText(_translate("MainWindow", "<html><head/><body><p>Jump:</p></body></html>"))
-        self.label_22.setText(_translate("MainWindow", "<html><head/><body><p>Crouch:</p></body></html>"))
-        self.label_23.setText(_translate("MainWindow", "<html><head/><body><p>Reset camera:</p></body></html>"))
-        self.label_24.setText(_translate("MainWindow", "<html><head/><body><p>Switch spell:</p></body></html>"))
-        self.label_25.setText(_translate("MainWindow", "<html><head/><body><p>Switch item:</p></body></html>"))
-        self.label_26.setText(_translate("MainWindow", "<html><head/><body><p>Attack:</p></body></html>"))
-        self.label_27.setText(_translate("MainWindow", "<html><head/><body><p>Strong attack:</p></body></html>"))
-        self.label_28.setText(_translate("MainWindow", "<html><head/><body><p>Guard:</p></body></html>"))
-        self.label_29.setText(_translate("MainWindow", "<html><head/><body><p>Skill:</p></body></html>"))
-        self.label_30.setText(_translate("MainWindow", "<html><head/><body><p>Use item:</p></body></html>"))
-        self.label_31.setText(_translate("MainWindow", "<html><head/><body><p>Event action:</p></body></html>"))
-        self.label_19.setText(_translate("MainWindow", "<html><head/><body><p>Recovery key:</p></body></html>"))
+        self.label_4.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>ms. (1/1000 sec.)</p></body></html>",
+            )
+        )
+        self.label_20.setText(
+            _translate("MainWindow", "<html><head/><body><p>Roll:</p></body></html>")
+        )
+        self.label_21.setText(
+            _translate("MainWindow", "<html><head/><body><p>Jump:</p></body></html>")
+        )
+        self.label_22.setText(
+            _translate("MainWindow", "<html><head/><body><p>Crouch:</p></body></html>")
+        )
+        self.label_23.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Reset camera:</p></body></html>"
+            )
+        )
+        self.label_24.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Switch spell:</p></body></html>"
+            )
+        )
+        self.label_25.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Switch item:</p></body></html>"
+            )
+        )
+        self.label_26.setText(
+            _translate("MainWindow", "<html><head/><body><p>Attack:</p></body></html>")
+        )
+        self.label_27.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Strong attack:</p></body></html>"
+            )
+        )
+        self.label_28.setText(
+            _translate("MainWindow", "<html><head/><body><p>Guard:</p></body></html>")
+        )
+        self.label_29.setText(
+            _translate("MainWindow", "<html><head/><body><p>Skill:</p></body></html>")
+        )
+        self.label_30.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Use item:</p></body></html>"
+            )
+        )
+        self.label_31.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Event action:</p></body></html>"
+            )
+        )
+        self.label_19.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Recovery key:</p></body></html>"
+            )
+        )
         self.checkBox_RecoveryKeyAlt.setText(_translate("MainWindow", "+ Alt"))
         self.checkBox_RecoveryKeyCtrl.setText(_translate("MainWindow", "+ Ctrl"))
         self.checkBox_RecoveryKeyShift.setText(_translate("MainWindow", "+ Shift"))
-        self.label_32.setText(_translate("MainWindow", "<html><head/><body><p>Move up:</p></body></html>"))
-        self.label_33.setText(_translate("MainWindow", "<html><head/><body><p>Move down:</p></body></html>"))
-        self.label_34.setText(_translate("MainWindow", "<html><head/><body><p>Move left:</p></body></html>"))
-        self.label_35.setText(_translate("MainWindow", "<html><head/><body><p>Move right:</p></body></html>"))
+        self.label_32.setText(
+            _translate("MainWindow", "<html><head/><body><p>Move up:</p></body></html>")
+        )
+        self.label_33.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Move down:</p></body></html>"
+            )
+        )
+        self.label_34.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Move left:</p></body></html>"
+            )
+        )
+        self.label_35.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Move right:</p></body></html>"
+            )
+        )
         self.comboBox_MagicSearchMode.setItemText(0, _translate("MainWindow", "Auto"))
-        self.comboBox_MagicSearchMode.setItemText(1, _translate("MainWindow", "Semi-manual"))
-        self.comboBox_EquipmentSearchMode.setItemText(0, _translate("MainWindow", "Auto"))
-        self.comboBox_EquipmentSearchMode.setItemText(1, _translate("MainWindow", "Semi-manual"))
-        self.label_36.setText(_translate("MainWindow", "<html><head/><body><p>Magic:</p></body></html>"))
-        self.label_37.setText(_translate("MainWindow", "<html><head/><body><p>Equipment:</p></body></html>"))
+        self.comboBox_MagicSearchMode.setItemText(
+            1, _translate("MainWindow", "Semi-manual")
+        )
+        self.comboBox_EquipmentSearchMode.setItemText(
+            0, _translate("MainWindow", "Auto")
+        )
+        self.comboBox_EquipmentSearchMode.setItemText(
+            1, _translate("MainWindow", "Semi-manual")
+        )
+        self.label_36.setText(
+            _translate("MainWindow", "<html><head/><body><p>Magic:</p></body></html>")
+        )
+        self.label_37.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Equipment:</p></body></html>"
+            )
+        )
         self.label_18.setText(_translate("MainWindow", "Search mode"))
         self.label_39.setText(_translate("MainWindow", "Elden Ring controls"))
-        self.label_40.setText(_translate("MainWindow", "<html><head/><body><p>Assign control keys in game and make sure that controls are filled here. Otherwise some hotkeys will not work.</p></body></html>"))
+        self.label_40.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>Assign control keys in game and make sure that controls are filled here. Otherwise some hotkeys will not work.</p></body></html>",
+            )
+        )
         self.label_43.setText(_translate("MainWindow", "Standard pause time"))
-        self.label_44.setText(_translate("MainWindow", "<html><head/><body><p>Pause between virtual key presses. The less stable your framerate is, the bigger value is needed here. 30-40 ms is good for stable 60 FPS; 60-80 ms is for stable 30 FPS.</p></body></html>"))
-        self.label_46.setText(_translate("MainWindow", "<html><head/><body><p>In <span style=\" color:#b4a68a;\">Auto </span>mode current item is removed and new one is being searched from the start of list. Slow but stable. </p><p>In <span style=\" color:#b4a68a;\">Semi-manual </span>mode Melina\'s Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you\'\'ll have to clear Melina\'s Fingers memory using <span style=\" color:#b4a68a;\">Recovery </span>key.</p></body></html>"))
+        self.label_44.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>Pause between virtual key presses. The less stable your framerate is, the bigger value is needed here. 30-40 ms is good for stable 60 FPS; 60-80 ms is for stable 30 FPS.</p></body></html>",
+            )
+        )
+        self.label_46.setText(
+            _translate(
+                "MainWindow",
+                '<html><head/><body><p>In <span style=" color:#b4a68a;">Auto </span>mode current item is removed and new one is being searched from the start of list. Slow but stable. </p><p>In <span style=" color:#b4a68a;">Semi-manual </span>mode Melina\'s Fingers remembers your current item. Next search will be calculated based on your current item position. Faster but less stable. If sequence is broken (due frames loss, mouse movement or enemy attack), you\'\'ll have to clear Melina\'s Fingers memory using <span style=" color:#b4a68a;">Recovery </span>key.</p></body></html>',
+            )
+        )
         self.button_FontSizeUp.setText(_translate("MainWindow", "+"))
         self.button_FontSizeDown.setText(_translate("MainWindow", "-"))
-        self.label_53.setText(_translate("MainWindow", "<html><head/><body><p>Font size:</p></body></html>"))
+        self.label_53.setText(
+            _translate(
+                "MainWindow", "<html><head/><body><p>Font size:</p></body></html>"
+            )
+        )
         self.label_45.setText(_translate("MainWindow", "Extra settings"))
-        self.button_ControlsReload.setText(_translate("MainWindow", "Reload from save file"))
+        self.button_ControlsReload.setText(
+            _translate("MainWindow", "Reload from save file")
+        )
         self.button_Load.setText(_translate("MainWindow", "Load"))
         self.button_Save.setText(_translate("MainWindow", "Save"))
-        self.label_56.setText(_translate("MainWindow", "<html><head/><body><p>Manual work with &quot;mf_settings.cfg&quot;:</p></body></html>"))
+        self.label_56.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>Manual work with &quot;mf_settings.cfg&quot;:</p></body></html>",
+            )
+        )
         self.comboBox_ItemsSearchMode.setItemText(0, _translate("MainWindow", "Auto"))
-        self.comboBox_ItemsSearchMode.setItemText(1, _translate("MainWindow", "Semi-manual"))
-        self.label_62.setText(_translate("MainWindow", "<html><head/><body><p>Items:</p></body></html>"))
-        self.label_74.setText(_translate("MainWindow", "<html><head/><body><p>Window scale<br/>(need to restart):</p></body></html>"))
+        self.comboBox_ItemsSearchMode.setItemText(
+            1, _translate("MainWindow", "Semi-manual")
+        )
+        self.label_62.setText(
+            _translate("MainWindow", "<html><head/><body><p>Items:</p></body></html>")
+        )
+        self.label_74.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>Window scale<br/>(need to restart):</p></body></html>",
+            )
+        )
         self.label_38.setText(_translate("MainWindow", "Journal"))
         item = self.table_Journal.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "New Column"))
@@ -3243,15 +3986,22 @@ class Ui_MainWindow(object):
         self.button_RefreshJournal.setText(_translate("MainWindow", "Refresh"))
         self.button_GitHub2.setText(_translate("MainWindow", "Give a star on GitHub"))
         self.button_Nexus.setText(_translate("MainWindow", "Nexus Page"))
-        self.label_64.setText(_translate("MainWindow", "Meilna\'s Fingers"))
+        self.label_64.setText(_translate("MainWindow", "Meilna's Fingers"))
         self.label_67.setText(_translate("MainWindow", "E-mail:"))
         self.label_68.setText(_translate("MainWindow", "Developer:"))
         self.label_69.setText(_translate("MainWindow", "If you want to help"))
         self.label_70.setText(_translate("MainWindow", "Author"))
-        self.label_71.setText(_translate("MainWindow", "If you have questions, wishes or bugreports"))
+        self.label_71.setText(
+            _translate("MainWindow", "If you have questions, wishes or bugreports")
+        )
         self.label_72.setText(_translate("MainWindow", "Flower"))
         self.label_73.setText(_translate("MainWindow", "fln@mail.ru"))
-        self.label_65.setText(_translate("MainWindow", "<html><head/><body><p>I want to get a job as Python developer.  But a repo with some stars would greatly help me with my first job search.</p><p>Therefore if you gave Melina\'s Fingers a star on GitHub, you have my gratitude, hugs and polite bow.</p></body></html>"))
+        self.label_65.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p>I want to get a job as Python developer.  But a repo with some stars would greatly help me with my first job search.</p><p>Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.</p></body></html>",
+            )
+        )
         self.button_GitHub3.setText(_translate("MainWindow", "GitHub Issues"))
         self.button_OpenSaveFile.setText(_translate("MainWindow", "Open save file"))
         item = self.tableWidget_Macros.verticalHeaderItem(0)
@@ -3290,11 +4040,14 @@ class Ui_MainWindow(object):
         self.button_About.setText(_translate("MainWindow", "About"))
         self.button_Journal.setText(_translate("MainWindow", "Journal"))
         self.button_GitHub.setText(_translate("MainWindow", "Give a star on GitHub"))
+
+
 import ui_rc
 
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
