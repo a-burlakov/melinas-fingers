@@ -20,16 +20,7 @@
 ### Features
 Melina's Fingers lets you bind game actions to hotkeys, making your gameplay much more fluid and pleasant as actions that required pressing >10 buttons now require pressing only one. 
 
-Melina's Fingers have separate functionality depending on if EasyAntiCheat (EAC) is on or off.
-
-With **EAC on** you can bind some nice "Built-in" hotkeys that are harmless to use in multiplayer:
-- **gestures**: now you need only 1 button to perform a gesture;
-- **invasion attempts in a row**: you press 1 button, and Meilna's fingers uses Bloody Finger, then Recusant Finger and so several times. It will get you to invasion much - faster than just waiting for invasion or constantly using Bloody and Recusant Finger yourself;
-- **using Duelist's or Tarnished's Furled Fingers**;
-- **two-handing a weapon**: if you still miss good ol' days when it could be done with one button; 
-- **fast quit to main menu**: useful if you lost to gravity but still want to cheat death;
-
-With **EAC off** you can additionally bind almost anything:
+With Melina's Fingers you can additionally bind almost anything:
 - **weapons hardswap**: change your current weapon in about a second, and instantly take it in two hands or perform a skill if you need it;
 - **armor hardswap**;
 - **talismans hardswap**;
@@ -37,12 +28,17 @@ With **EAC off** you can additionally bind almost anything:
 - **selecting next/previous weapon**;
 - **magic select**: Melina's Fingers brings a joy of playing the mage to the new level as you can handle your spells much, much easier and faster;
 - **quick item select**: now you don't have to calculate how many times you have to press "Switch item" button to get to needed item in the heat of battle;
+- **gestures**: now you need only 1 button to perform a gesture;
+- **invasion attempts in a row**: you press 1 button, and Meilna's fingers uses Bloody Finger, then Recusant Finger and so several times. It will get you to invasion much - faster than just waiting for invasion or constantly using Bloody and Recusant Finger yourself;
+- **using Duelist's or Tarnished's Furled Fingers**;
+- **two-handing a weapon**: if you still miss good ol' days when it could be done with one button; 
+- **fast quit to main menu**: useful if you lost to gravity but still want to cheat death;
 - **crouch attack**;
 - **stance attack**;
 - **reverse backstep**;
 - **fast katana stance attacks**: these stance attacks makes recovery animation much shorter due performing a crouch after each attack;
 
-and any crazy hotkey you made yourself via rich DIY-constructor. You can even make a hotkey for farming mobs being AFK.
+and any crazy hotkey you made yourself via **rich DIY-constructor**. You can even make a hotkey for farming mobs being AFK.
 
 ### Getting Started
 1. [Download latest Melina's Fingers release](https://github.com/flower-ab/EldenRing-MelinasFingers/releases/latest);
