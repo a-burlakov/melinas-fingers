@@ -1,3 +1,5 @@
+_It was made pretty long time ago for fun and learning PyQt. Code of this project no longer indicates my current skills._
+
 <p align="center">
   <a target="blank"><img src="src/images/icon.jpg" width="100" alt="MF Logo"/></a>
 </p>
