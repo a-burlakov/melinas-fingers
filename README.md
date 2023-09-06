@@ -1,4 +1,6 @@
-_It was made pretty long time ago for fun and learning PyQt. Code of this project no longer indicates my current skills. Repository is left public for the sake of Elden Ring community._
+_It was made pretty long time ago for fun and learning PyQt.
+Code of this project no longer indicates my current skills. 
+Repository is left public for the sake of Elden Ring community._
 
 <br>
 <br>
