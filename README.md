@@ -1,5 +1,5 @@
 _It was made pretty long time ago for fun and learning PyQt.<br>
-Also for getting free PyCharm Pro license._ 😎<br>
+(Also for getting free PyCharm Pro license._ 😎)<br>
 _Code of this project no longer indicates my current skills.<br> 
 Repository is left public for the sake of Elden Ring community._
 
