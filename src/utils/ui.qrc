@@ -1,0 +1,23 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>ui_img/icon.jpg</file>
+    <file>ui_img/flower.png</file>
+    <file>ui_img/down_arrow_combobox.png</file>
+    <file>ui_img/inventory.png</file>
+    <file>ui_img/weapon_right.png</file>
+    <file>ui_img/weapon_right_active.png</file>
+    <file>ui_img/armor_hands.png</file>
+    <file>ui_img/armor_hands_active.png</file>
+    <file>ui_img/armor_head.png</file>
+    <file>ui_img/armor_head_active.png</file>
+    <file>ui_img/armor_legs.png</file>
+    <file>ui_img/armor_legs_active.png</file>
+    <file>ui_img/armor_torso.png</file>
+    <file>ui_img/armor_torso_active.png</file>
+    <file>ui_img/talisman.png</file>
+    <file>ui_img/talisman_active.png</file>
+    <file>ui_img/weapon_left.png</file>
+    <file>ui_img/background.png</file>
+    <file>ui_img/weapon_left_active.png</file>
+  </qresource>
+</RCC>
