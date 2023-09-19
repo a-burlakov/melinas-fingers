@@ -16,13 +16,13 @@ Repository is left public for the sake of Elden Ring community._
 <p align="center"><a href="https://www.nexusmods.com/eldenring/mods/2504">Nexus page</a></p>
 
 <p align="center">
-  <a target="blank"><img src="src/images/screenshot_1.png" alt="MF Logo" /></a>
+  <a target="blank"><img src="src/docs/screenshot_1.png" alt="MF Logo" /></a>
 </p>
 <p align="center">
-  <a target="blank"><img src="src/images/screenshot_2.png" alt="MF Logo" /></a>
+  <a target="blank"><img src="src/docs/screenshot_2.png" alt="MF Logo" /></a>
 </p>
 <p align="center">
-  <a target="blank"><img src="src/images/screenshot_3.png" alt="MF Logo" /></a>
+  <a target="blank"><img src="src/docs/screenshot_3.png" alt="MF Logo" /></a>
 </p>
 
 ### Features
@@ -110,15 +110,15 @@ There're no long sequences, but you can make something really long in DIY hotkey
 ### UI development
 
 1. Install [Qt Designer](https://build-system.fman.io/qt-designer-download) for interactive UI development.
-2. Open ```src/mainWindow.ui``` via Qt Designer.
+2. Open ```src/utils/mainWindow.ui``` via Qt Designer.
 3. Make your changes.
-4. Run ```src/qtdesigner_to_py.bat```. That will create corresponding UI files used by Python.
+4. Run ```src/utils/qtdesigner_to_py.bat```. That will create corresponding .py files (`mainWindow.py` and `ui_rc.py`).
 
 ### Freezing to .exe
 
 1. Just use PyInstaller:
 ```sh
-pyinstaller src\main.py -F -w -i src\images\icon.ico  
+pyinstaller src\main.py -F -w -i src\utils\ui_img\icon.ico  
 ```
 
 2. Newly created ```dist``` folder will have your .exe file.
