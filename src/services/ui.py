@@ -13,9 +13,8 @@ import PyQt5.QtGui
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 
-from src.constants.keyboard import available_game_control_buttons
 from src.utils.mainWindow import Ui_MainWindow
-
+from src.constants.keyboard import available_game_control_buttons
 from src.services.macro import Macro, built_in_macros, available_buttons_with_codes
 from src.services.savefile import SaveFile, SaveSlot
 
