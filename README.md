@@ -7,7 +7,7 @@ Repository is left public for the sake of Elden Ring community._
 <br>
 
 <p align="center">
-  <a target="blank"><img src="src/images/icon.jpg" width="100" alt="MF Logo"/></a>
+  <a target="blank"><img src="src/docs/logo.jpg" width="100" alt="MF Logo"/></a>
 </p>
 
 <h3 align="center">Melina's Fingers</h3>
