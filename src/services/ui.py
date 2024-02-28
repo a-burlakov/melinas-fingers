@@ -40,7 +40,7 @@ def pynput_on_press(key):
     global LAST_KEY_COMBINATION
     global CURRENT_KEY_COMBINATION
 
-    # print(key)
+    print(key)
     if hasattr(key, 'vk'):
         CURRENT_KEY_COMBINATION.add(key.vk)
     else:

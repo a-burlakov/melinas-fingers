@@ -171,28 +171,6 @@ class Macro:
         else:
             self.id = self.saveslot.number * 1000 + 1
 
-    def is_safe_for_online(self) -> bool:
-        """
-        Returns True if this macro is OK to use online with EAC on.
-        'False' value will forbid macro performing if savefile's
-        'save_online_mode' is set to True.
-        """
-
-        # Weapon hardswapping is forbidden if EAC is on.
-        if self.type == 'Equipment':
-            settings = self.settings['equipment']
-            if (
-                settings['weapon_right_1']['position']
-                or settings['weapon_right_2']['position']
-                or settings['weapon_right_3']['position']
-                or settings['weapon_left_1']['position']
-                or settings['weapon_left_2']['position']
-                or settings['weapon_left_3']['position']
-            ):
-                return False
-
-        return True
-
     def execute(self):
         """
         That's a function that is called when assigned hotkey is pressed.
@@ -208,14 +186,6 @@ class Macro:
         # Calculate 'safe_online_mode' if it's time to do it.
         if time_start - self.savefile.safe_online_mode_last_check_time > 20:
             self.savefile.calculate_online_mode()
-
-        # if not self.is_safe_for_online() and self.savefile.safe_online_mode:
-        #     self.savefile.make_journal_entry(
-        #         "The macro is not safe for "
-        #         "current online mode so it "
-        #         "won't be performed."
-        #     )
-        #     return
 
         # Nobody knows what can happen inside keylines mechanism
         # (especially with DIYs), so we need exceptions catch.
