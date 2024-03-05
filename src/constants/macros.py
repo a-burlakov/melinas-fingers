@@ -20,6 +20,34 @@ def built_in_macros() -> list:
             'comment': 'For those who miss the days when it could be done with one button.',
         },
         {
+            'name': 'Four invasion attempts (wide)',
+            'keyline': (
+                               f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|'
+                               * 2
+                       )[:-10],
+            'comment': 'Performs an attempt to invade as bloody finger,\n'
+                       'then attempt to invade as recusant, and so two times.\n'
+                       '\n'
+                       "Usually that's enough to invade even with mediocre connection\n"
+                       'and get a snack from kitchen.\n'
+                       '\n'
+                       'Invades over all map.',
+        },
+        {
+            'name': 'Four invasion attempts (local)',
+            'keyline': (
+                               f'{keyline_to_invade_as_bloody_finger()}|pause4000|{keyline_to_invade_as_recusant()}|pause4000'
+                               * 2
+                       )[:-10],
+            'comment': 'Performs an attempt to invade as bloody finger,\n'
+                       'then attempt to invade as recusant, and so two times.\n'
+                       '\n'
+                       "Usually that's enough to invade even with mediocre connection\n"
+                       'and get a snack from kitchen.\n'
+                       '\n'
+                       'Invades locally.',
+        },
+        {
             'name': 'Six invasion attempts (wide)',
             'keyline': (
                 f'{keyline_to_invade_as_bloody_finger(True)}|pause4000|{keyline_to_invade_as_recusant(True)}|pause4000|'
@@ -86,7 +114,8 @@ def built_in_macros() -> list:
         {
             'name': 'Crouch attack',
             'keyline': 'crouch|attack',
-            'comment': "Everyone's hated button except UGS players before 1.07.",
+            'comment': "May be very useful on weapons with powerful crouch attack,\n"
+                       "like dual katanas. ",
         },
         {
             'name': 'Stance attack',
@@ -103,30 +132,6 @@ def built_in_macros() -> list:
             'keyline': 'event_action+guard|pause200|skill',
             'comment': 'Takes weapons from left hand to both hands and performs\n'
             "it's skill immediately.",
-        },
-        {
-            'name': 'Fast katana stance attacks',
-            'keyline': 'skill_press300|attack|pause500|crouch_press20|crouch',
-            'comment': 'Performs a stance attack and crouch to cancel a recovery\n'
-            'animation. It makes consecutive stance attacks much faster\n'
-            'and dangerous.\n'
-            '\n'
-            "To continue attack wait for a beginning of crouch and press button again. You'll stay in crouch position after attack.\n"
-            '\n'
-            "They hated you because you're Moonveil user, but now\n"
-            'you actually deserve this.',
-        },
-        {
-            'name': 'Fast katana stance attacks (strong)',
-            'keyline': 'skill_press300|strong_attack|pause500|crouch_press20|crouch',
-            'comment': 'Performs a strong stance attack and crouch to cancel a recovery\n'
-            'animation. It makes consecutive stance attacks much faster\n'
-            'and dangerous.\n'
-            '\n'
-            "To continue attack wait for a beginning of crouch and press button again. You'll stay in crouch position after attack.\n"
-            '\n'
-            "They hated you because you're Moonveil user, but now\n"
-            'you actually deserve this.',
         },
         {
             'name': 'Next weapon (right)',
@@ -183,17 +188,93 @@ def built_in_macros() -> list:
         )
 
     # Six gestures.
-    for i in range(1, 7):
-        downs = (i - 1) // 2
-        rights = (i - 1) % 2
-        macros_list.append(
-            {
-                'name': f'Gesture {str(i)}',
-                'keyline': f'esc|right|down|down|down{"|down" * downs}{"|right" * rights}|e|esc',
-                'comment': f'Performs gesture {i}.',
-            }
-        )
+    macros_list.append(
+        {
+            'name': f'Gesture 1',
+            'keyline': f'esc|right|down|down|down|e|esc',
+            'comment': f'Performs gesture 1.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Gesture 2',
+            'keyline': f'esc|left|down|down|down|e|esc',
+            'comment': f'Performs gesture 2',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Gesture 3',
+            'keyline': f'esc|right|up|up|e|esc',
+            'comment': f'Performs gesture 2',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Gesture 4',
+            'keyline': f'esc|left|up|up|e|esc',
+            'comment': f'Performs gesture 2',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Gesture 5',
+            'keyline': f'esc|right|up|e|esc',
+            'comment': f'Performs gesture 2',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Gesture 6',
+            'keyline': f'esc|left|up|e|esc',
+            'comment': f'Performs gesture 2',
+        }
+    )
 
+
+    # Six pouch items.
+    macros_list.append(
+        {
+            'name': f'Pouch item 1',
+            'keyline': f'esc|right|e|esc',
+            'comment': f'Use item 1 in pouch.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Pouch item 2',
+            'keyline': f'esc|left|e|esc',
+            'comment': f'Use item 2 in pouch.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Pouch item 3',
+            'keyline': f'esc|right|down|e|esc',
+            'comment': f'Use item 3 in pouch.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Pouch item 4',
+            'keyline': f'esc|left|down|e|esc',
+            'comment': f'Use item 4 in pouch.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Pouch item 5',
+            'keyline': f'esc|right|down|down|e|esc',
+            'comment': f'Use item 5 in pouch.',
+        }
+    )
+    macros_list.append(
+        {
+            'name': f'Pouch item 6',
+            'keyline': f'esc|left|down|down|e|esc',
+            'comment': f'Use item 6 in pouch.',
+        }
+    )
     return macros_list
 
 

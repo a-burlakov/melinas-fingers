@@ -113,7 +113,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.savefile.location and not self.savefile.current_saveslot.macros:
             self.add_introductory_macros()
 
-        self.savefile.calculate_online_mode()
         self.set_macros_settings_from_window()
         self.fill_builtin_macros()
         self.Pages_SetPage()
@@ -338,16 +337,101 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macros = self.savefile.current_saveslot.macros
         macros.clear()
 
-        # Place for user's macros.
-        for i in range(1, 10):
+        # Sort all: Asc. Acquisition.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = '! Use it first ! Sort all: Asc. Acquisition'
+        macro.type = 'Built-in'
+        macro.hotkey = 'F11'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['built-in']['macro_name'] = 'Sort all: Asc. Acquisition'
+        macros.append(macro)
+
+        # Place for equipment macros.
+        for i in range(1, 7):
             macro = Macro(self.savefile.current_saveslot)
             macro.name = macro.standard_name()
-            macro.type = ''
+            macro.type = 'Equipment'
             macro.hotkey = 'F' + str(i)
             macro.hotkey_ctrl = False
             macro.hotkey_shift = False
             macro.hotkey_alt = False
             macros.append(macro)
+
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = macro.standard_name()
+            macro.type = 'Equipment'
+            macro.hotkey = 'F' + str(i)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macros.append(macro)
+
+        # Place for equipment macros on keyboard.
+        for i in range(1, 7):
+            hotkeys = {1: 'U', 2: 'I', 3: 'J', 4: 'K', 5: 'M', 6: ','}
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = macro.standard_name()
+            macro.type = 'Equipment'
+            macro.hotkey = hotkeys[i]
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macros.append(macro)
+
+        # Magic.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to spell {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
+            macros.append(macro)
+
+        # Items.
+        for i in range(1, 11):
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Switch to quick item {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = str(i % 10)
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
+            macros.append(macro)
+
+        # Pouch items.
+        for i in range(1, 7):
+            hotkeys = {1: 'U', 2: 'I', 3: 'J', 4: 'K', 5: 'M', 6: ','}
+
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Pouch item {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = hotkeys[i]
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = True
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Pouch item {str(i)}'
+            macros.append(macro)
+
+        # Gestures.
+        for i in range(1, 7):
+            hotkeys = {1: 'Num7', 2: 'Num8', 3: 'Num4', 4: 'Num5', 5: 'Num1', 6: 'Num2'}
+
+            macro = Macro(self.savefile.current_saveslot)
+            macro.name = f'Gesture {str(i)}'
+            macro.type = 'Built-in'
+            macro.hotkey = hotkeys[i]
+            macro.hotkey_ctrl = False
+            macro.hotkey_shift = False
+            macro.hotkey_alt = False
+            macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
+            macros.append(macro)
+
 
         # Invasion attempts.
         macro = Macro(self.savefile.current_saveslot)
@@ -360,16 +444,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.settings['built-in']['macro_name'] = 'Six invasion attempts (wide)'
         macros.append(macro)
 
-        # Sort all: Asc. Acquisition.
         macro = Macro(self.savefile.current_saveslot)
-        macro.name = 'Sort all: Asc. Acquisition'
+        macro.name = 'Four invasion attempts (wide)'
         macro.type = 'Built-in'
-        macro.hotkey = 'F11'
+        macro.hotkey = 'F10'
         macro.hotkey_ctrl = False
-        macro.hotkey_shift = False
+        macro.hotkey_shift = True
         macro.hotkey_alt = False
-        macro.settings['built-in']['macro_name'] = 'Sort all: Asc. Acquisition'
+        macro.settings['built-in']['macro_name'] = 'Four invasion attempts (wide)'
         macros.append(macro)
+
 
         # Reverse backstep.
         macro = Macro(self.savefile.current_saveslot)
@@ -436,44 +520,86 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macro.settings['diy']['times_to_repeat'] = 1
         macros.append(macro)
 
-        # Magic.
-        for i in range(1, 11):
+        # Fancy teabagging.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Fancy teabagging'
+        macro.type = 'DIY'
+        macro.hotkey = 'F4'
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = True
+        macro.settings['diy']['macro'] = """crouch
+move_right_press50
+crouch_pause400
+
+crouch
+move_down_press50
+crouch_pause400
+
+crouch
+move_left_press50
+crouch_pause400
+
+crouch
+move_up_press50
+crouch_pause400
+
+# Calibrated for 40ms "Standard pause time" (see settings)
+        """
+        macro.settings['diy']['times_to_repeat'] = 4
+        macros.append(macro)
+
+        # Farming.
+        macro = Macro(self.savefile.current_saveslot)
+        macro.name = 'Malicious albinaurics farming'
+        macro.type = 'DIY'
+        macro.hotkey = None
+        macro.hotkey_ctrl = False
+        macro.hotkey_shift = False
+        macro.hotkey_alt = False
+        macro.settings['diy']['macro'] = """# You need to:
+# - equip Sacred Relic Sword
+# - preferably equip Gold Scarab
+# - move to "Palace Approach Ledge-Road" site of grace
+
+# Moving to the point where most albinaurics can be seen. >:)
+pause500
+move_down_press200
+pause500
+roll_pause500 * 7
+pause500
+
+# Directing our character to poor grey people.
+move_left+move_up_press1000
+
+# Launching Wave of Gold!
+skill_press200
+pause5000
+
+# Moving to the site of grace via map.
+G_pause500
+F_pause500
+E_pause500
+E_pause500
+
+# Waiting for loading...
+pause6000
+                """
+        macro.settings['diy']['times_to_repeat'] = 60
+        macros.append(macro)
+
+        # Equipment for talismans etc.
+        for i in range(1, 4):
+            hotkeys = {1: 'Num9', 2: 'Num6', 3: 'Num3'}
             macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Switch to spell {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = False
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Switch to spell {str(i)}'
-            macros.append(macro)
-
-        # Items.
-        for i in range(1, 11):
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Switch to quick item {str(i)}'
-            macro.type = 'Built-in'
-            macro.hotkey = str(i % 10)
-            macro.hotkey_ctrl = False
-            macro.hotkey_shift = True
-            macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Switch to quick item {str(i)}'
-            macros.append(macro)
-
-        # Gestures.
-        for i in range(1, 7):
-
-            hotkeys = {1: 'Num7', 2: 'Num8', 3: 'Num4', 4: 'Num5', 5: 'Num1', 6: 'Num2'}
-
-            macro = Macro(self.savefile.current_saveslot)
-            macro.name = f'Gesture {str(i)}'
-            macro.type = 'Built-in'
+            macro.name = macro.standard_name()
+            macro.type = 'Equipment'
             macro.hotkey = hotkeys[i]
             macro.hotkey_ctrl = False
             macro.hotkey_shift = False
             macro.hotkey_alt = False
-            macro.settings['built-in']['macro_name'] = f'Gesture {str(i)}'
             macros.append(macro)
+
 
     def set_macros_settings_from_window(self) -> None:
         """

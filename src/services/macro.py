@@ -183,10 +183,6 @@ class Macro:
         self.savefile.make_journal_entry('=' * 40)
         self.savefile.make_journal_entry(f'Start: {self}')
 
-        # Calculate 'safe_online_mode' if it's time to do it.
-        if time_start - self.savefile.safe_online_mode_last_check_time > 20:
-            self.savefile.calculate_online_mode()
-
         # Nobody knows what can happen inside keylines mechanism
         # (especially with DIYs), so we need exceptions catch.
         try:
@@ -243,6 +239,9 @@ class Macro:
         ]
 
         cells = {x: settings[x] for x in cells}
+        if all(cell['action'] == 'skip' for cell in cells.values()):
+            self.macro_keyline = ''
+            return
 
         # Actions to do after cell is passed to get to next cell.
         # Also put a key 'keyline' which will keep a keyline to handle a cell.

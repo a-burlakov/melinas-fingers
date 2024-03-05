@@ -35,11 +35,6 @@ class SaveFile:
         for key in self.control_keys_ranges().keys():
             self.game_controls[key] = ''
 
-        # If "online_mode" is on, then Melina's Fingers will stop some macros
-        # from performing to not harm balanced PvP.
-        self.safe_online_mode: bool = True
-        self.safe_online_mode_last_check_time = time.time()
-
     @staticmethod
     def range_before_saveslots() -> int:
         """
@@ -533,7 +528,7 @@ class SaveSlot:
             inventory_list.append(instance_dict)
 
         # To find items in quick slots we need to find first "46 41 43 45"
-        # sequience in safe-file ("FACE", don't know what that means).
+        # sequence in save-file ("FACE", don't know what that means).
         # End of quick slots will be 88 symbols earlier.
         #
         # Quick slots are just sequence of ten "XX XX XX XX"-like words, where
