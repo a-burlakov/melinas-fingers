@@ -766,7 +766,7 @@ pause6000
         """
         Saves settings to file 'mf_settings.cfg' in the same folder.
         """
-        with open(r'../mf_settings.cfg', 'wb') as settings_file:
+        with open(r'mf_settings.cfg', 'wb') as settings_file:
             pickle.dump(self.savefile, settings_file)
 
     def read_settings_from_file(self):
@@ -774,10 +774,10 @@ pause6000
         Reads settings from file 'mf_settings.cfg' in the same folder.
         """
 
-        if not os.path.exists('../mf_settings.cfg'):
+        if not os.path.exists('mf_settings.cfg'):
             return
 
-        with open('../mf_settings.cfg', 'rb') as settings_file:
+        with open('mf_settings.cfg', 'rb') as settings_file:
             self.savefile = pickle.load(settings_file)
 
     def set_standard_settings(self) -> None:
@@ -2521,8 +2521,8 @@ def set_qt_scale_factor() -> None:
 
     scale_factor = 1.3
 
-    if os.path.exists('../mf_settings.cfg'):
-        with open('../mf_settings.cfg', 'rb') as settings_file:
+    if os.path.exists('mf_settings.cfg'):
+        with open('mf_settings.cfg', 'rb') as settings_file:
             savefile = pickle.load(settings_file)
             if savefile.window_scale:
                 scale_factor = savefile.window_scale

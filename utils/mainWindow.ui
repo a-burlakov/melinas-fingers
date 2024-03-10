@@ -531,7 +531,7 @@ QScrollBar {
      </font>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>9</number>
     </property>
     <widget class="QWidget" name="stackedWidget_Pages_Empty"/>
     <widget class="QWidget" name="stackedWidget_Pages_Equipment">
@@ -5651,8 +5651,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_67">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>190</y>
+        <x>20</x>
+        <y>140</y>
         <width>161</width>
         <height>25</height>
        </rect>
@@ -5673,8 +5673,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_68">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>160</y>
+        <x>20</x>
+        <y>110</y>
         <width>101</width>
         <height>25</height>
        </rect>
@@ -5785,24 +5785,11 @@ p, li { white-space: pre-wrap; }
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
-     <widget class="QGraphicsView" name="graphicsView">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>130</y>
-        <width>121</width>
-        <height>121</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border-image: url(:/newPrefix/ui_img/flower.png);</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_72">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>160</y>
+        <x>100</x>
+        <y>110</y>
         <width>111</width>
         <height>25</height>
        </rect>
@@ -5823,8 +5810,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="label_73">
       <property name="geometry">
        <rect>
-        <x>240</x>
-        <y>190</y>
+        <x>100</x>
+        <y>140</y>
         <width>111</width>
         <height>25</height>
        </rect>
@@ -5858,7 +5845,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I want to get a job as Python developer.  But a repo with some stars would greatly help me with my first job search.&lt;/p&gt;&lt;p&gt;Therefore if you gave Melina's Fingers a star on GitHub, you have my gratitude, hugs and polite bow.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I will be very happy about this, and you will have my gratitude, hugs and polite bow.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -5900,7 +5887,6 @@ p, li { white-space: pre-wrap; }
      <zorder>label_69</zorder>
      <zorder>label_70</zorder>
      <zorder>label_71</zorder>
-     <zorder>graphicsView</zorder>
      <zorder>label_73</zorder>
      <zorder>label_72</zorder>
      <zorder>label_65</zorder>
