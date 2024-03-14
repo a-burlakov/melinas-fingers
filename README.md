@@ -72,7 +72,7 @@ Melina's Fingers has several types of hotkeys to customize:
 
 For "Equipment", "Magic" and "Item" types of hotkeys there are also two search modes:
 - **Auto**: slower but more stable;
-- **Semi-manual**: faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
+- **Semi-manual**: much faster but less stable and you'll need to press "Recovery key" if something went wrong (press "Settings" button for more information).
 
 ### Some little important things
 

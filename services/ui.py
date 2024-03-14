@@ -349,7 +349,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         macros.append(macro)
 
         # Place for equipment macros.
-        for i in range(1, 7):
+        for i in range(1, 9):
             macro = Macro(self.savefile.current_saveslot)
             macro.name = macro.standard_name()
             macro.type = 'Equipment'
