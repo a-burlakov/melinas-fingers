@@ -115,7 +115,13 @@ def built_in_macros() -> list:
             'name': 'Crouch attack',
             'keyline': 'crouch|attack',
             'comment': "May be very useful on weapons with powerful crouch attack,\n"
-                       "like dual katanas. ",
+                       "like claymore. ",
+        },
+        {
+            'name': 'Crouch attack (dual wield)',
+            'keyline': 'crouch|guard',
+            'comment': "May be very useful on weapons with powerful crouch attack,\n"
+                       "like dual katanas or dual lances. ",
         },
         {
             'name': 'Stance attack',
