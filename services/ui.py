@@ -942,7 +942,6 @@ pause6000
             self,
             'Choose your Elden Ring Save File',
             start_folder,
-            'Elden Ring Save File (*.sl2 *.co2)',
             options=options,
         )
 
