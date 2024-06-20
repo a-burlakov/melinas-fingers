@@ -369,8 +369,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             macros.append(macro)
 
         # Place for equipment macros on keyboard.
-        for i in range(1, 7):
-            hotkeys = {1: 'U', 2: 'I', 3: 'J', 4: 'K', 5: 'M', 6: ','}
+        for i in range(1, 13):
+            hotkeys = {1: 'T', 2: 'Y', 3: 'G', 4: 'H', 5: 'B', 6: 'N', 7: 'U', 8: 'I', 9: 'J', 10: 'K', 11: 'M', 12: ','}
             macro = Macro(self.savefile.current_saveslot)
             macro.name = macro.standard_name()
             macro.type = 'Equipment'

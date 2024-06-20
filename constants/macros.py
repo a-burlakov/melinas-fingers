@@ -311,7 +311,7 @@ def keyline_to_invade_as_bloody_finger(wide_invade: bool = True) -> str:
     keyline = 'esc|up|up|e|up|up|e'
 
     if wide_invade:
-        keyline += '|pause50|right'
+        keyline += '|pause50|right|pause400'
 
     keyline += '|e|esc'
 
@@ -326,7 +326,7 @@ def keyline_to_invade_as_recusant(wide_invade: bool = True) -> str:
     keyline = 'esc|up|up|e|up|up|right|e'
 
     if wide_invade:
-        keyline += '|pause50|right'
+        keyline += '|pause50|right|pause400'
 
     keyline += '|e|esc'
 
