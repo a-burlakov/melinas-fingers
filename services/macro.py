@@ -502,7 +502,7 @@ class Macro:
             # Choosing equip.
             keys_list.append('e')
             if value['not_enough_stats']:
-                keys_list.append('pause50|e|pause200')
+                keys_list.append('pause300|e|pause200')
 
             # Quiting cell.
             keys_list.append('q|pause200')
